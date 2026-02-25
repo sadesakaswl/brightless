@@ -1,0 +1,24 @@
+[package]
+name = "brightless"
+version = "0.1.0"
+edition = "2021"
+license = "GPL-3.0-only"
+description = "DDC brightness control for external monitors"
+authors = ["Brightless"]
+rust-version = "1.77"
+
+[dependencies]
+gtk = { package = "gtk4", version = "0.11", features = ["v4_14"] }
+adw = { package = "libadwaita", version = "0.9", features = ["v1_8"] }
+glib = "0.22"
+ddc = "0.2"
+ddc-i2c = { version = "0.2", features = ["with-linux", "with-linux-enumerate"] }
+i2c-linux = "0.1"
+libc = "0.2"
+thiserror = "2"
+dirs = "5"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[features]
+default = []

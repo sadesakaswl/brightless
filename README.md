@@ -1,16 +1,17 @@
 # Brightless
 
-A modern DDC brightness control application for Linux external monitors.
+A modern DDC control application for Linux external monitors.
 
 ## Features
 
-- **Brightness & Contrast Control** — Adjust external monitor settings via DDC/CI protocol
+- **Brightness, Contrast & Volume Control** — Adjust external monitor settings via DDC/CI protocol
+- **Input Source Selection** — Switch between HDMI, DisplayPort, VGA, DVI, USB-C
+- **Power Mode Control** — Turn monitor on, off, or to standby/suspend
 - **Auto-detect Monitors** — Discovers connected monitors via DRM and reads names from EDID
-- **Real-time Value Display** — Shows current brightness/contrast values on startup
-- **DDC Range Info** — Displays supported DDC ranges in monitor subtitle
+- **Real-time Value Display** — Shows current values on startup
 - **Mouse Scroll Support** — Scroll on sliders to adjust values (configurable step: 1-10%)
 - **Settings Persistence** — Saves your preferences to `~/.config/brightless/settings.json`
-- **Modern UI** — Built with GTK4 and libadwaita for a native GNOME experience
+- **Modern UI** — Built with GTK4 and libadwaita
 
 ## Requirements
 
@@ -42,7 +43,8 @@ cargo build --release
 
 ### Controls
 
-- **Sliders** — Drag to adjust brightness/contrast
+- **Sliders** — Drag to adjust brightness/contrast/volume
+- **Dropdowns** — Select input source and power mode
 - **Mouse Scroll** — Scroll on any slider to change values (default: 2% per tick)
 - **Settings** — Click the gear icon in the titlebar to configure scroll step
 

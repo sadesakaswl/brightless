@@ -125,7 +125,17 @@ impl MainWindow {
         let ddc_ref = Rc::new(RefCell::new(ddc));
 
         for i in 0..monitor_count {
-            let (name, min_brightness, max_brightness, min_contrast, max_contrast) = {
+            let (
+                name,
+                min_brightness,
+                max_brightness,
+                min_contrast,
+                max_contrast,
+                min_volume,
+                max_volume,
+                supports_input_source,
+                supports_power_mode,
+            ) = {
                 let ddc = ddc_ref.borrow();
                 (
                     ddc.monitors[i].name.clone(),
@@ -133,6 +143,10 @@ impl MainWindow {
                     ddc.monitors[i].max_brightness,
                     ddc.monitors[i].min_contrast,
                     ddc.monitors[i].max_contrast,
+                    ddc.monitors[i].min_volume,
+                    ddc.monitors[i].max_volume,
+                    ddc.monitors[i].supports_input_source,
+                    ddc.monitors[i].supports_power_mode,
                 )
             };
 
@@ -142,6 +156,10 @@ impl MainWindow {
                 max_brightness,
                 min_contrast,
                 max_contrast,
+                min_volume,
+                max_volume,
+                supports_input_source,
+                supports_power_mode,
                 scroll_step,
             );
 
@@ -159,6 +177,38 @@ impl MainWindow {
                 row.connect_contrast_changed(move |value| {
                     if let Ok(mut ddc) = ddc_clone2.try_borrow_mut() {
                         let _ = ddc.set_contrast_percentage(idx2, value);
+                    }
+                });
+            }
+
+            let ddc_clone3 = ddc_ref.clone();
+            let idx3 = i;
+            if row.has_volume() {
+                row.connect_volume_changed(move |value| {
+                    if let Ok(mut ddc) = ddc_clone3.try_borrow_mut() {
+                        let _ = ddc.set_volume_percentage(idx3, value);
+                    }
+                });
+            }
+
+            let ddc_clone4 = ddc_ref.clone();
+            let idx4 = i;
+            if row.has_input_source() {
+                row.connect_input_source_changed(move |value| {
+                    use crate::ddc_manager::InputSource;
+                    if let Ok(mut ddc) = ddc_clone4.try_borrow_mut() {
+                        let _ = ddc.set_input_source(idx4, InputSource::from_code(value));
+                    }
+                });
+            }
+
+            let ddc_clone5 = ddc_ref.clone();
+            let idx5 = i;
+            if row.has_power_mode() {
+                row.connect_power_mode_changed(move |value| {
+                    use crate::ddc_manager::PowerMode;
+                    if let Ok(mut ddc) = ddc_clone5.try_borrow_mut() {
+                        let _ = ddc.set_power_mode(idx5, PowerMode::from_code(value));
                     }
                 });
             }
@@ -213,6 +263,33 @@ impl MainWindow {
                 match ddc.get_contrast_percentage(i) {
                     Ok(percentage) => {
                         row.set_contrast(percentage);
+                    }
+                    Err(_) => {}
+                }
+            }
+
+            if row.has_volume() {
+                match ddc.get_volume_percentage(i) {
+                    Ok(percentage) => {
+                        row.set_volume(percentage);
+                    }
+                    Err(_) => {}
+                }
+            }
+
+            if row.has_input_source() {
+                match ddc.get_input_source(i) {
+                    Ok(source) => {
+                        row.set_input_source(source.code());
+                    }
+                    Err(_) => {}
+                }
+            }
+
+            if row.has_power_mode() {
+                match ddc.get_power_mode(i) {
+                    Ok(mode) => {
+                        row.set_power_mode(mode.code());
                     }
                     Err(_) => {}
                 }

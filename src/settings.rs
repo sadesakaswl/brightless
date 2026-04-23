@@ -1,15 +1,31 @@
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::fs;
 use std::path::PathBuf;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(default)]
 pub struct AppSettings {
     pub scroll_step: u8,
+    pub dynamic_contrast_enabled: bool,
+    pub dynamic_contrast_global: bool,
+    pub dynamic_contrast_ratio: f32,
+    pub dynamic_contrast_per_monitor_ratio: bool,
+    pub monitor_dynamic_contrast: HashMap<String, bool>,
+    pub monitor_ratios: HashMap<String, f32>,
 }
 
 impl Default for AppSettings {
     fn default() -> Self {
-        Self { scroll_step: 2 }
+        Self {
+            scroll_step: 2,
+            dynamic_contrast_enabled: false,
+            dynamic_contrast_global: true,
+            dynamic_contrast_ratio: 0.7,
+            dynamic_contrast_per_monitor_ratio: false,
+            monitor_dynamic_contrast: HashMap::new(),
+            monitor_ratios: HashMap::new(),
+        }
     }
 }
 

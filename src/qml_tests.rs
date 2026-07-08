@@ -67,4 +67,66 @@ mod tests {
         assert!(!MAIN_QML.contains("width: 720"), "window width must not be a fixed large default");
         assert!(!MAIN_QML.contains("height: 560"), "window height must not be a fixed large default");
     }
+
+    #[test]
+    fn main_window_contains_settings_controls() {
+        for expected in [
+            "id: settingsPopup",
+            "Scroll Step:",
+            "controller.set_scroll_step",
+            "Dynamic Contrast",
+            "controller.set_dynamic_contrast_enabled",
+            "Apply to all monitors",
+            "controller.set_dynamic_contrast_global",
+            "Contrast Ratio:",
+            "controller.set_dynamic_contrast_ratio",
+            "Per-monitor ratio",
+            "controller.set_dynamic_contrast_per_monitor_ratio",
+            "controller.set_monitor_ratio",
+        ] {
+            assert!(MAIN_QML.contains(expected), "Main.qml missing expected settings control: {expected}");
+        }
+    }
+
+    #[test]
+    fn monitor_card_contains_all_monitor_controls() {
+        for expected in [
+            "Brightness:",
+            "controller.set_brightness",
+            "Contrast:",
+            "controller.set_contrast",
+            "Dynamic Contrast:",
+            "controller.set_dynamic_contrast_brightness",
+            "Volume:",
+            "controller.set_volume",
+            "Input:",
+            "controller.set_input_source",
+            "Power:",
+            "controller.set_power_mode",
+        ] {
+            assert!(MONITOR_CARD_QML.contains(expected), "MonitorCard.qml missing expected monitor control: {expected}");
+        }
+    }
+
+    #[test]
+    fn monitor_card_preserves_input_and_power_option_sets() {
+        for expected in [
+            "VGA",
+            "DVI",
+            "DisplayPort 1",
+            "DisplayPort 2",
+            "HDMI 1",
+            "HDMI 2",
+            "HDMI 3",
+            "HDMI 4",
+            "USB-C",
+            "On",
+            "Standby",
+            "Suspend",
+            "Off",
+            "Normal",
+        ] {
+            assert!(MONITOR_CARD_QML.contains(expected), "MonitorCard.qml missing option: {expected}");
+        }
+    }
 }

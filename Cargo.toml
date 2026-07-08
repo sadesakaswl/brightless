@@ -10,7 +10,7 @@ rust-version = "1.77"
 [dependencies]
 cxx = "1"
 cxx-qt = "0.9.1"
-cxx-qt-lib = "0.9.1"
+cxx-qt-lib = { version = "0.9.1", features = ["qt_gui", "qt_qml", "qt_quickcontrols"] }
 ddc = "0.2"
 ddc-i2c = { version = "0.2", features = ["with-linux", "with-linux-enumerate"] }
 i2c-linux = "0.1"

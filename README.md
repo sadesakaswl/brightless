@@ -11,7 +11,7 @@ A modern DDC control application for Linux external monitors.
 - **Real-time Value Display** — Shows current values on startup
 - **Mouse Scroll Support** — Scroll on sliders to adjust values (configurable step: 1-10%)
 - **Settings Persistence** — Saves your preferences to `~/.config/brightless/settings.json`
-- **Modern UI** — Built with GTK4 and libadwaita
+- **Modern UI** — Built with Qt 6 and QML
 
 ## Requirements
 
@@ -20,13 +20,13 @@ A modern DDC control application for Linux external monitors.
 - System dependencies:
   ```bash
   # Debian/Ubuntu
-  sudo apt install libgtk-4-dev libadwaita-1-dev libddc-dev
-  
+  sudo apt install qt6-base-dev qt6-declarative-dev libddc-dev
+
   # Fedora
-  sudo dnf install gtk4-devel libadwaita-devel
-  
+  sudo dnf install qt6-qtbase-devel qt6-qtdeclarative-devel
+
   # Arch Linux
-  sudo pacman -S gtk4 libadwaita
+  sudo pacman -S qt6-base qt6-declarative
   ```
 
 ## Building

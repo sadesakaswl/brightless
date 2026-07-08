@@ -26,20 +26,44 @@ mod tests {
             "scrolling sliders must update the DDC backend directly instead of only moving the local slider"
         );
         assert!(
+            MONITOR_CARD_QML.matches("MouseArea {").count() >= 4,
+            "each slider must have a MouseArea wheel overlay so ScrollView does not steal wheel events"
+        );
+        assert!(
+            !MONITOR_CARD_QML.contains("WheelHandler"),
+            "slider wheel handling must not use WheelHandler because it is unreliable inside the ScrollView"
+        );
+        assert!(
             !MONITOR_CARD_QML.contains("slider.moved()"),
             "scrolling must not rely on manually emitting Slider.moved(), which does not reliably call the setter"
         );
     }
 
     #[test]
-    fn input_and_power_combos_bind_initial_selection_to_backend_codes() {
+    fn input_and_power_combos_have_fallback_current_values() {
         assert!(
-            MONITOR_CARD_QML.contains("currentIndex: indexOfValue(controller.input_source_code(root.monitorIndex))"),
-            "input ComboBox must show the current backend input source code"
+            MONITOR_CARD_QML.contains("function choicesWithCurrent(choices, code)"),
+            "ComboBox models must include a fallback entry for unknown/current DDC codes"
         );
         assert!(
-            MONITOR_CARD_QML.contains("currentIndex: indexOfValue(controller.power_mode_code(root.monitorIndex))"),
-            "power ComboBox must show the current backend power mode code"
+            MONITOR_CARD_QML.contains("Current ("),
+            "unknown non-zero DDC input/power codes must be displayed instead of leaving the ComboBox blank"
         );
+        assert!(
+            MONITOR_CARD_QML.contains("Unknown"),
+            "failed DDC reads with code 0 must display Unknown instead of leaving the ComboBox blank"
+        );
+        assert!(
+            !MONITOR_CARD_QML.contains("currentIndex: indexOfValue("),
+            "ComboBox initial selection must not depend on indexOfValue returning a known hardcoded code"
+        );
+    }
+
+    #[test]
+    fn main_window_has_adaptive_space_for_controls() {
+        assert!(MAIN_QML.contains("width: 720"), "default window width should fit monitor controls");
+        assert!(MAIN_QML.contains("height: 560"), "default window height should show useful content");
+        assert!(MAIN_QML.contains("minimumWidth: 560"), "window should not shrink below usable control width");
+        assert!(MAIN_QML.contains("minimumHeight: 420"), "window should not shrink below usable control height");
     }
 }

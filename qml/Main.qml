@@ -5,8 +5,10 @@ import com.brightless
 
 ApplicationWindow {
     id: window
-    width: 400
-    height: 300
+    width: 720
+    height: 560
+    minimumWidth: 560
+    minimumHeight: 420
     visible: true
     title: "Brightless"
 

@@ -25,7 +25,7 @@ Frame {
         spacing: 8
 
         Label {
-            text: controller.monitor_name(root.monitorIndex)
+            text: controller.monitor_names[root.monitorIndex]
             font.bold: true
             Layout.fillWidth: true
         }

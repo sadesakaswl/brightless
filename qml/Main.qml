@@ -122,7 +122,7 @@ ApplicationWindow {
                     ColumnLayout {
                         visible: controller.dynamic_contrast_per_monitor_ratio() && controller.supports_contrast(index)
                         RowLayout {
-                            Label { text: controller.monitor_name(index) + " Ratio:"; Layout.fillWidth: true }
+                            Label { text: controller.monitor_names[index] + " Ratio:"; Layout.fillWidth: true }
                             Label { text: perMonitorRatio.value.toFixed(1) }
                         }
                         Slider {

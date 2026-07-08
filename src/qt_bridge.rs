@@ -13,12 +13,14 @@ use std::pin::Pin;
 mod ffi {
     unsafe extern "C++" {
         type QString = cxx_qt_lib::QString;
+        type QStringList = cxx_qt_lib::QStringList;
     }
 
     extern "RustQt" {
         #[qobject]
         #[qml_element]
         #[qproperty(QString, startup_error, READ, NOTIFY)]
+        #[qproperty(QStringList, monitor_names, READ, NOTIFY)]
         #[qproperty(i32, revision)]
         type BrightlessController = super::BrightlessControllerRust;
 
@@ -26,8 +28,6 @@ mod ffi {
         fn initialize(self: Pin<&mut BrightlessController>);
         #[qinvokable]
         fn monitor_count(self: &BrightlessController) -> i32;
-        #[qinvokable]
-        fn monitor_name(self: &BrightlessController, index: i32) -> String;
         #[qinvokable]
         fn brightness(self: &BrightlessController, index: i32) -> i32;
         #[qinvokable]
@@ -91,6 +91,7 @@ mod ffi {
 
 pub struct BrightlessControllerRust {
     startup_error: cxx_qt_lib::QString,
+    monitor_names: cxx_qt_lib::QStringList,
     revision: i32,
     ddc: RefCell<Option<DdcManager>>,
     settings: RefCell<AppSettings>,
@@ -101,6 +102,7 @@ impl Default for BrightlessControllerRust {
     fn default() -> Self {
         Self {
             startup_error: cxx_qt_lib::QString::default(),
+            monitor_names: cxx_qt_lib::QStringList::default(),
             revision: 0,
             ddc: RefCell::new(None),
             settings: RefCell::new(AppSettings::load()),
@@ -115,6 +117,7 @@ impl ffi::BrightlessController {
         match DdcManager::new() {
             Ok(mut ddc) => {
                 let mut states = Vec::new();
+                let mut monitor_names = cxx_qt_lib::QStringList::default();
                 for i in 0..ddc.monitors.len() {
                     let (
                         name,
@@ -139,6 +142,7 @@ impl ffi::BrightlessController {
                     let power_mode_code = ddc.get_power_mode(i).map(|m| m.code()).unwrap_or(0);
                     let dc_enabled = dynamic_contrast_enabled_for_monitor(&settings, &name);
                     let ratio = ratio_for_monitor(&settings, &name);
+                    monitor_names.append(cxx_qt_lib::QString::from(name.as_str()));
                     states.push(MonitorUiState {
                         name,
                         brightness,
@@ -160,6 +164,8 @@ impl ffi::BrightlessController {
                     });
                 }
                 *self.as_ref().rust().monitors.borrow_mut() = states;
+                self.as_mut().rust_mut().monitor_names = monitor_names;
+                self.as_mut().monitor_names_changed();
                 *self.as_ref().rust().ddc.borrow_mut() = Some(ddc);
                 self.as_mut().rust_mut().startup_error = cxx_qt_lib::QString::default();
                 self.as_mut().bump_revision();
@@ -175,13 +181,6 @@ impl ffi::BrightlessController {
 
     pub fn monitor_count(&self) -> i32 {
         self.rust().monitors.borrow().len() as i32
-    }
-
-    pub fn monitor_name(&self, index: i32) -> String {
-        let monitors = self.rust().monitors.borrow();
-        valid_index(index, monitors.len())
-            .map(|i| monitors[i].name.clone())
-            .unwrap_or_default()
     }
 
     pub fn brightness(&self, index: i32) -> i32 {

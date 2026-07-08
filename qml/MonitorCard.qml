@@ -9,14 +9,14 @@ Frame {
     required property int monitorIndex
     property int revision: controller.revision
 
-    function sliderWheel(slider, wheel) {
+    function sliderWheel(slider, wheel, applyValue) {
         var step = controller.scroll_step()
         if (wheel.angleDelta.y > 0) {
             slider.value = Math.min(slider.to, slider.value + step)
         } else if (wheel.angleDelta.y < 0) {
             slider.value = Math.max(slider.from, slider.value - step)
         }
-        slider.moved()
+        applyValue(Math.round(slider.value))
         wheel.accepted = true
     }
 
@@ -52,7 +52,7 @@ Frame {
                 value: controller.brightness(root.monitorIndex)
                 Layout.fillWidth: true
                 onMoved: controller.set_brightness(root.monitorIndex, Math.round(value))
-                WheelHandler { onWheel: root.sliderWheel(brightnessSlider, wheel) }
+                WheelHandler { onWheel: (wheel) => root.sliderWheel(brightnessSlider, wheel, function(value) { controller.set_brightness(root.monitorIndex, value) }) }
             }
             Label { text: Math.round(brightnessSlider.value) + "%"; Layout.preferredWidth: 48; horizontalAlignment: Text.AlignRight }
         }
@@ -69,7 +69,7 @@ Frame {
                 value: controller.contrast(root.monitorIndex)
                 Layout.fillWidth: true
                 onMoved: controller.set_contrast(root.monitorIndex, Math.round(value))
-                WheelHandler { onWheel: root.sliderWheel(contrastSlider, wheel) }
+                WheelHandler { onWheel: (wheel) => root.sliderWheel(contrastSlider, wheel, function(value) { controller.set_contrast(root.monitorIndex, value) }) }
             }
             Label { text: Math.round(contrastSlider.value) + "%"; Layout.preferredWidth: 48; horizontalAlignment: Text.AlignRight }
         }
@@ -86,7 +86,7 @@ Frame {
                 value: controller.brightness(root.monitorIndex)
                 Layout.fillWidth: true
                 onMoved: controller.set_dynamic_contrast_brightness(root.monitorIndex, Math.round(value))
-                WheelHandler { onWheel: root.sliderWheel(dynamicContrastSlider, wheel) }
+                WheelHandler { onWheel: (wheel) => root.sliderWheel(dynamicContrastSlider, wheel, function(value) { controller.set_dynamic_contrast_brightness(root.monitorIndex, value) }) }
             }
             Label { text: Math.round(dynamicContrastSlider.value) + "%"; Layout.preferredWidth: 48; horizontalAlignment: Text.AlignRight }
         }
@@ -102,7 +102,7 @@ Frame {
                 value: controller.volume(root.monitorIndex)
                 Layout.fillWidth: true
                 onMoved: controller.set_volume(root.monitorIndex, Math.round(value))
-                WheelHandler { onWheel: root.sliderWheel(volumeSlider, wheel) }
+                WheelHandler { onWheel: (wheel) => root.sliderWheel(volumeSlider, wheel, function(value) { controller.set_volume(root.monitorIndex, value) }) }
             }
             Label { text: Math.round(volumeSlider.value) + "%"; Layout.preferredWidth: 48; horizontalAlignment: Text.AlignRight }
         }
@@ -114,6 +114,7 @@ Frame {
                 visible: controller.supports_input_source(root.monitorIndex)
                 textRole: "text"
                 valueRole: "code"
+                currentIndex: indexOfValue(controller.input_source_code(root.monitorIndex))
                 model: [
                     { text: "VGA", code: 1 },
                     { text: "DVI", code: 3 },
@@ -133,6 +134,7 @@ Frame {
                 visible: controller.supports_power_mode(root.monitorIndex)
                 textRole: "text"
                 valueRole: "code"
+                currentIndex: indexOfValue(controller.power_mode_code(root.monitorIndex))
                 model: [
                     { text: "On", code: 1 },
                     { text: "Standby", code: 2 },

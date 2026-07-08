@@ -21,13 +21,12 @@ mod ffi {
         #[qml_element]
         #[qproperty(QString, startup_error, READ, NOTIFY)]
         #[qproperty(QStringList, monitor_names, READ, NOTIFY)]
+        #[qproperty(i32, monitor_count, READ, NOTIFY)]
         #[qproperty(i32, revision)]
         type BrightlessController = super::BrightlessControllerRust;
 
         #[qinvokable]
         fn initialize(self: Pin<&mut BrightlessController>);
-        #[qinvokable]
-        fn monitor_count(self: &BrightlessController) -> i32;
         #[qinvokable]
         fn brightness(self: &BrightlessController, index: i32) -> i32;
         #[qinvokable]
@@ -92,6 +91,7 @@ mod ffi {
 pub struct BrightlessControllerRust {
     startup_error: cxx_qt_lib::QString,
     monitor_names: cxx_qt_lib::QStringList,
+    monitor_count: i32,
     revision: i32,
     ddc: RefCell<Option<DdcManager>>,
     settings: RefCell<AppSettings>,
@@ -103,6 +103,7 @@ impl Default for BrightlessControllerRust {
         Self {
             startup_error: cxx_qt_lib::QString::default(),
             monitor_names: cxx_qt_lib::QStringList::default(),
+            monitor_count: 0,
             revision: 0,
             ddc: RefCell::new(None),
             settings: RefCell::new(AppSettings::load()),
@@ -163,9 +164,12 @@ impl ffi::BrightlessController {
                         },
                     });
                 }
+                let monitor_count = states.len() as i32;
                 *self.as_ref().rust().monitors.borrow_mut() = states;
                 self.as_mut().rust_mut().monitor_names = monitor_names;
                 self.as_mut().monitor_names_changed();
+                self.as_mut().rust_mut().monitor_count = monitor_count;
+                self.as_mut().monitor_count_changed();
                 *self.as_ref().rust().ddc.borrow_mut() = Some(ddc);
                 self.as_mut().rust_mut().startup_error = cxx_qt_lib::QString::default();
                 self.as_mut().bump_revision();
@@ -174,13 +178,11 @@ impl ffi::BrightlessController {
                 self.as_mut().rust_mut().startup_error =
                     cxx_qt_lib::QString::from(format!("{}", error).as_str());
                 self.as_mut().startup_error_changed();
+                self.as_mut().rust_mut().monitor_count = 0;
+                self.as_mut().monitor_count_changed();
                 self.as_mut().bump_revision();
             }
         }
-    }
-
-    pub fn monitor_count(&self) -> i32 {
-        self.rust().monitors.borrow().len() as i32
     }
 
     pub fn brightness(&self, index: i32) -> i32 {

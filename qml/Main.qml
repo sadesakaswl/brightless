@@ -118,7 +118,7 @@ ApplicationWindow {
                 }
 
                 Repeater {
-                    model: controller.monitor_count()
+                    model: controller.monitor_count
                     ColumnLayout {
                         visible: controller.dynamic_contrast_per_monitor_ratio() && controller.supports_contrast(index)
                         RowLayout {
@@ -147,7 +147,7 @@ ApplicationWindow {
             width: parent.width
             spacing: 12
             Repeater {
-                model: controller.monitor_count()
+                model: controller.monitor_count
                 MonitorCard {
                     controller: controller
                     monitorIndex: index

@@ -1,6 +1,8 @@
 mod app_state;
 mod ddc_manager;
 mod qt_bridge;
+#[cfg(test)]
+mod qml_tests;
 mod settings;
 
 use cxx_qt_lib::{QGuiApplication, QQmlApplicationEngine, QString, QUrl};

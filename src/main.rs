@@ -1,4 +1,6 @@
 mod app_state;
+#[cfg(test)]
+mod config_tests;
 mod ddc_manager;
 mod qt_bridge;
 #[cfg(test)]

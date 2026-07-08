@@ -57,6 +57,23 @@ pub fn clamp_percent(value: i32) -> u8 {
     value.clamp(0, 100) as u8
 }
 
+pub fn clamp_ratio(value: f32) -> f32 {
+    value.clamp(0.1, 2.0)
+}
+
+pub fn valid_index(index: i32, len: usize) -> Option<usize> {
+    if index < 0 {
+        return None;
+    }
+
+    let index = index as usize;
+    if index < len {
+        Some(index)
+    } else {
+        None
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -107,5 +124,20 @@ mod tests {
         assert_eq!(clamp_percent(-10), 0);
         assert_eq!(clamp_percent(42), 42);
         assert_eq!(clamp_percent(120), 100);
+    }
+
+    #[test]
+    fn ratio_values_are_clamped_to_current_ui_range() {
+        assert_eq!(clamp_ratio(0.0), 0.1);
+        assert_eq!(clamp_ratio(1.2), 1.2);
+        assert_eq!(clamp_ratio(5.0), 2.0);
+    }
+
+    #[test]
+    fn index_conversion_rejects_negative_and_out_of_range_values() {
+        assert_eq!(valid_index(-1, 2), None);
+        assert_eq!(valid_index(0, 2), Some(0));
+        assert_eq!(valid_index(1, 2), Some(1));
+        assert_eq!(valid_index(2, 2), None);
     }
 }

@@ -1,3 +1,4 @@
+mod app_state;
 mod ddc_manager;
 mod monitor_row;
 mod settings;

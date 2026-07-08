@@ -5,10 +5,10 @@ import com.brightless
 
 ApplicationWindow {
     id: window
-    width: 720
-    height: 560
-    minimumWidth: 560
-    minimumHeight: 420
+    width: Math.min(Screen.desktopAvailableWidth, Math.max(minimumWidth, monitorColumn.implicitWidth + 48))
+    height: Math.min(Screen.desktopAvailableHeight, Math.max(minimumHeight, monitorColumn.implicitHeight + header.height + 48))
+    minimumWidth: 480
+    minimumHeight: 320
     visible: true
     title: "Brightless"
 
@@ -146,7 +146,8 @@ ApplicationWindow {
         anchors.fill: parent
         anchors.margins: 16
         ColumnLayout {
-            width: parent.width
+            id: monitorColumn
+            width: Math.max(parent.width, implicitWidth)
             spacing: 12
             Repeater {
                 model: controller.monitor_count

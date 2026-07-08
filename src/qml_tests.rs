@@ -60,10 +60,11 @@ mod tests {
     }
 
     #[test]
-    fn main_window_has_adaptive_space_for_controls() {
-        assert!(MAIN_QML.contains("width: 720"), "default window width should fit monitor controls");
-        assert!(MAIN_QML.contains("height: 560"), "default window height should show useful content");
-        assert!(MAIN_QML.contains("minimumWidth: 560"), "window should not shrink below usable control width");
-        assert!(MAIN_QML.contains("minimumHeight: 420"), "window should not shrink below usable control height");
+    fn main_window_sizes_from_content_instead_of_fixed_dimensions() {
+        assert!(MAIN_QML.contains("id: monitorColumn"), "main content column must expose implicit size for adaptive window sizing");
+        assert!(MAIN_QML.contains("width: Math.min(Screen.desktopAvailableWidth"), "window width should be derived from content and capped to screen width");
+        assert!(MAIN_QML.contains("height: Math.min(Screen.desktopAvailableHeight"), "window height should be derived from content and capped to screen height");
+        assert!(!MAIN_QML.contains("width: 720"), "window width must not be a fixed large default");
+        assert!(!MAIN_QML.contains("height: 560"), "window height must not be a fixed large default");
     }
 }

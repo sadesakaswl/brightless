@@ -42,6 +42,21 @@ mod tests {
     }
 
     #[test]
+    fn gtk_feature_platform_requirements_are_documented() {
+        assert!(
+            CARGO_TOML.contains("rust-version = \"1.92\""),
+            "Cargo.toml must declare the Rust version required by the selected GTK stack"
+        );
+
+        for expected in ["Rust 1.92", "GTK 4.14", "libadwaita 1.8"] {
+            assert!(
+                README.contains(expected),
+                "README missing GTK platform requirement: {expected}"
+            );
+        }
+    }
+
+    #[test]
     fn invalid_frontend_selections_have_targeted_compile_errors() {
         assert!(BUILD_RS.contains("enable exactly one UI feature: `qt` or `gtk`"));
         assert!(BUILD_RS.contains("features `qt` and `gtk` are mutually exclusive"));

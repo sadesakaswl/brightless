@@ -22,6 +22,9 @@ There is no default frontend; select exactly one Cargo feature.
 
 - Linux with DRM support
 - I2C dev permissions (`/dev/i2c-*`)
+- Rust 1.92+
+- GTK 4.14+ (for the GTK frontend)
+- libadwaita 1.8+ (for the GTK frontend)
 - DDC/CI support:
   ```bash
   # Debian/Ubuntu

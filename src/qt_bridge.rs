@@ -74,17 +74,28 @@ mod ffi {
         #[qinvokable]
         fn dynamic_contrast_per_monitor_ratio(self: &BrightlessController) -> bool;
         #[qinvokable]
-        fn set_dynamic_contrast_per_monitor_ratio(self: Pin<&mut BrightlessController>, value: bool);
+        fn set_dynamic_contrast_per_monitor_ratio(
+            self: Pin<&mut BrightlessController>,
+            value: bool,
+        );
         #[qinvokable]
         fn monitor_dynamic_contrast_enabled(self: &BrightlessController, index: i32) -> bool;
         #[qinvokable]
-        fn set_monitor_dynamic_contrast_enabled(self: Pin<&mut BrightlessController>, index: i32, value: bool);
+        fn set_monitor_dynamic_contrast_enabled(
+            self: Pin<&mut BrightlessController>,
+            index: i32,
+            value: bool,
+        );
         #[qinvokable]
         fn monitor_ratio(self: &BrightlessController, index: i32) -> f32;
         #[qinvokable]
         fn set_monitor_ratio(self: Pin<&mut BrightlessController>, index: i32, value: f32);
         #[qinvokable]
-        fn set_dynamic_contrast_brightness(self: Pin<&mut BrightlessController>, index: i32, value: i32);
+        fn set_dynamic_contrast_brightness(
+            self: Pin<&mut BrightlessController>,
+            index: i32,
+            value: i32,
+        );
     }
 }
 
@@ -324,7 +335,11 @@ impl ffi::BrightlessController {
     }
 
     pub fn set_dynamic_contrast_enabled(mut self: Pin<&mut Self>, value: bool) {
-        self.as_ref().rust().settings.borrow_mut().dynamic_contrast_enabled = value;
+        self.as_ref()
+            .rust()
+            .settings
+            .borrow_mut()
+            .dynamic_contrast_enabled = value;
         let _ = self.as_ref().rust().settings.borrow().save();
         self.as_mut().refresh_dynamic_contrast_state();
         self.as_mut().bump_revision();
@@ -335,7 +350,11 @@ impl ffi::BrightlessController {
     }
 
     pub fn set_dynamic_contrast_global(mut self: Pin<&mut Self>, value: bool) {
-        self.as_ref().rust().settings.borrow_mut().dynamic_contrast_global = value;
+        self.as_ref()
+            .rust()
+            .settings
+            .borrow_mut()
+            .dynamic_contrast_global = value;
         let _ = self.as_ref().rust().settings.borrow().save();
         self.as_mut().refresh_dynamic_contrast_state();
         self.as_mut().bump_revision();
@@ -346,14 +365,21 @@ impl ffi::BrightlessController {
     }
 
     pub fn set_dynamic_contrast_ratio(mut self: Pin<&mut Self>, value: f32) {
-        self.as_ref().rust().settings.borrow_mut().dynamic_contrast_ratio = clamp_ratio(value);
+        self.as_ref()
+            .rust()
+            .settings
+            .borrow_mut()
+            .dynamic_contrast_ratio = clamp_ratio(value);
         let _ = self.as_ref().rust().settings.borrow().save();
         self.as_mut().refresh_dynamic_contrast_state();
         self.as_mut().bump_revision();
     }
 
     pub fn dynamic_contrast_per_monitor_ratio(&self) -> bool {
-        self.rust().settings.borrow().dynamic_contrast_per_monitor_ratio
+        self.rust()
+            .settings
+            .borrow()
+            .dynamic_contrast_per_monitor_ratio
     }
 
     pub fn set_dynamic_contrast_per_monitor_ratio(mut self: Pin<&mut Self>, value: bool) {
@@ -374,11 +400,7 @@ impl ffi::BrightlessController {
             .unwrap_or(false)
     }
 
-    pub fn set_monitor_dynamic_contrast_enabled(
-        mut self: Pin<&mut Self>,
-        index: i32,
-        value: bool,
-    ) {
+    pub fn set_monitor_dynamic_contrast_enabled(mut self: Pin<&mut Self>, index: i32, value: bool) {
         let monitor_len = { self.as_ref().rust().monitors.borrow().len() };
         if let Some(i) = valid_index(index, monitor_len) {
             let name = self.as_ref().rust().monitors.borrow()[i].name.clone();

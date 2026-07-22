@@ -61,11 +61,26 @@ mod tests {
 
     #[test]
     fn main_window_sizes_from_content_instead_of_fixed_dimensions() {
-        assert!(MAIN_QML.contains("id: monitorColumn"), "main content column must expose implicit size for adaptive window sizing");
-        assert!(MAIN_QML.contains("width: Math.min(Screen.desktopAvailableWidth"), "window width should be derived from content and capped to screen width");
-        assert!(MAIN_QML.contains("height: Math.min(Screen.desktopAvailableHeight"), "window height should be derived from content and capped to screen height");
-        assert!(!MAIN_QML.contains("width: 720"), "window width must not be a fixed large default");
-        assert!(!MAIN_QML.contains("height: 560"), "window height must not be a fixed large default");
+        assert!(
+            MAIN_QML.contains("id: monitorColumn"),
+            "main content column must expose implicit size for adaptive window sizing"
+        );
+        assert!(
+            MAIN_QML.contains("width: Math.min(Screen.desktopAvailableWidth"),
+            "window width should be derived from content and capped to screen width"
+        );
+        assert!(
+            MAIN_QML.contains("height: Math.min(Screen.desktopAvailableHeight"),
+            "window height should be derived from content and capped to screen height"
+        );
+        assert!(
+            !MAIN_QML.contains("width: 720"),
+            "window width must not be a fixed large default"
+        );
+        assert!(
+            !MAIN_QML.contains("height: 560"),
+            "window height must not be a fixed large default"
+        );
     }
 
     #[test]
@@ -84,7 +99,10 @@ mod tests {
             "controller.set_dynamic_contrast_per_monitor_ratio",
             "controller.set_monitor_ratio",
         ] {
-            assert!(MAIN_QML.contains(expected), "Main.qml missing expected settings control: {expected}");
+            assert!(
+                MAIN_QML.contains(expected),
+                "Main.qml missing expected settings control: {expected}"
+            );
         }
     }
 
@@ -104,7 +122,10 @@ mod tests {
             "Power:",
             "controller.set_power_mode",
         ] {
-            assert!(MONITOR_CARD_QML.contains(expected), "MonitorCard.qml missing expected monitor control: {expected}");
+            assert!(
+                MONITOR_CARD_QML.contains(expected),
+                "MonitorCard.qml missing expected monitor control: {expected}"
+            );
         }
     }
 
@@ -126,7 +147,10 @@ mod tests {
             "Off",
             "Normal",
         ] {
-            assert!(MONITOR_CARD_QML.contains(expected), "MonitorCard.qml missing option: {expected}");
+            assert!(
+                MONITOR_CARD_QML.contains(expected),
+                "MonitorCard.qml missing option: {expected}"
+            );
         }
     }
 }

@@ -99,10 +99,14 @@ mod tests {
         settings.dynamic_contrast_global = false;
         assert!(dynamic_contrast_enabled_for_monitor(&settings, "Dell"));
 
-        settings.monitor_dynamic_contrast.insert("Dell".to_string(), false);
+        settings
+            .monitor_dynamic_contrast
+            .insert("Dell".to_string(), false);
         assert!(!dynamic_contrast_enabled_for_monitor(&settings, "Dell"));
 
-        settings.monitor_dynamic_contrast.insert("Dell".to_string(), true);
+        settings
+            .monitor_dynamic_contrast
+            .insert("Dell".to_string(), true);
         assert!(dynamic_contrast_enabled_for_monitor(&settings, "Dell"));
     }
 

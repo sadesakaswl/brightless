@@ -1,3 +1,5 @@
+#![cfg_attr(feature = "gtk", deny(deprecated))]
+
 #[cfg(all(feature = "qt", not(feature = "gtk")))]
 mod app_state;
 #[cfg(test)]

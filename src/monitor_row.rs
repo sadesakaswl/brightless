@@ -2,8 +2,8 @@ use adw::prelude::*;
 use adw::ActionRow;
 use glib::Propagation;
 use gtk::{
-    Box, ComboBoxText, EventControllerScroll, EventControllerScrollFlags, Label, Orientation,
-    Scale, Switch,
+    Box, DropDown, EventControllerScroll, EventControllerScrollFlags, Label, Orientation, Scale,
+    Switch,
 };
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -39,6 +39,13 @@ fn option_code(options: &[(u8, &str)], position: u32) -> Option<u8> {
     options.get(position as usize).map(|(code, _)| *code)
 }
 
+fn dropdown_from_options(options: &[(u8, &str)]) -> DropDown {
+    let labels: Vec<&str> = options.iter().map(|(_, label)| *label).collect();
+    let dropdown = DropDown::from_strings(&labels);
+    dropdown.set_selected(gtk::INVALID_LIST_POSITION);
+    dropdown
+}
+
 #[derive(Debug)]
 pub struct MonitorRow {
     pub container: ActionRow,
@@ -49,8 +56,8 @@ pub struct MonitorRow {
     pub contrast_label: Option<Label>,
     pub volume_scale: Option<Scale>,
     pub volume_label: Option<Label>,
-    pub input_source_combo: Option<ComboBoxText>,
-    pub power_mode_combo: Option<ComboBoxText>,
+    pub input_source_dropdown: Option<DropDown>,
+    pub power_mode_dropdown: Option<DropDown>,
     pub dynamic_contrast_scale: Option<Scale>,
     pub dynamic_contrast_label: Option<Label>,
     pub dynamic_contrast_toggle: Option<Switch>,
@@ -309,50 +316,28 @@ impl MonitorRow {
             main_box.append(&volume_row);
         }
 
-        let input_source_combo = if supports_input_source {
-            let combo = ComboBoxText::new();
-            combo.append(Some("1"), "VGA");
-            combo.append(Some("3"), "DVI");
-            combo.append(Some("15"), "DisplayPort 1");
-            combo.append(Some("16"), "DisplayPort 2");
-            combo.append(Some("17"), "HDMI 1");
-            combo.append(Some("18"), "HDMI 2");
-            combo.append(Some("19"), "HDMI 3");
-            combo.append(Some("20"), "HDMI 4");
-            combo.append(Some("27"), "USB-C");
-            Some(combo)
-        } else {
-            None
-        };
+        let input_source_dropdown =
+            supports_input_source.then(|| dropdown_from_options(INPUT_SOURCE_OPTIONS));
 
-        let power_mode_combo = if supports_power_mode {
-            let combo = ComboBoxText::new();
-            combo.append(Some("1"), "On");
-            combo.append(Some("2"), "Standby");
-            combo.append(Some("3"), "Suspend");
-            combo.append(Some("4"), "Off");
-            combo.append(Some("5"), "Normal");
-            Some(combo)
-        } else {
-            None
-        };
+        let power_mode_dropdown =
+            supports_power_mode.then(|| dropdown_from_options(POWER_MODE_OPTIONS));
 
         if supports_input_source || supports_power_mode {
             let controls_row = Box::new(Orientation::Horizontal, 8);
             controls_row.set_margin_top(8);
 
-            if let Some(ref combo) = &input_source_combo {
+            if let Some(ref dropdown) = &input_source_dropdown {
                 let input_label = Label::new(Some("Input:"));
                 input_label.set_width_chars(12);
                 controls_row.append(&input_label);
-                controls_row.append(combo);
+                controls_row.append(dropdown);
             }
 
-            if let Some(ref combo) = &power_mode_combo {
+            if let Some(ref dropdown) = &power_mode_dropdown {
                 let power_label = Label::new(Some("Power:"));
                 power_label.set_width_chars(12);
                 controls_row.append(&power_label);
-                controls_row.append(combo);
+                controls_row.append(dropdown);
             }
 
             main_box.append(&controls_row);
@@ -380,8 +365,8 @@ impl MonitorRow {
             contrast_label,
             volume_scale,
             volume_label,
-            input_source_combo,
-            power_mode_combo,
+            input_source_dropdown,
+            power_mode_dropdown,
             dynamic_contrast_scale,
             dynamic_contrast_label,
             dynamic_contrast_toggle: dc_toggle_row.map(|(_, t)| t),
@@ -450,11 +435,11 @@ impl MonitorRow {
     }
 
     pub fn has_input_source(&self) -> bool {
-        self.input_source_combo.is_some()
+        self.input_source_dropdown.is_some()
     }
 
     pub fn has_power_mode(&self) -> bool {
-        self.power_mode_combo.is_some()
+        self.power_mode_dropdown.is_some()
     }
 
     pub fn set_volume(&self, percentage: u8) {
@@ -467,16 +452,14 @@ impl MonitorRow {
     }
 
     pub fn set_input_source(&self, source_code: u8) {
-        if let Some(ref combo) = self.input_source_combo {
-            let code_str = source_code.to_string();
-            combo.set_active_id(Some(&code_str));
+        if let Some(ref dropdown) = self.input_source_dropdown {
+            dropdown.set_selected(option_position(INPUT_SOURCE_OPTIONS, source_code));
         }
     }
 
     pub fn set_power_mode(&self, mode_code: u8) {
-        if let Some(ref combo) = self.power_mode_combo {
-            let code_str = mode_code.to_string();
-            combo.set_active_id(Some(&code_str));
+        if let Some(ref dropdown) = self.power_mode_dropdown {
+            dropdown.set_selected(option_position(POWER_MODE_OPTIONS, mode_code));
         }
     }
 
@@ -502,13 +485,11 @@ impl MonitorRow {
     where
         F: Fn(u8) + Clone + 'static,
     {
-        if let Some(ref combo) = self.input_source_combo {
+        if let Some(ref dropdown) = self.input_source_dropdown {
             let callback_clone = callback.clone();
-            combo.connect_changed(move |combo| {
-                if let Some(id) = combo.active_id() {
-                    if let Ok(code) = id.parse::<u8>() {
-                        callback_clone(code);
-                    }
+            dropdown.connect_selected_notify(move |dropdown| {
+                if let Some(code) = option_code(INPUT_SOURCE_OPTIONS, dropdown.selected()) {
+                    callback_clone(code);
                 }
             });
         }
@@ -518,13 +499,11 @@ impl MonitorRow {
     where
         F: Fn(u8) + Clone + 'static,
     {
-        if let Some(ref combo) = self.power_mode_combo {
+        if let Some(ref dropdown) = self.power_mode_dropdown {
             let callback_clone = callback.clone();
-            combo.connect_changed(move |combo| {
-                if let Some(id) = combo.active_id() {
-                    if let Ok(code) = id.parse::<u8>() {
-                        callback_clone(code);
-                    }
+            dropdown.connect_selected_notify(move |dropdown| {
+                if let Some(code) = option_code(POWER_MODE_OPTIONS, dropdown.selected()) {
+                    callback_clone(code);
                 }
             });
         }
@@ -607,9 +586,7 @@ impl MonitorRow {
 
 #[cfg(test)]
 mod tests {
-    use super::{
-        option_code, option_position, INPUT_SOURCE_OPTIONS, POWER_MODE_OPTIONS,
-    };
+    use super::{option_code, option_position, INPUT_SOURCE_OPTIONS, POWER_MODE_OPTIONS};
 
     #[test]
     fn input_source_options_preserve_labels_and_round_trip_codes() {
@@ -629,8 +606,14 @@ mod tests {
         );
 
         for (position, (code, _)) in INPUT_SOURCE_OPTIONS.iter().enumerate() {
-            assert_eq!(option_position(INPUT_SOURCE_OPTIONS, *code), position as u32);
-            assert_eq!(option_code(INPUT_SOURCE_OPTIONS, position as u32), Some(*code));
+            assert_eq!(
+                option_position(INPUT_SOURCE_OPTIONS, *code),
+                position as u32
+            );
+            assert_eq!(
+                option_code(INPUT_SOURCE_OPTIONS, position as u32),
+                Some(*code)
+            );
         }
     }
 
@@ -638,12 +621,21 @@ mod tests {
     fn power_mode_options_preserve_labels_and_round_trip_codes() {
         assert_eq!(
             POWER_MODE_OPTIONS,
-            &[(1, "On"), (2, "Standby"), (3, "Suspend"), (4, "Off"), (5, "Normal")]
+            &[
+                (1, "On"),
+                (2, "Standby"),
+                (3, "Suspend"),
+                (4, "Off"),
+                (5, "Normal")
+            ]
         );
 
         for (position, (code, _)) in POWER_MODE_OPTIONS.iter().enumerate() {
             assert_eq!(option_position(POWER_MODE_OPTIONS, *code), position as u32);
-            assert_eq!(option_code(POWER_MODE_OPTIONS, position as u32), Some(*code));
+            assert_eq!(
+                option_code(POWER_MODE_OPTIONS, position as u32),
+                Some(*code)
+            );
         }
     }
 

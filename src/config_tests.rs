@@ -2,6 +2,8 @@
 mod tests {
     const BUILD_RS: &str = include_str!("../build.rs");
     const CARGO_TOML: &str = include_str!("../Cargo.toml");
+    const MAIN_RS: &str = include_str!("main.rs");
+    const MONITOR_ROW_RS: &str = include_str!("monitor_row.rs");
     const README: &str = include_str!("../README.md");
 
     #[test]
@@ -64,20 +66,34 @@ mod tests {
 
     #[test]
     fn gtk_error_window_uses_adwaita_content_api() {
-        const MAIN_RS: &str = include_str!("main.rs");
-
         assert!(MAIN_RS.contains("window.set_content(Some(&label));"));
         assert!(!MAIN_RS.contains("window.set_child(Some(&label));"));
     }
 
     #[test]
     fn qt_build_steps_are_gated_away_from_gtk_builds() {
-        const MAIN_RS: &str = include_str!("main.rs");
-
         assert!(BUILD_RS.contains("all(feature = \"qt\", not(feature = \"gtk\"))"));
         assert!(MAIN_RS.contains("mod window;"));
         assert!(MAIN_RS.contains("mod monitor_row;"));
         assert!(MAIN_RS.contains("cxx_qt::init_crate!(brightless);"));
+    }
+
+    #[test]
+    fn gtk_frontend_enforces_and_uses_non_deprecated_selector_apis() {
+        assert!(MAIN_RS.contains("#![cfg_attr(feature = \"gtk\", deny(deprecated))]"));
+        assert!(MONITOR_ROW_RS.contains("DropDown"));
+
+        for deprecated in [
+            "ComboBoxText",
+            "set_active_id",
+            "active_id",
+            "connect_changed",
+        ] {
+            assert!(
+                !MONITOR_ROW_RS.contains(deprecated),
+                "GTK monitor row still uses deprecated API: {deprecated}"
+            );
+        }
     }
 
     #[test]

@@ -2,6 +2,7 @@
 mod tests {
     const BUILD_RS: &str = include_str!("../build.rs");
     const CARGO_TOML: &str = include_str!("../Cargo.toml");
+    const README: &str = include_str!("../README.md");
 
     #[test]
     fn release_profile_enables_o3_lto_and_single_codegen_unit() {
@@ -54,5 +55,25 @@ mod tests {
         assert!(MAIN_RS.contains("mod window;"));
         assert!(MAIN_RS.contains("mod monitor_row;"));
         assert!(MAIN_RS.contains("cxx_qt::init_crate!(brightless);"));
+    }
+
+    #[test]
+    fn readme_documents_both_explicit_frontends() {
+        for expected in [
+            "cargo build --release --features qt",
+            "cargo build --release --features gtk",
+            "qt6-base-dev qt6-declarative-dev",
+            "libadwaita-1-dev",
+            "qt6-qtbase-devel qt6-qtdeclarative-devel",
+            "libadwaita-devel",
+            "qt6-base qt6-declarative",
+            "gtk4 libadwaita",
+            "There is no default frontend",
+        ] {
+            assert!(
+                README.contains(expected),
+                "README missing frontend documentation: {expected}"
+            );
+        }
     }
 }

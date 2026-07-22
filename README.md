@@ -11,16 +11,26 @@ A modern DDC control application for Linux external monitors.
 - **Real-time Value Display** — Shows current values on startup
 - **Mouse Scroll Support** — Scroll on sliders to adjust values (configurable step: 1-10%)
 - **Settings Persistence** — Saves your preferences to `~/.config/brightless/settings.json`
-- **Modern UI** — Built with Qt 6 and QML
+- **Selectable Modern UI** — Choose either Qt 6/QML or GTK4/libadwaita
+
+## Frontends
+
+Brightless supports two interfaces: Qt 6 with QML, and GTK4 with libadwaita.
+There is no default frontend; select exactly one Cargo feature.
 
 ## Requirements
 
 - Linux with DRM support
 - I2C dev permissions (`/dev/i2c-*`)
-- System dependencies:
+- DDC/CI support:
   ```bash
   # Debian/Ubuntu
-  sudo apt install qt6-base-dev qt6-declarative-dev libddc-dev
+  sudo apt install libddc-dev
+  ```
+- Qt frontend dependencies:
+  ```bash
+  # Debian/Ubuntu
+  sudo apt install qt6-base-dev qt6-declarative-dev
 
   # Fedora
   sudo dnf install qt6-qtbase-devel qt6-qtdeclarative-devel
@@ -28,14 +38,47 @@ A modern DDC control application for Linux external monitors.
   # Arch Linux
   sudo pacman -S qt6-base qt6-declarative
   ```
+- GTK frontend dependencies:
+  ```bash
+  # Debian/Ubuntu (supplies/requires the GTK4 development stack)
+  sudo apt install libadwaita-1-dev
+
+  # Fedora
+  sudo dnf install gtk4-devel libadwaita-devel
+
+  # Arch Linux
+  sudo pacman -S gtk4 libadwaita
+  ```
 
 ## Building
 
+Build the Qt 6/QML frontend:
+
 ```bash
-cargo build --release
+cargo build --release --features qt
+```
+
+Build the GTK4/libadwaita frontend:
+
+```bash
+cargo build --release --features gtk
 ```
 
 ## Usage
+
+Launch the Qt frontend directly:
+
+```bash
+cargo run --features qt
+```
+
+Launch the GTK frontend directly:
+
+```bash
+cargo run --features gtk
+```
+
+For an already-built release binary:
 
 ```bash
 ./target/release/brightless

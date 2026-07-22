@@ -1,10 +1,8 @@
-use crate::app_state::{
+use crate::common::{
     clamp_percent, clamp_ratio, contrast_for_dynamic_brightness,
-    dynamic_contrast_enabled_for_monitor, ratio_for_monitor, valid_index, MonitorCapabilities,
-    MonitorUiState,
+    dynamic_contrast_enabled_for_monitor, ratio_for_monitor, valid_index, AppSettings, DdcManager,
+    InputSource, MonitorCapabilities, MonitorUiState, PowerMode,
 };
-use crate::ddc_manager::{DdcManager, InputSource, PowerMode};
-use crate::settings::AppSettings;
 use cxx_qt::CxxQtType;
 use std::cell::RefCell;
 use std::pin::Pin;

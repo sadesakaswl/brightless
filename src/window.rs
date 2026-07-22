@@ -1,6 +1,5 @@
-use crate::ddc_manager::{DdcError, DdcManager};
+use crate::common::{AppSettings, DdcError, DdcManager, InputSource, PowerMode};
 use crate::monitor_row::MonitorRow;
-use crate::settings::AppSettings;
 use adw::prelude::*;
 use adw::{Application, ApplicationWindow, HeaderBar, ToolbarView, ViewStack, ViewSwitcher};
 use glib::Propagation;
@@ -293,7 +292,6 @@ impl MainWindow {
             let idx4 = i;
             if row.has_input_source() {
                 row.connect_input_source_changed(move |value| {
-                    use crate::ddc_manager::InputSource;
                     if let Ok(mut ddc) = ddc_clone4.try_borrow_mut() {
                         let _ = ddc.set_input_source(idx4, InputSource::from_code(value));
                     }
@@ -304,7 +302,6 @@ impl MainWindow {
             let idx5 = i;
             if row.has_power_mode() {
                 row.connect_power_mode_changed(move |value| {
-                    use crate::ddc_manager::PowerMode;
                     if let Ok(mut ddc) = ddc_clone5.try_borrow_mut() {
                         let _ = ddc.set_power_mode(idx5, PowerMode::from_code(value));
                     }

@@ -1,4 +1,4 @@
-use crate::settings::AppSettings;
+use super::settings::AppSettings;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct MonitorCapabilities {

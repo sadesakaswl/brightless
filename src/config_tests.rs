@@ -1,5 +1,7 @@
 #[cfg(test)]
 mod tests {
+    use std::path::Path;
+
     const BUILD_RS: &str = include_str!("../build.rs");
     const CARGO_TOML: &str = include_str!("../Cargo.toml");
     const MAIN_RS: &str = include_str!("main.rs");
@@ -112,6 +114,25 @@ mod tests {
             assert!(
                 README.contains(expected),
                 "README missing frontend documentation: {expected}"
+            );
+        }
+    }
+
+    #[test]
+    fn toolkit_independent_sources_live_under_common() {
+        for path in [
+            "src/common/mod.rs",
+            "src/common/model.rs",
+            "src/common/ddc_manager.rs",
+            "src/common/settings.rs",
+        ] {
+            assert!(Path::new(path).is_file(), "missing common source: {path}");
+        }
+
+        for path in ["src/app_state.rs", "src/ddc_manager.rs", "src/settings.rs"] {
+            assert!(
+                !Path::new(path).exists(),
+                "legacy root source remains: {path}"
             );
         }
     }

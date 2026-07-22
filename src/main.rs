@@ -1,17 +1,14 @@
 #![cfg_attr(feature = "gtk", deny(deprecated))]
 
-#[cfg(all(feature = "qt", not(feature = "gtk")))]
-mod app_state;
+mod common;
 #[cfg(test)]
 mod config_tests;
-mod ddc_manager;
 #[cfg(all(feature = "gtk", not(feature = "qt")))]
 mod monitor_row;
 #[cfg(all(test, feature = "qt", not(feature = "gtk")))]
 mod qml_tests;
 #[cfg(all(feature = "qt", not(feature = "gtk")))]
 mod qt_bridge;
-mod settings;
 #[cfg(all(feature = "gtk", not(feature = "qt")))]
 mod window;
 

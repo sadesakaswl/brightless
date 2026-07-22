@@ -291,7 +291,10 @@ impl MainWindow {
                 continue;
             }
             let name = row.name.clone();
-            let ratio = monitor_states[index].dynamic_contrast_ratio;
+            let ratio = controller
+                .borrow()
+                .configured_monitor_ratio(index)
+                .unwrap_or(monitor_states[index].dynamic_contrast_ratio);
             let pm_label = Label::new(Some(&format!("{} Ratio:", name)));
             pm_label.set_halign(gtk::Align::Start);
             pm_label.set_hexpand(true);

@@ -104,6 +104,17 @@ impl CommonController {
         self.monitors.get(index)
     }
 
+    #[cfg_attr(not(feature = "gtk"), allow(dead_code))]
+    pub(crate) fn configured_monitor_ratio(&self, index: usize) -> Option<f32> {
+        self.monitors.get(index).map(|monitor| {
+            self.settings
+                .monitor_ratios
+                .get(&monitor.name)
+                .copied()
+                .unwrap_or(self.settings.dynamic_contrast_ratio)
+        })
+    }
+
     pub(crate) fn set_brightness(&mut self, index: usize, value: i32) -> bool {
         let value = clamp_percent(value);
         let Some(monitor) = self.monitors.get_mut(index) else {
@@ -359,5 +370,22 @@ mod tests {
         assert!(state.dynamic_contrast_enabled);
         assert!(state.dynamic_contrast_toggle_visible);
         assert_eq!(state.dynamic_contrast_ratio, 1.4);
+    }
+
+    #[test]
+    fn configured_monitor_ratio_preserves_saved_value_when_per_monitor_mode_is_disabled() {
+        let mut controller = controller();
+        controller.settings.dynamic_contrast_ratio = 0.7;
+        controller.settings.dynamic_contrast_per_monitor_ratio = false;
+        controller
+            .settings
+            .monitor_ratios
+            .insert("Test".into(), 1.4);
+
+        controller.refresh_dynamic_contrast_state();
+
+        assert_eq!(controller.monitor(0).unwrap().dynamic_contrast_ratio, 0.7);
+        assert_eq!(controller.configured_monitor_ratio(0), Some(1.4));
+        assert_eq!(controller.configured_monitor_ratio(1), None);
     }
 }

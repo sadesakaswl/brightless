@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
-    const MAIN_QML: &str = include_str!("../qml/Main.qml");
-    const MONITOR_CARD_QML: &str = include_str!("../qml/MonitorCard.qml");
+    const MAIN_QML: &str = include_str!("qml/Main.qml");
+    const MONITOR_CARD_QML: &str = include_str!("qml/MonitorCard.qml");
 
     #[test]
     fn monitor_repeaters_bind_to_reactive_monitor_count_property() {

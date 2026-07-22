@@ -1,5 +1,5 @@
+use super::monitor_row::MonitorRow;
 use crate::common::{AppSettings, DdcError, DdcManager, InputSource, PowerMode};
-use crate::monitor_row::MonitorRow;
 use adw::prelude::*;
 use adw::{Application, ApplicationWindow, HeaderBar, ToolbarView, ViewStack, ViewSwitcher};
 use glib::Propagation;

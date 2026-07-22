@@ -5,7 +5,11 @@ mod tests {
     const BUILD_RS: &str = include_str!("../build.rs");
     const CARGO_TOML: &str = include_str!("../Cargo.toml");
     const MAIN_RS: &str = include_str!("main.rs");
-    const MONITOR_ROW_RS: &str = include_str!("monitor_row.rs");
+    const MONITOR_ROW_RS: &str = include_str!("gtk/monitor_row.rs");
+    const GTK_MOD_RS: &str = include_str!("gtk/mod.rs");
+    const QT_MOD_RS: &str = include_str!("qt/mod.rs");
+    const QT_TESTS_RS: &str = include_str!("qt/tests.rs");
+    const QT_QRC: &str = include_str!("qt/qml.qrc");
     const README: &str = include_str!("../README.md");
 
     #[test]
@@ -68,16 +72,22 @@ mod tests {
 
     #[test]
     fn gtk_error_window_uses_adwaita_content_api() {
-        assert!(MAIN_RS.contains("window.set_content(Some(&label));"));
-        assert!(!MAIN_RS.contains("window.set_child(Some(&label));"));
+        assert!(GTK_MOD_RS.contains("window.set_content(Some(&label));"));
+        assert!(!GTK_MOD_RS.contains("window.set_child(Some(&label));"));
     }
 
     #[test]
     fn qt_build_steps_are_gated_away_from_gtk_builds() {
         assert!(BUILD_RS.contains("all(feature = \"qt\", not(feature = \"gtk\"))"));
-        assert!(MAIN_RS.contains("mod window;"));
-        assert!(MAIN_RS.contains("mod monitor_row;"));
-        assert!(MAIN_RS.contains("cxx_qt::init_crate!(brightless);"));
+        assert!(MAIN_RS.contains("#[path = \"qt/mod.rs\"]"));
+        assert!(MAIN_RS.contains("#[path = \"gtk/mod.rs\"]"));
+        assert!(MAIN_RS.contains("frontend::run();"));
+        assert!(QT_MOD_RS.contains("pub(crate) fn run()"));
+        assert!(GTK_MOD_RS.contains("pub(crate) fn run()"));
+        assert!(QT_TESTS_RS.contains("qml/Main.qml"));
+        assert!(QT_QRC.contains("prefix=\"/qt/qml/com/brightless/qml\""));
+        assert!(QT_QRC.contains("alias=\"Main.qml\">qml/Main.qml"));
+        assert!(QT_QRC.contains("alias=\"MonitorCard.qml\">qml/MonitorCard.qml"));
     }
 
     #[test]
@@ -135,5 +145,31 @@ mod tests {
                 "legacy root source remains: {path}"
             );
         }
+    }
+
+    #[test]
+    fn frontends_live_in_separate_modules_and_main_only_delegates() {
+        for path in [
+            "src/qt/mod.rs",
+            "src/qt/bridge.rs",
+            "src/qt/tests.rs",
+            "src/qt/qml.qrc",
+            "src/qt/qml/Main.qml",
+            "src/qt/qml/MonitorCard.qml",
+            "src/gtk/mod.rs",
+            "src/gtk/window.rs",
+            "src/gtk/monitor_row.rs",
+        ] {
+            assert!(Path::new(path).is_file(), "missing frontend source: {path}");
+        }
+
+        assert!(MAIN_RS.contains("#[path = \"qt/mod.rs\"]"));
+        assert!(MAIN_RS.contains("#[path = \"gtk/mod.rs\"]"));
+        assert!(MAIN_RS.contains("frontend::run();"));
+        assert!(!MAIN_RS.contains("QGuiApplication::new"));
+        assert!(!MAIN_RS.contains("Application::builder"));
+
+        assert!(BUILD_RS.contains("src/qt/bridge.rs"));
+        assert!(BUILD_RS.contains("src/qt/qml/Main.qml"));
     }
 }

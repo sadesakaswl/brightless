@@ -4,10 +4,12 @@ mod tests {
 
     const BUILD_RS: &str = include_str!("../build.rs");
     const CARGO_TOML: &str = include_str!("../Cargo.toml");
+    const COMMON_CONTROLLER_RS: &str = include_str!("common/controller.rs");
     const MAIN_RS: &str = include_str!("main.rs");
     const MONITOR_ROW_RS: &str = include_str!("gtk/monitor_row.rs");
     const GTK_MOD_RS: &str = include_str!("gtk/mod.rs");
     const QT_MOD_RS: &str = include_str!("qt/mod.rs");
+    const QT_BRIDGE_RS: &str = include_str!("qt/bridge.rs");
     const QT_TESTS_RS: &str = include_str!("qt/tests.rs");
     const QT_QRC: &str = include_str!("qt/qml.qrc");
     const README: &str = include_str!("../README.md");
@@ -88,6 +90,23 @@ mod tests {
         assert!(QT_QRC.contains("prefix=\"/qt/qml/com/brightless/qml\""));
         assert!(QT_QRC.contains("alias=\"Main.qml\">qml/Main.qml"));
         assert!(QT_QRC.contains("alias=\"MonitorCard.qml\">qml/MonitorCard.qml"));
+    }
+
+    #[test]
+    fn qt_bridge_delegates_business_logic_to_common_controller() {
+        assert!(COMMON_CONTROLLER_RS.contains("pub(crate) struct CommonController"));
+        assert!(QT_BRIDGE_RS.contains("controller: RefCell<CommonController>"));
+
+        for forbidden in [
+            "DdcManager",
+            "AppSettings",
+            "contrast_for_dynamic_brightness",
+        ] {
+            assert!(
+                !QT_BRIDGE_RS.contains(forbidden),
+                "Qt bridge still owns shared logic: {forbidden}"
+            );
+        }
     }
 
     #[test]

@@ -9,8 +9,14 @@ pub struct MonitorCapabilities {
 }
 
 #[derive(Debug, Clone, PartialEq)]
-pub struct MonitorUiState {
+pub struct MonitorState {
     pub name: String,
+    pub min_brightness: u16,
+    pub max_brightness: u16,
+    pub min_contrast: u16,
+    pub max_contrast: u16,
+    pub min_volume: u16,
+    pub max_volume: u16,
     pub brightness: u8,
     pub contrast: u8,
     pub volume: u8,

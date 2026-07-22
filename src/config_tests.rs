@@ -5,6 +5,10 @@ mod tests {
     const BUILD_RS: &str = include_str!("../build.rs");
     const CARGO_TOML: &str = include_str!("../Cargo.toml");
     const COMMON_CONTROLLER_RS: &str = include_str!("common/controller.rs");
+    const COMMON_DDC_RS: &str = include_str!("common/ddc_manager.rs");
+    const COMMON_MODEL_RS: &str = include_str!("common/model.rs");
+    const COMMON_MOD_RS: &str = include_str!("common/mod.rs");
+    const COMMON_SETTINGS_RS: &str = include_str!("common/settings.rs");
     const MAIN_RS: &str = include_str!("main.rs");
     const MONITOR_ROW_RS: &str = include_str!("gtk/monitor_row.rs");
     const GTK_WINDOW_RS: &str = include_str!("gtk/window.rs");
@@ -182,6 +186,46 @@ mod tests {
             assert!(
                 !Path::new(path).exists(),
                 "legacy root source remains: {path}"
+            );
+        }
+    }
+
+    #[test]
+    fn common_and_entry_point_are_toolkit_free() {
+        let common_sources = [
+            COMMON_MOD_RS,
+            COMMON_CONTROLLER_RS,
+            COMMON_MODEL_RS,
+            COMMON_DDC_RS,
+            COMMON_SETTINGS_RS,
+        ];
+
+        for forbidden in [
+            "gtk::",
+            "adw::",
+            "cxx_qt",
+            "cxx_qt_lib",
+            "QGuiApplication",
+            "QML",
+        ] {
+            assert!(
+                common_sources
+                    .iter()
+                    .all(|source| !source.contains(forbidden)),
+                "common layer contains toolkit symbol: {forbidden}"
+            );
+        }
+
+        for forbidden in [
+            "QGuiApplication",
+            "QQmlApplicationEngine",
+            "adw::Application",
+            "ApplicationWindow",
+            "MainWindow",
+        ] {
+            assert!(
+                !MAIN_RS.contains(forbidden),
+                "main.rs contains frontend setup: {forbidden}"
             );
         }
     }

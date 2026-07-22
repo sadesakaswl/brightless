@@ -7,6 +7,7 @@ mod tests {
     const COMMON_CONTROLLER_RS: &str = include_str!("common/controller.rs");
     const MAIN_RS: &str = include_str!("main.rs");
     const MONITOR_ROW_RS: &str = include_str!("gtk/monitor_row.rs");
+    const GTK_WINDOW_RS: &str = include_str!("gtk/window.rs");
     const GTK_MOD_RS: &str = include_str!("gtk/mod.rs");
     const QT_MOD_RS: &str = include_str!("qt/mod.rs");
     const QT_BRIDGE_RS: &str = include_str!("qt/bridge.rs");
@@ -105,6 +106,25 @@ mod tests {
             assert!(
                 !QT_BRIDGE_RS.contains(forbidden),
                 "Qt bridge still owns shared logic: {forbidden}"
+            );
+        }
+    }
+
+    #[test]
+    fn gtk_window_delegates_business_logic_to_common_controller() {
+        assert!(GTK_WINDOW_RS.contains("Rc<RefCell<CommonController>>"));
+        assert!(GTK_WINDOW_RS.contains("controller.initialize()?"));
+
+        for forbidden in [
+            "Rc<RefCell<DdcManager>>",
+            "Rc<RefCell<AppSettings>>",
+            "InputSource::from_code",
+            "PowerMode::from_code",
+            "brightness as f32 * ratio",
+        ] {
+            assert!(
+                !GTK_WINDOW_RS.contains(forbidden),
+                "GTK window still owns shared logic: {forbidden}"
             );
         }
     }

@@ -60,7 +60,7 @@ fn main() {
             label.set_margin_end(20);
             label.set_margin_top(20);
             label.set_margin_bottom(20);
-            window.set_child(Some(&label));
+            window.set_content(Some(&label));
             window.present();
         }
     });

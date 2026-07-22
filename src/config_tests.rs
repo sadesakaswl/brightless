@@ -63,6 +63,14 @@ mod tests {
     }
 
     #[test]
+    fn gtk_error_window_uses_adwaita_content_api() {
+        const MAIN_RS: &str = include_str!("main.rs");
+
+        assert!(MAIN_RS.contains("window.set_content(Some(&label));"));
+        assert!(!MAIN_RS.contains("window.set_child(Some(&label));"));
+    }
+
+    #[test]
     fn qt_build_steps_are_gated_away_from_gtk_builds() {
         const MAIN_RS: &str = include_str!("main.rs");
 

@@ -8,6 +8,37 @@ use gtk::{
 use std::cell::RefCell;
 use std::rc::Rc;
 
+const INPUT_SOURCE_OPTIONS: &[(u8, &str)] = &[
+    (1, "VGA"),
+    (3, "DVI"),
+    (15, "DisplayPort 1"),
+    (16, "DisplayPort 2"),
+    (17, "HDMI 1"),
+    (18, "HDMI 2"),
+    (19, "HDMI 3"),
+    (20, "HDMI 4"),
+    (27, "USB-C"),
+];
+
+const POWER_MODE_OPTIONS: &[(u8, &str)] = &[
+    (1, "On"),
+    (2, "Standby"),
+    (3, "Suspend"),
+    (4, "Off"),
+    (5, "Normal"),
+];
+
+fn option_position(options: &[(u8, &str)], code: u8) -> u32 {
+    options
+        .iter()
+        .position(|(candidate, _)| *candidate == code)
+        .map_or(gtk::INVALID_LIST_POSITION, |position| position as u32)
+}
+
+fn option_code(options: &[(u8, &str)], position: u32) -> Option<u8> {
+    options.get(position as usize).map(|(code, _)| *code)
+}
+
 #[derive(Debug)]
 pub struct MonitorRow {
     pub container: ActionRow,
@@ -571,5 +602,65 @@ impl MonitorRow {
 
     pub fn has_dynamic_contrast(&self) -> bool {
         self.dynamic_contrast_scale.is_some()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{
+        option_code, option_position, INPUT_SOURCE_OPTIONS, POWER_MODE_OPTIONS,
+    };
+
+    #[test]
+    fn input_source_options_preserve_labels_and_round_trip_codes() {
+        assert_eq!(
+            INPUT_SOURCE_OPTIONS,
+            &[
+                (1, "VGA"),
+                (3, "DVI"),
+                (15, "DisplayPort 1"),
+                (16, "DisplayPort 2"),
+                (17, "HDMI 1"),
+                (18, "HDMI 2"),
+                (19, "HDMI 3"),
+                (20, "HDMI 4"),
+                (27, "USB-C"),
+            ]
+        );
+
+        for (position, (code, _)) in INPUT_SOURCE_OPTIONS.iter().enumerate() {
+            assert_eq!(option_position(INPUT_SOURCE_OPTIONS, *code), position as u32);
+            assert_eq!(option_code(INPUT_SOURCE_OPTIONS, position as u32), Some(*code));
+        }
+    }
+
+    #[test]
+    fn power_mode_options_preserve_labels_and_round_trip_codes() {
+        assert_eq!(
+            POWER_MODE_OPTIONS,
+            &[(1, "On"), (2, "Standby"), (3, "Suspend"), (4, "Off"), (5, "Normal")]
+        );
+
+        for (position, (code, _)) in POWER_MODE_OPTIONS.iter().enumerate() {
+            assert_eq!(option_position(POWER_MODE_OPTIONS, *code), position as u32);
+            assert_eq!(option_code(POWER_MODE_OPTIONS, position as u32), Some(*code));
+        }
+    }
+
+    #[test]
+    fn unknown_codes_and_invalid_positions_do_not_select_an_option() {
+        assert_eq!(
+            option_position(INPUT_SOURCE_OPTIONS, 255),
+            gtk::INVALID_LIST_POSITION
+        );
+        assert_eq!(
+            option_position(POWER_MODE_OPTIONS, 255),
+            gtk::INVALID_LIST_POSITION
+        );
+        assert_eq!(
+            option_code(INPUT_SOURCE_OPTIONS, gtk::INVALID_LIST_POSITION),
+            None
+        );
+        assert_eq!(option_code(POWER_MODE_OPTIONS, 99), None);
     }
 }

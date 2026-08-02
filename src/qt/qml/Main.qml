@@ -17,6 +17,7 @@ ApplicationWindow {
         Component.onCompleted: initialize()
     }
 
+    readonly property var backend: controller
     property int revision: controller.revision
 
     header: ToolBar {
@@ -152,7 +153,7 @@ ApplicationWindow {
             Repeater {
                 model: controller.monitor_count
                 MonitorCard {
-                    controller: controller
+                    controller: window.backend
                     monitorIndex: index
                     Layout.fillWidth: true
                 }

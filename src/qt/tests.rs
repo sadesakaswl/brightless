@@ -16,6 +16,13 @@ mod tests {
     }
 
     #[test]
+    fn monitor_cards_receive_the_outer_controller() {
+        assert!(MAIN_QML.contains("readonly property var backend: controller"));
+        assert!(MAIN_QML.contains("controller: window.backend"));
+        assert!(!MAIN_QML.contains("controller: controller"));
+    }
+
+    #[test]
     fn slider_wheel_handlers_call_backend_setters_directly() {
         assert!(
             MONITOR_CARD_QML.contains("function sliderWheel(slider, wheel, applyValue)"),

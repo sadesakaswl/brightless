@@ -18,6 +18,7 @@ class BrightlessController : public QObject
     Q_PROPERTY(int monitor_count READ monitorCount NOTIFY monitorCountChanged)
     Q_PROPERTY(int revision READ revision NOTIFY revisionChanged)
     Q_PROPERTY(bool close_to_tray READ closeToTray WRITE setCloseToTray NOTIFY closeToTrayChanged)
+    Q_PROPERTY(bool autostart READ autostart WRITE setAutostart NOTIFY autostartChanged)
 
 public:
     explicit BrightlessController(QObject *parent = nullptr);
@@ -29,6 +30,8 @@ public:
     int revision() const;
     bool closeToTray() const;
     void setCloseToTray(bool value);
+    bool autostart() const;
+    void setAutostart(bool value);
     QSize savedWindowSize() const;
     void saveWindowSize(const QSize &size);
     int adjustAllBrightness(int direction);
@@ -71,6 +74,7 @@ signals:
     void monitorCountChanged();
     void revisionChanged();
     void closeToTrayChanged();
+    void autostartChanged();
 
 private:
     struct Monitor;

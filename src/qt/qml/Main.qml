@@ -79,6 +79,16 @@ ApplicationWindow {
 
             RowLayout {
                 Layout.fillWidth: true
+                Label { text: "Autostart on login"; Layout.fillWidth: true }
+                Switch {
+                    Accessible.name: "Autostart on login"
+                    checked: controller.autostart
+                    onToggled: controller.autostart = checked
+                }
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
                 Label { text: "Close to tray icon"; Layout.fillWidth: true }
                 Switch {
                     checked: controller.close_to_tray

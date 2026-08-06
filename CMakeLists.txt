@@ -53,4 +53,13 @@ if(BUILD_TESTING)
     add_executable(brightless_model_test tests/model_test.cpp)
     target_include_directories(brightless_model_test PRIVATE src)
     add_test(NAME model COMMAND brightless_model_test)
+
+    add_executable(brightless_controller_test
+        tests/controller_test.cpp
+        src/brightlesscontroller.cpp
+        src/brightlesscontroller.h
+    )
+    target_include_directories(brightless_controller_test PRIVATE src)
+    target_link_libraries(brightless_controller_test PRIVATE Qt6::Qml PkgConfig::DDCUTIL)
+    add_test(NAME controller COMMAND brightless_controller_test)
 endif()

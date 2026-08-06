@@ -15,6 +15,7 @@ A modern DDC control application for Linux external monitors.
 - **Mouse Scroll Support** — Scroll over sliders or the tray icon with a configurable 1–10% step; tray changes show the Plasma OSD
 - **Dynamic Contrast** — Link brightness and contrast globally or per monitor
 - **Settings Persistence** — Save preferences and the previous window size in `~/.config/brightless/settings.json`
+- **Optional Autostart** — Launch Brightless on login through XDG autostart; disabled by default
 - **Optional System Tray** — Keep Brightless available after closing its window
 - **Qt 6 UI** — Native C++23 backend with QML and Qt Quick Controls
 
@@ -72,7 +73,7 @@ cmake --install build --prefix ~/.local
 - **Sliders** — Drag to adjust brightness, contrast, or volume
 - **Dropdowns** — Select an input source or power mode
 - **Mouse wheel** — Scroll over a slider or the tray icon to change brightness (and contrast when Dynamic Contrast is enabled)
-- **Settings** — Use the gear button to configure scroll and dynamic contrast
+- **Settings** — Use the gear button to configure autostart, tray, scroll, and dynamic contrast
 - **System tray** — Enable “Close to tray icon” in settings, then click the tray icon or choose “Show Brightless” to restore the window
 
 ## License

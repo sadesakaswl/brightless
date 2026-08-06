@@ -4,6 +4,7 @@
 
 #include <ddcutil_c_api.h>
 
+#include <QCoreApplication>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -97,6 +98,43 @@ QString settingsPath()
     return QDir(root).filePath(QStringLiteral("brightless/settings.json"));
 }
 
+QString autostartPath()
+{
+    const auto root = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
+    return root.isEmpty() ? QString()
+                          : QDir(root).filePath(QStringLiteral("autostart/brightless.desktop"));
+}
+
+QByteArray autostartEntry()
+{
+    const auto path = QCoreApplication::applicationFilePath();
+    if (path.contains(QLatin1Char('\n')) || path.contains(QLatin1Char('\r'))
+        || path.contains(QLatin1Char('\t'))) {
+        return {};
+    }
+
+    QString executable;
+    executable.reserve(path.size());
+    for (const auto character : path) {
+        if (character == QLatin1Char('%')) {
+            executable += QStringLiteral("%%");
+        } else if (character == QLatin1Char('\\')) {
+            executable += QStringLiteral("\\\\\\\\");
+        } else if (character == QLatin1Char('"') || character == QLatin1Char('`')
+                   || character == QLatin1Char('$')) {
+            executable += QStringLiteral("\\\\");
+            executable += character;
+        } else {
+            executable += character;
+        }
+    }
+
+    return QStringLiteral("[Desktop Entry]\nType=Application\nName=Brightless\n"
+                          "Exec=\"%1\"\nTerminal=false\n")
+        .arg(executable)
+        .toUtf8();
+}
+
 } // namespace
 
 struct BrightlessController::Monitor
@@ -165,6 +203,37 @@ void BrightlessController::setCloseToTray(bool value)
     closeToTray_ = value;
     saveSettings();
     emit closeToTrayChanged();
+}
+
+bool BrightlessController::autostart() const
+{
+    const auto path = autostartPath();
+    return !path.isEmpty() && QFileInfo(path).isFile();
+}
+
+void BrightlessController::setAutostart(bool value)
+{
+    if (autostart() == value) {
+        return;
+    }
+
+    const auto path = autostartPath();
+    if (value) {
+        const auto data = autostartEntry();
+        if (!path.isEmpty() && !data.isEmpty() && QDir().mkpath(QFileInfo(path).absolutePath())) {
+            QSaveFile file(path);
+            if (file.open(QIODevice::WriteOnly)) {
+                if (file.write(data) == data.size()) {
+                    file.commit();
+                } else {
+                    file.cancelWriting();
+                }
+            }
+        }
+    } else if (!path.isEmpty()) {
+        QFile::remove(path);
+    }
+    emit autostartChanged();
 }
 
 QSize BrightlessController::savedWindowSize() const

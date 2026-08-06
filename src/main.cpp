@@ -6,6 +6,7 @@
 #include <QApplication>
 #include <QDBusConnection>
 #include <QDBusInterface>
+#include <QDBusMessage>
 #include <QIcon>
 #include <QLocale>
 #include <QMenu>
@@ -19,6 +20,37 @@
 
 #include <memory>
 
+namespace {
+class ApplicationActivation final : public QObject
+{
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "com.brightless.Application")
+
+public:
+    void setWindow(QWindow *window) { window_ = window; }
+    void activate() { activate({}); }
+
+public slots:
+    void activate(const QString &token)
+    {
+        if (window_) {
+            if (!token.isEmpty()) {
+                qputenv("XDG_ACTIVATION_TOKEN", token.toUtf8());
+            }
+            window_->show();
+            window_->raise();
+            window_->requestActivate();
+            if (!token.isEmpty()) {
+                qunsetenv("XDG_ACTIVATION_TOKEN");
+            }
+        }
+    }
+
+private:
+    QWindow *window_ = nullptr;
+};
+} // namespace
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
@@ -26,6 +58,19 @@ int main(int argc, char *argv[])
     QApplication::setApplicationDisplayName(QStringLiteral("Brightless"));
     QApplication::setWindowIcon(
         QIcon(QStringLiteral(":/qt/qml/com/brightless/icon.png")));
+
+    const auto serviceName = QStringLiteral("com.brightless.Application");
+    const auto objectPath = QStringLiteral("/com/brightless/Application");
+    auto sessionBus = QDBusConnection::sessionBus();
+    ApplicationActivation activation;
+    if (sessionBus.isConnected()
+        && sessionBus.registerObject(objectPath, &activation, QDBusConnection::ExportAllSlots)
+        && !sessionBus.registerService(serviceName)) {
+        QDBusInterface runningApplication(serviceName, objectPath, serviceName, sessionBus);
+        const auto reply = runningApplication.call(QStringLiteral("activate"),
+                                                   qEnvironmentVariable("XDG_ACTIVATION_TOKEN"));
+        return reply.type() == QDBusMessage::ErrorMessage ? 1 : 0;
+    }
 
     QTranslator translator;
     if (translator.load(QLocale::system(), QStringLiteral("brightless"), QStringLiteral("_"),
@@ -58,11 +103,8 @@ int main(int argc, char *argv[])
         controller->saveWindowSize(window->size());
     });
 
-    const auto showWindow = [window] {
-        window->show();
-        window->raise();
-        window->requestActivate();
-    };
+    activation.setWindow(window);
+    const auto showWindow = [&activation] { activation.activate(); };
 
     QDBusInterface brightnessOsd(QStringLiteral("org.kde.plasmashell"),
                                  QStringLiteral("/org/kde/osdService"),
@@ -111,3 +153,5 @@ int main(int argc, char *argv[])
 
     return app.exec();
 }
+
+#include "main.moc"

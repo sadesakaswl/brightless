@@ -55,6 +55,10 @@ target_link_libraries(brightless PRIVATE
     PkgConfig::DDCUTIL
 )
 
+include(CheckIPOSupported)
+check_ipo_supported()
+set_property(TARGET brightless PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+
 include(GNUInstallDirs)
 install(TARGETS brightless RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
@@ -72,4 +76,14 @@ if(BUILD_TESTING)
     target_include_directories(brightless_controller_test PRIVATE src)
     target_link_libraries(brightless_controller_test PRIVATE Qt6::Qml PkgConfig::DDCUTIL)
     add_test(NAME controller COMMAND brightless_controller_test)
+
+    find_program(DBUS_RUN_SESSION dbus-run-session)
+    if(DBUS_RUN_SESSION)
+        add_test(NAME single-instance
+            COMMAND ${DBUS_RUN_SESSION} -- sh
+                ${CMAKE_CURRENT_SOURCE_DIR}/tests/single_instance_test.sh
+                $<TARGET_FILE:brightless>
+        )
+        set_tests_properties(single-instance PROPERTIES TIMEOUT 30)
+    endif()
 endif()

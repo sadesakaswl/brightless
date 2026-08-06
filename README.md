@@ -17,6 +17,7 @@ A modern DDC control application for Linux external monitors.
 - **Settings Persistence** — Save preferences and the previous window size in `~/.config/brightless/settings.json`
 - **Optional Autostart** — Launch Brightless on login through XDG autostart; disabled by default
 - **Optional System Tray** — Keep Brightless available after closing its window
+- **Single Instance** — Launching Brightless again restores the existing window
 - **System Language** — Automatically use English, German, French, Italian, Turkish, or Spanish
 - **Qt 6 UI** — Native C++23 backend with QML and Qt Quick Controls
 

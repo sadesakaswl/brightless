@@ -9,7 +9,7 @@ ApplicationWindow {
     id: window
     width: Math.min(Screen.desktopAvailableWidth, Math.max(minimumWidth, monitorColumn.implicitWidth + 48))
     height: Math.min(Screen.desktopAvailableHeight, Math.max(minimumHeight, monitorColumn.implicitHeight + header.height + 48))
-    minimumWidth: 480
+    minimumWidth: 360
     minimumHeight: 320
     visible: true
     title: "Brightless"
@@ -62,12 +62,29 @@ ApplicationWindow {
         focus: true
         x: Math.max(0, window.width - width - 12)
         y: 12
-        width: 340
+        width: Math.min(340, window.width - 24)
+        height: Math.min(settingsColumn.implicitHeight + topPadding + bottomPadding, window.height - 24)
         padding: 12
 
-        ColumnLayout {
-            spacing: 12
-            anchors.fill: parent
+        contentItem: ScrollView {
+            id: settingsScroll
+            clip: true
+            contentWidth: availableWidth
+            ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+
+            ColumnLayout {
+                id: settingsColumn
+                width: settingsScroll.availableWidth
+                spacing: 12
+
+            RowLayout {
+                Layout.fillWidth: true
+                Label { text: "Close to tray icon"; Layout.fillWidth: true }
+                Switch {
+                    checked: controller.close_to_tray
+                    onToggled: controller.close_to_tray = checked
+                }
+            }
 
             Label { text: "Scroll Step:" }
             Label { text: scrollStepSlider.value.toFixed(0) + "%"; Layout.alignment: Qt.AlignRight }
@@ -132,10 +149,16 @@ ApplicationWindow {
                     ColumnLayout {
                         id: ratioDelegate
                         required property int index
+                        Layout.fillWidth: true
                         visible: window.refreshed(window.backend.dynamic_contrast_per_monitor_ratio())
                             && window.backend.supports_contrast(ratioDelegate.index)
                         RowLayout {
-                            Label { text: window.backend.monitor_names[ratioDelegate.index] + " Ratio:"; Layout.fillWidth: true }
+                            Layout.fillWidth: true
+                            Label {
+                                text: window.backend.monitor_names[ratioDelegate.index] + " Ratio:"
+                                elide: Text.ElideRight
+                                Layout.fillWidth: true
+                            }
                             Label { text: perMonitorRatio.value.toFixed(1) }
                         }
                         Slider {
@@ -148,6 +171,7 @@ ApplicationWindow {
                             onMoved: window.backend.set_monitor_ratio(ratioDelegate.index, value)
                         }
                     }
+                    }
                 }
             }
         }
@@ -156,9 +180,13 @@ ApplicationWindow {
     ScrollView {
         anchors.fill: parent
         anchors.margins: 16
+        clip: true
+        contentWidth: availableWidth
+        ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+
         ColumnLayout {
             id: monitorColumn
-            width: Math.max(parent.width, implicitWidth)
+            width: parent.width
             spacing: 12
             Repeater {
                 model: controller.monitor_count

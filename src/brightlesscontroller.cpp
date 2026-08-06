@@ -152,6 +152,35 @@ int BrightlessController::revision() const
     return revision_;
 }
 
+bool BrightlessController::closeToTray() const
+{
+    return closeToTray_;
+}
+
+void BrightlessController::setCloseToTray(bool value)
+{
+    if (closeToTray_ == value) {
+        return;
+    }
+    closeToTray_ = value;
+    saveSettings();
+    emit closeToTrayChanged();
+}
+
+QSize BrightlessController::savedWindowSize() const
+{
+    return savedWindowSize_;
+}
+
+void BrightlessController::saveWindowSize(const QSize &size)
+{
+    if (size.isEmpty() || savedWindowSize_ == size) {
+        return;
+    }
+    savedWindowSize_ = size;
+    saveSettings();
+}
+
 void BrightlessController::initialize()
 {
     monitors_.clear();
@@ -533,6 +562,17 @@ void BrightlessController::loadSettings()
     if (const auto value = object.value(QStringLiteral("scroll_step")); value.isDouble()) {
         scrollStep_ = std::clamp(value.toInt(scrollStep_), 1, 10);
     }
+    if (const auto value = object.value(QStringLiteral("close_to_tray")); value.isBool()) {
+        closeToTray_ = value.toBool();
+    }
+    const auto windowWidth = object.value(QStringLiteral("window_width"));
+    const auto windowHeight = object.value(QStringLiteral("window_height"));
+    if (windowWidth.isDouble() && windowHeight.isDouble()) {
+        const QSize size(windowWidth.toInt(), windowHeight.toInt());
+        if (!size.isEmpty()) {
+            savedWindowSize_ = size;
+        }
+    }
     if (const auto value = object.value(QStringLiteral("dynamic_contrast_enabled")); value.isBool()) {
         dynamicContrastEnabled_ = value.toBool();
     }
@@ -587,6 +627,11 @@ void BrightlessController::saveSettings() const
 
     QJsonObject object;
     object.insert(QStringLiteral("scroll_step"), scrollStep_);
+    object.insert(QStringLiteral("close_to_tray"), closeToTray_);
+    if (!savedWindowSize_.isEmpty()) {
+        object.insert(QStringLiteral("window_width"), savedWindowSize_.width());
+        object.insert(QStringLiteral("window_height"), savedWindowSize_.height());
+    }
     object.insert(QStringLiteral("dynamic_contrast_enabled"), dynamicContrastEnabled_);
     object.insert(QStringLiteral("dynamic_contrast_global"), dynamicContrastGlobal_);
     object.insert(QStringLiteral("dynamic_contrast_ratio"), dynamicContrastRatio_);

@@ -8,6 +8,8 @@ Frame {
     required property var controller
     required property int monitorIndex
     property int revision: root.controller.revision
+    readonly property bool compact: width < 560
+    readonly property int labelWidth: compact ? 100 : 140
 
     property var inputSourceChoices: [
         { text: "VGA", code: 1 },
@@ -86,23 +88,31 @@ Frame {
         Label {
             text: root.controller.monitor_names[root.monitorIndex]
             font.bold: true
+            elide: Text.ElideRight
             Layout.fillWidth: true
         }
 
         RowLayout {
+            Layout.fillWidth: true
             visible: root.refreshed(root.controller.dynamic_contrast_enabled())
                 && !root.controller.dynamic_contrast_global()
                 && root.controller.supports_contrast(root.monitorIndex)
-            Label { text: "Dynamic Contrast:"; Layout.preferredWidth: 140 }
+            Label { text: "Dynamic Contrast:"; Layout.fillWidth: true }
             Switch {
                 checked: root.refreshed(root.controller.monitor_dynamic_contrast_enabled(root.monitorIndex))
                 onToggled: root.controller.set_monitor_dynamic_contrast_enabled(root.monitorIndex, checked)
             }
         }
 
-        RowLayout {
+        GridLayout {
+            Layout.fillWidth: true
+            columns: root.compact ? 2 : 3
             visible: !root.refreshed(root.controller.monitor_dynamic_contrast_enabled(root.monitorIndex))
-            Label { text: "Brightness:"; Layout.preferredWidth: 140 }
+            Label {
+                text: "Brightness:"
+                Layout.columnSpan: root.compact ? 2 : 1
+                Layout.preferredWidth: root.labelWidth
+            }
             Slider {
                 id: brightnessSlider
                 from: 0
@@ -121,10 +131,16 @@ Frame {
             Label { text: Math.round(brightnessSlider.value) + "%"; Layout.preferredWidth: 48; horizontalAlignment: Text.AlignRight }
         }
 
-        RowLayout {
+        GridLayout {
+            Layout.fillWidth: true
+            columns: root.compact ? 2 : 3
             visible: root.controller.supports_contrast(root.monitorIndex)
                 && !root.refreshed(root.controller.monitor_dynamic_contrast_enabled(root.monitorIndex))
-            Label { text: "Contrast:"; Layout.preferredWidth: 140 }
+            Label {
+                text: "Contrast:"
+                Layout.columnSpan: root.compact ? 2 : 1
+                Layout.preferredWidth: root.labelWidth
+            }
             Slider {
                 id: contrastSlider
                 from: 0
@@ -143,10 +159,16 @@ Frame {
             Label { text: Math.round(contrastSlider.value) + "%"; Layout.preferredWidth: 48; horizontalAlignment: Text.AlignRight }
         }
 
-        RowLayout {
+        GridLayout {
+            Layout.fillWidth: true
+            columns: root.compact ? 2 : 3
             visible: root.controller.supports_contrast(root.monitorIndex)
                 && root.refreshed(root.controller.monitor_dynamic_contrast_enabled(root.monitorIndex))
-            Label { text: "Dynamic Contrast:"; Layout.preferredWidth: 140 }
+            Label {
+                text: "Dynamic Contrast:"
+                Layout.columnSpan: root.compact ? 2 : 1
+                Layout.preferredWidth: root.labelWidth
+            }
             Slider {
                 id: dynamicContrastSlider
                 from: 0
@@ -165,9 +187,15 @@ Frame {
             Label { text: Math.round(dynamicContrastSlider.value) + "%"; Layout.preferredWidth: 48; horizontalAlignment: Text.AlignRight }
         }
 
-        RowLayout {
+        GridLayout {
+            Layout.fillWidth: true
+            columns: root.compact ? 2 : 3
             visible: root.controller.supports_volume(root.monitorIndex)
-            Label { text: "Volume:"; Layout.preferredWidth: 140 }
+            Label {
+                text: "Volume:"
+                Layout.columnSpan: root.compact ? 2 : 1
+                Layout.preferredWidth: root.labelWidth
+            }
             Slider {
                 id: volumeSlider
                 from: 0
@@ -186,10 +214,16 @@ Frame {
             Label { text: Math.round(volumeSlider.value) + "%"; Layout.preferredWidth: 48; horizontalAlignment: Text.AlignRight }
         }
 
-        RowLayout {
+        GridLayout {
+            Layout.fillWidth: true
+            columns: root.compact ? 2 : 4
             visible: root.controller.supports_input_source(root.monitorIndex)
                 || root.controller.supports_power_mode(root.monitorIndex)
-            Label { text: "Input:"; Layout.preferredWidth: 140; visible: root.controller.supports_input_source(root.monitorIndex) }
+            Label {
+                text: "Input:"
+                visible: root.controller.supports_input_source(root.monitorIndex)
+                Layout.preferredWidth: root.labelWidth
+            }
             ComboBox {
                 visible: root.controller.supports_input_source(root.monitorIndex)
                 textRole: "text"

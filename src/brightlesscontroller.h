@@ -2,6 +2,7 @@
 
 #include <QHash>
 #include <QObject>
+#include <QSize>
 #include <QStringList>
 #include <QtQml/qqmlregistration.h>
 
@@ -16,6 +17,7 @@ class BrightlessController : public QObject
     Q_PROPERTY(QStringList monitor_names READ monitorNames NOTIFY monitorNamesChanged)
     Q_PROPERTY(int monitor_count READ monitorCount NOTIFY monitorCountChanged)
     Q_PROPERTY(int revision READ revision NOTIFY revisionChanged)
+    Q_PROPERTY(bool close_to_tray READ closeToTray WRITE setCloseToTray NOTIFY closeToTrayChanged)
 
 public:
     explicit BrightlessController(QObject *parent = nullptr);
@@ -25,6 +27,10 @@ public:
     QStringList monitorNames() const;
     int monitorCount() const;
     int revision() const;
+    bool closeToTray() const;
+    void setCloseToTray(bool value);
+    QSize savedWindowSize() const;
+    void saveWindowSize(const QSize &size);
 
     Q_INVOKABLE void initialize();
     Q_INVOKABLE int brightness(int index) const;
@@ -63,6 +69,7 @@ signals:
     void monitorNamesChanged();
     void monitorCountChanged();
     void revisionChanged();
+    void closeToTrayChanged();
 
 private:
     struct Monitor;
@@ -79,6 +86,8 @@ private:
     int revision_ = 0;
 
     int scrollStep_ = 2;
+    bool closeToTray_ = true;
+    QSize savedWindowSize_;
     bool dynamicContrastEnabled_ = false;
     bool dynamicContrastGlobal_ = true;
     double dynamicContrastRatio_ = 0.7;

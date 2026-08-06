@@ -12,7 +12,7 @@ A modern DDC control application for Linux external monitors.
 - **Input Source Selection** — Switch between HDMI, DisplayPort, VGA, DVI, and USB-C
 - **Power Mode Control** — Turn monitors on, off, or to standby/suspend
 - **Automatic Monitor Detection** — Discover DDC-capable displays through libddcutil
-- **Mouse Scroll Support** — Scroll over sliders with a configurable 1–10% step
+- **Mouse Scroll Support** — Scroll over sliders or the tray icon with a configurable 1–10% step; tray changes show the Plasma OSD
 - **Dynamic Contrast** — Link brightness and contrast globally or per monitor
 - **Settings Persistence** — Save preferences and the previous window size in `~/.config/brightless/settings.json`
 - **Optional System Tray** — Keep Brightless available after closing its window
@@ -24,26 +24,27 @@ A modern DDC control application for Linux external monitors.
 - Permission to access the system I²C devices
 - A C++23 compiler
 - CMake 3.21+
-- Qt 6.4+ (`Quick` and `QuickControls2`)
+- Qt 6.4+ (`DBus`, `Quick`, `QuickControls2`, and `Widgets`)
+- KDE Frameworks 6 `StatusNotifierItem`
 - libddcutil 1.2+
 - pkg-config
 
 For Debian/Ubuntu:
 
 ```bash
-sudo apt install cmake g++ pkg-config qt6-base-dev qt6-declarative-dev libddcutil-dev
+sudo apt install cmake g++ pkg-config qt6-base-dev qt6-declarative-dev libkf6statusnotifieritem-dev libddcutil-dev
 ```
 
 For Fedora:
 
 ```bash
-sudo dnf install cmake gcc-c++ pkgconf-pkg-config qt6-qtbase-devel qt6-qtdeclarative-devel libddcutil-devel
+sudo dnf install cmake gcc-c++ pkgconf-pkg-config qt6-qtbase-devel qt6-qtdeclarative-devel kf6-kstatusnotifieritem-devel libddcutil-devel
 ```
 
 For Arch Linux:
 
 ```bash
-sudo pacman -S cmake gcc pkgconf qt6-declarative ddcutil
+sudo pacman -S cmake gcc pkgconf qt6-declarative kstatusnotifieritem ddcutil
 ```
 
 ## Build
@@ -70,7 +71,7 @@ cmake --install build --prefix ~/.local
 
 - **Sliders** — Drag to adjust brightness, contrast, or volume
 - **Dropdowns** — Select an input source or power mode
-- **Mouse wheel** — Scroll over a slider to change it
+- **Mouse wheel** — Scroll over a slider or the tray icon to change brightness (and contrast when Dynamic Contrast is enabled)
 - **Settings** — Use the gear button to configure scroll and dynamic contrast
 - **System tray** — Enable “Close to tray icon” in settings, then click the tray icon or choose “Show Brightless” to restore the window
 

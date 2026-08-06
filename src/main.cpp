@@ -1,7 +1,11 @@
 #include "brightlesscontroller.h"
 
+#include <KStatusNotifierItem>
+
 #include <QAction>
 #include <QApplication>
+#include <QDBusConnection>
+#include <QDBusInterface>
 #include <QIcon>
 #include <QMenu>
 #include <QQmlApplicationEngine>
@@ -10,6 +14,8 @@
 #include <QSystemTrayIcon>
 #include <QUrl>
 #include <QWindow>
+
+#include <memory>
 
 int main(int argc, char *argv[])
 {
@@ -50,32 +56,49 @@ int main(int argc, char *argv[])
         window->requestActivate();
     };
 
-    QMenu trayMenu;
-    auto *showAction = trayMenu.addAction(QStringLiteral("Show Brightless"));
-    trayMenu.addSeparator();
-    auto *quitAction = trayMenu.addAction(QStringLiteral("Quit"));
-
-    QSystemTrayIcon trayIcon(QApplication::windowIcon());
-    trayIcon.setToolTip(QStringLiteral("Brightless"));
-    trayIcon.setContextMenu(&trayMenu);
-
-    const auto updateTray = [&app, &trayIcon, controller] {
+    QDBusInterface brightnessOsd(QStringLiteral("org.kde.plasmashell"),
+                                 QStringLiteral("/org/kde/osdService"),
+                                 QStringLiteral("org.kde.osdService"),
+                                 QDBusConnection::sessionBus());
+    std::unique_ptr<KStatusNotifierItem> trayIcon;
+    const auto updateTray = [&app, &brightnessOsd, &trayIcon, controller, window, showWindow] {
         const auto enabled = controller->closeToTray();
-        trayIcon.setVisible(enabled);
+        if (enabled && !trayIcon) {
+            trayIcon = std::make_unique<KStatusNotifierItem>(QStringLiteral("brightless"));
+            trayIcon->setCategory(KStatusNotifierItem::Hardware);
+            trayIcon->setIconByPixmap(QApplication::windowIcon());
+            trayIcon->setToolTipTitle(QStringLiteral("Brightless"));
+            trayIcon->setStandardActionsEnabled(false);
+
+            auto *trayMenu = new QMenu;
+            auto *showAction = trayMenu->addAction(QStringLiteral("Show Brightless"));
+            trayMenu->addSeparator();
+            auto *quitAction = trayMenu->addAction(QStringLiteral("Quit"));
+            trayIcon->setContextMenu(trayMenu);
+
+            QObject::connect(showAction, &QAction::triggered, window, showWindow);
+            QObject::connect(quitAction, &QAction::triggered, &app, &QApplication::quit);
+            QObject::connect(trayIcon.get(), &KStatusNotifierItem::activateRequested, window,
+                             showWindow);
+            QObject::connect(trayIcon.get(), &KStatusNotifierItem::scrollRequested, controller,
+                             [controller, &brightnessOsd](int delta, Qt::Orientation orientation) {
+                                 if (orientation != Qt::Vertical) {
+                                     return;
+                                 }
+                                 const auto percent = controller->adjustAllBrightness(delta);
+                                 if (percent >= 0 && brightnessOsd.isValid()) {
+                                     brightnessOsd.asyncCall(QStringLiteral("brightnessChanged"),
+                                                             percent);
+                                 }
+                             });
+            trayIcon->setStatus(KStatusNotifierItem::Active);
+        } else if (!enabled) {
+            trayIcon.reset();
+        }
         app.setQuitOnLastWindowClosed(!enabled || !QSystemTrayIcon::isSystemTrayAvailable());
     };
+    QObject::connect(controller, &BrightlessController::closeToTrayChanged, &app, updateTray);
     updateTray();
-
-    QObject::connect(controller, &BrightlessController::closeToTrayChanged, &trayIcon, updateTray);
-    QObject::connect(showAction, &QAction::triggered, window, showWindow);
-    QObject::connect(quitAction, &QAction::triggered, &app, &QApplication::quit);
-    QObject::connect(&trayIcon, &QSystemTrayIcon::activated, window,
-                     [showWindow](QSystemTrayIcon::ActivationReason reason) {
-                         if (reason == QSystemTrayIcon::Trigger
-                             || reason == QSystemTrayIcon::DoubleClick) {
-                             showWindow();
-                         }
-                     });
 
     return app.exec();
 }

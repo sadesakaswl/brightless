@@ -181,6 +181,28 @@ void BrightlessController::saveWindowSize(const QSize &size)
     saveSettings();
 }
 
+int BrightlessController::adjustAllBrightness(int direction)
+{
+    if (monitors_.empty()) {
+        return -1;
+    }
+
+    int total = 0;
+    for (int index = 0; index < monitorCount(); ++index) {
+        auto *monitor = monitorAt(index);
+        const auto value = brightless::stepPercent(monitor->brightness, scrollStep_, direction);
+        if (value != monitor->brightness) {
+            if (monitor->dynamicContrastEnabled) {
+                set_dynamic_contrast_brightness(index, value);
+            } else {
+                set_brightness(index, value);
+            }
+        }
+        total += monitor->brightness;
+    }
+    return total / monitorCount();
+}
+
 void BrightlessController::initialize()
 {
     monitors_.clear();

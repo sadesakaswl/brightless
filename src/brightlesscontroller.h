@@ -31,6 +31,7 @@ public:
     void setCloseToTray(bool value);
     QSize savedWindowSize() const;
     void saveWindowSize(const QSize &size);
+    int adjustAllBrightness(int direction);
 
     Q_INVOKABLE void initialize();
     Q_INVOKABLE int brightness(int index) const;

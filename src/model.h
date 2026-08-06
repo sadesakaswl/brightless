@@ -16,6 +16,11 @@ constexpr double clampRatio(double value)
     return std::clamp(value, 0.1, 2.0);
 }
 
+constexpr int stepPercent(int value, int step, int direction)
+{
+    return clampPercent(value + (direction > 0 ? step : direction < 0 ? -step : 0));
+}
+
 inline int contrastForDynamicBrightness(int brightness, double ratio)
 {
     return clampPercent(static_cast<int>(std::lround(brightness * ratio)));

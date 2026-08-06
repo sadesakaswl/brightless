@@ -8,6 +8,9 @@ int main()
     static_assert(brightless::clampRatio(0.0) == 0.1);
     static_assert(brightless::clampRatio(1.2) == 1.2);
     static_assert(brightless::clampRatio(5.0) == 2.0);
+    static_assert(brightless::stepPercent(50, 2, 120) == 52);
+    static_assert(brightless::stepPercent(1, 2, -120) == 0);
+    static_assert(brightless::stepPercent(99, 2, 0) == 99);
     static_assert(!brightless::validIndex(-1, 2));
     static_assert(brightless::validIndex(1, 2));
     static_assert(!brightless::validIndex(2, 2));

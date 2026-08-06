@@ -6,7 +6,8 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-find_package(Qt6 6.4 REQUIRED COMPONENTS Quick QuickControls2 Widgets)
+find_package(Qt6 6.4 REQUIRED COMPONENTS DBus Quick QuickControls2 Widgets)
+find_package(KF6StatusNotifierItem REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(DDCUTIL REQUIRED IMPORTED_TARGET ddcutil>=1.2)
 
@@ -36,9 +37,11 @@ qt_add_qml_module(brightless
 
 target_include_directories(brightless PRIVATE src)
 target_link_libraries(brightless PRIVATE
+    Qt6::DBus
     Qt6::Quick
     Qt6::QuickControls2
     Qt6::Widgets
+    KF6::StatusNotifierItem
     PkgConfig::DDCUTIL
 )
 

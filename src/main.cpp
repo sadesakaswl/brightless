@@ -7,11 +7,13 @@
 #include <QDBusConnection>
 #include <QDBusInterface>
 #include <QIcon>
+#include <QLocale>
 #include <QMenu>
 #include <QQmlApplicationEngine>
 #include <QQmlProperty>
 #include <QScreen>
 #include <QSystemTrayIcon>
+#include <QTranslator>
 #include <QUrl>
 #include <QWindow>
 
@@ -24,6 +26,12 @@ int main(int argc, char *argv[])
     QApplication::setApplicationDisplayName(QStringLiteral("Brightless"));
     QApplication::setWindowIcon(
         QIcon(QStringLiteral(":/qt/qml/com/brightless/icon.png")));
+
+    QTranslator translator;
+    if (translator.load(QLocale::system(), QStringLiteral("brightless"), QStringLiteral("_"),
+                        QStringLiteral(":/i18n"))) {
+        app.installTranslator(&translator);
+    }
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/qt/qml/com/brightless/Main.qml")));
@@ -71,9 +79,10 @@ int main(int argc, char *argv[])
             trayIcon->setStandardActionsEnabled(false);
 
             auto *trayMenu = new QMenu;
-            auto *showAction = trayMenu->addAction(QStringLiteral("Show Brightless"));
+            auto *showAction = trayMenu->addAction(
+                QCoreApplication::translate("Tray", "Show Brightless"));
             trayMenu->addSeparator();
-            auto *quitAction = trayMenu->addAction(QStringLiteral("Quit"));
+            auto *quitAction = trayMenu->addAction(QCoreApplication::translate("Tray", "Quit"));
             trayIcon->setContextMenu(trayMenu);
 
             QObject::connect(showAction, &QAction::triggered, window, showWindow);

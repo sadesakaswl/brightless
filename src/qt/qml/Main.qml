@@ -38,6 +38,7 @@ ApplicationWindow {
             }
             ToolButton {
                 text: "⚙"
+                Accessible.name: qsTr("Settings")
                 onClicked: settingsPopup.open()
             }
         }
@@ -45,12 +46,12 @@ ApplicationWindow {
 
     Dialog {
         id: errorDialog
-        title: "Error"
+        title: qsTr("Error")
         modal: true
         standardButtons: Dialog.Ok
         visible: controller.startup_error.length > 0
         Label {
-            text: "Error: " + controller.startup_error
+            text: qsTr("Error: %1").arg(controller.startup_error)
             wrapMode: Text.WordWrap
             width: 260
         }
@@ -79,9 +80,9 @@ ApplicationWindow {
 
             RowLayout {
                 Layout.fillWidth: true
-                Label { text: "Autostart on login"; Layout.fillWidth: true }
+                Label { text: qsTr("Autostart on login"); Layout.fillWidth: true }
                 Switch {
-                    Accessible.name: "Autostart on login"
+                    Accessible.name: qsTr("Autostart on login")
                     checked: controller.autostart
                     onToggled: controller.autostart = checked
                 }
@@ -89,14 +90,15 @@ ApplicationWindow {
 
             RowLayout {
                 Layout.fillWidth: true
-                Label { text: "Close to tray icon"; Layout.fillWidth: true }
+                Label { text: qsTr("Close to tray icon"); Layout.fillWidth: true }
                 Switch {
+                    Accessible.name: qsTr("Close to tray icon")
                     checked: controller.close_to_tray
                     onToggled: controller.close_to_tray = checked
                 }
             }
 
-            Label { text: "Scroll Step:" }
+            Label { text: qsTr("Scroll Step:") }
             Label { text: scrollStepSlider.value.toFixed(0) + "%"; Layout.alignment: Qt.AlignRight }
             Slider {
                 id: scrollStepSlider
@@ -108,10 +110,10 @@ ApplicationWindow {
                 onMoved: controller.set_scroll_step(Math.round(value))
             }
 
-            Label { text: "Dynamic Contrast"; font.bold: true }
+            Label { text: qsTr("Dynamic Contrast"); font.bold: true }
 
             RowLayout {
-                Label { text: "Enable Dynamic Contrast"; Layout.fillWidth: true }
+                Label { text: qsTr("Enable Dynamic Contrast"); Layout.fillWidth: true }
                 Switch {
                     checked: window.refreshed(controller.dynamic_contrast_enabled())
                     onToggled: controller.set_dynamic_contrast_enabled(checked)
@@ -123,7 +125,7 @@ ApplicationWindow {
                 spacing: 8
 
                 RowLayout {
-                    Label { text: "Apply to all monitors"; Layout.fillWidth: true }
+                    Label { text: qsTr("Apply to all monitors"); Layout.fillWidth: true }
                     Switch {
                         checked: window.refreshed(controller.dynamic_contrast_global())
                         onToggled: controller.set_dynamic_contrast_global(checked)
@@ -132,7 +134,7 @@ ApplicationWindow {
 
                 RowLayout {
                     visible: !window.refreshed(controller.dynamic_contrast_per_monitor_ratio())
-                    Label { text: "Contrast Ratio:"; Layout.preferredWidth: 120 }
+                    Label { text: qsTr("Contrast Ratio:"); Layout.preferredWidth: 120 }
                     Label { text: ratioSlider.value.toFixed(1); Layout.fillWidth: true; horizontalAlignment: Text.AlignRight }
                 }
                 Slider {
@@ -147,7 +149,7 @@ ApplicationWindow {
                 }
 
                 RowLayout {
-                    Label { text: "Per-monitor ratio"; Layout.fillWidth: true }
+                    Label { text: qsTr("Per-monitor ratio"); Layout.fillWidth: true }
                     Switch {
                         checked: window.refreshed(controller.dynamic_contrast_per_monitor_ratio())
                         onToggled: controller.set_dynamic_contrast_per_monitor_ratio(checked)
@@ -165,7 +167,7 @@ ApplicationWindow {
                         RowLayout {
                             Layout.fillWidth: true
                             Label {
-                                text: window.backend.monitor_names[ratioDelegate.index] + " Ratio:"
+                                text: qsTr("%1 Ratio:").arg(window.backend.monitor_names[ratioDelegate.index])
                                 elide: Text.ElideRight
                                 Layout.fillWidth: true
                             }

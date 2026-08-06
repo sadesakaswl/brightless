@@ -78,15 +78,16 @@ QString displayName(const DDCA_Display_Info &info, int number)
             .arg(info.product_code, 4, 16, QLatin1Char('0'));
     }
 
-    return QStringLiteral("Monitor %1").arg(number);
+    return QCoreApplication::translate("BrightlessController", "Monitor %1").arg(number);
 }
 
-QString ddcError(const char *operation, DDCA_Status status)
+QString ddcError(const QString &operation, DDCA_Status status)
 {
     const char *description = ddca_rc_desc(status);
-    return QStringLiteral("%1: %2")
-        .arg(QString::fromLatin1(operation),
-             QString::fromLocal8Bit(description ? description : "unknown error"));
+    const auto detail = description
+        ? QString::fromLocal8Bit(description)
+        : QCoreApplication::translate("BrightlessController", "unknown error");
+    return QStringLiteral("%1: %2").arg(operation, detail);
 }
 
 QString settingsPath()
@@ -283,7 +284,7 @@ void BrightlessController::initialize()
         rawList, &ddca_free_display_info_list);
 
     if (status != 0) {
-        error = ddcError("Failed to detect displays", status);
+        error = ddcError(tr("Failed to detect displays"), status);
     } else if (displayList) {
         for (int index = 0; index < displayList->ct; ++index) {
             const auto &info = displayList->info[index];
@@ -336,7 +337,7 @@ void BrightlessController::initialize()
     }
 
     if (error.isEmpty() && monitors_.empty()) {
-        error = QStringLiteral("No DDC monitors found");
+        error = tr("No DDC monitors found");
     }
 
     refreshDynamicContrastState();

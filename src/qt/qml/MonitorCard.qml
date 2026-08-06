@@ -23,11 +23,11 @@ Frame {
         { text: "USB-C", code: 27 }
     ]
     property var powerModeChoices: [
-        { text: "On", code: 1 },
-        { text: "Standby", code: 2 },
-        { text: "Suspend", code: 3 },
-        { text: "Off", code: 4 },
-        { text: "Normal", code: 5 }
+        { text: qsTr("On"), code: 1 },
+        { text: qsTr("Standby"), code: 2 },
+        { text: qsTr("Suspend"), code: 3 },
+        { text: qsTr("Off"), code: 4 },
+        { text: qsTr("Normal"), code: 5 }
     ]
     property int inputSourceCode: {
         root.revision
@@ -60,7 +60,7 @@ Frame {
         }
 
         var fallback = {
-            text: Number(code) === 0 ? "Unknown" : "Current (" + code + ")",
+            text: Number(code) === 0 ? qsTr("Unknown") : qsTr("Current (%1)").arg(code),
             code: code
         }
         var result = [ fallback ]
@@ -97,7 +97,7 @@ Frame {
             visible: root.refreshed(root.controller.dynamic_contrast_enabled())
                 && !root.controller.dynamic_contrast_global()
                 && root.controller.supports_contrast(root.monitorIndex)
-            Label { text: "Dynamic Contrast:"; Layout.fillWidth: true }
+            Label { text: qsTr("Dynamic Contrast:"); Layout.fillWidth: true }
             Switch {
                 checked: root.refreshed(root.controller.monitor_dynamic_contrast_enabled(root.monitorIndex))
                 onToggled: root.controller.set_monitor_dynamic_contrast_enabled(root.monitorIndex, checked)
@@ -109,7 +109,7 @@ Frame {
             columns: root.compact ? 2 : 3
             visible: !root.refreshed(root.controller.monitor_dynamic_contrast_enabled(root.monitorIndex))
             Label {
-                text: "Brightness:"
+                text: qsTr("Brightness:")
                 Layout.columnSpan: root.compact ? 2 : 1
                 Layout.preferredWidth: root.labelWidth
             }
@@ -137,7 +137,7 @@ Frame {
             visible: root.controller.supports_contrast(root.monitorIndex)
                 && !root.refreshed(root.controller.monitor_dynamic_contrast_enabled(root.monitorIndex))
             Label {
-                text: "Contrast:"
+                text: qsTr("Contrast:")
                 Layout.columnSpan: root.compact ? 2 : 1
                 Layout.preferredWidth: root.labelWidth
             }
@@ -165,7 +165,7 @@ Frame {
             visible: root.controller.supports_contrast(root.monitorIndex)
                 && root.refreshed(root.controller.monitor_dynamic_contrast_enabled(root.monitorIndex))
             Label {
-                text: "Dynamic Contrast:"
+                text: qsTr("Dynamic Contrast:")
                 Layout.columnSpan: root.compact ? 2 : 1
                 Layout.preferredWidth: root.labelWidth
             }
@@ -192,7 +192,7 @@ Frame {
             columns: root.compact ? 2 : 3
             visible: root.controller.supports_volume(root.monitorIndex)
             Label {
-                text: "Volume:"
+                text: qsTr("Volume:")
                 Layout.columnSpan: root.compact ? 2 : 1
                 Layout.preferredWidth: root.labelWidth
             }
@@ -220,7 +220,7 @@ Frame {
             visible: root.controller.supports_input_source(root.monitorIndex)
                 || root.controller.supports_power_mode(root.monitorIndex)
             Label {
-                text: "Input:"
+                text: qsTr("Input:")
                 visible: root.controller.supports_input_source(root.monitorIndex)
                 Layout.preferredWidth: root.labelWidth
             }
@@ -238,7 +238,7 @@ Frame {
                 }
             }
 
-            Label { text: "Power:"; visible: root.controller.supports_power_mode(root.monitorIndex) }
+            Label { text: qsTr("Power:"); visible: root.controller.supports_power_mode(root.monitorIndex) }
             ComboBox {
                 visible: root.controller.supports_power_mode(root.monitorIndex)
                 textRole: "text"

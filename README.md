@@ -17,6 +17,7 @@ A modern DDC control application for Linux external monitors.
 - **Settings Persistence** — Save preferences and the previous window size in `~/.config/brightless/settings.json`
 - **Optional Autostart** — Launch Brightless on login through XDG autostart; disabled by default
 - **Optional System Tray** — Keep Brightless available after closing its window
+- **System Language** — Automatically use English, German, French, Italian, Turkish, or Spanish
 - **Qt 6 UI** — Native C++23 backend with QML and Qt Quick Controls
 
 ## Requirements
@@ -25,7 +26,7 @@ A modern DDC control application for Linux external monitors.
 - Permission to access the system I²C devices
 - A C++23 compiler
 - CMake 3.21+
-- Qt 6.4+ (`DBus`, `Quick`, `QuickControls2`, and `Widgets`)
+- Qt 6.4+ (`DBus`, `LinguistTools`, `Quick`, `QuickControls2`, and `Widgets`)
 - KDE Frameworks 6 `StatusNotifierItem`
 - libddcutil 1.2+
 - pkg-config
@@ -33,19 +34,19 @@ A modern DDC control application for Linux external monitors.
 For Debian/Ubuntu:
 
 ```bash
-sudo apt install cmake g++ pkg-config qt6-base-dev qt6-declarative-dev libkf6statusnotifieritem-dev libddcutil-dev
+sudo apt install cmake g++ pkg-config qt6-base-dev qt6-declarative-dev qt6-tools-dev libkf6statusnotifieritem-dev libddcutil-dev
 ```
 
 For Fedora:
 
 ```bash
-sudo dnf install cmake gcc-c++ pkgconf-pkg-config qt6-qtbase-devel qt6-qtdeclarative-devel kf6-kstatusnotifieritem-devel libddcutil-devel
+sudo dnf install cmake gcc-c++ pkgconf-pkg-config qt6-qtbase-devel qt6-qtdeclarative-devel qt6-qttools-devel kf6-kstatusnotifieritem-devel libddcutil-devel
 ```
 
 For Arch Linux:
 
 ```bash
-sudo pacman -S cmake gcc pkgconf qt6-declarative kstatusnotifieritem ddcutil
+sudo pacman -S cmake gcc pkgconf qt6-declarative qt6-tools kstatusnotifieritem ddcutil
 ```
 
 ## Build

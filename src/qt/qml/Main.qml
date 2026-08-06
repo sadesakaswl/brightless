@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -19,6 +21,11 @@ ApplicationWindow {
 
     readonly property var backend: controller
     property int revision: controller.revision
+
+    function refreshed(value) {
+        window.revision
+        return value
+    }
 
     header: ToolBar {
         RowLayout {
@@ -69,7 +76,7 @@ ApplicationWindow {
                 from: 1
                 to: 10
                 stepSize: 1
-                value: controller.scroll_step()
+                value: window.refreshed(controller.scroll_step())
                 Layout.fillWidth: true
                 onMoved: controller.set_scroll_step(Math.round(value))
             }
@@ -79,35 +86,35 @@ ApplicationWindow {
             RowLayout {
                 Label { text: "Enable Dynamic Contrast"; Layout.fillWidth: true }
                 Switch {
-                    checked: controller.dynamic_contrast_enabled()
+                    checked: window.refreshed(controller.dynamic_contrast_enabled())
                     onToggled: controller.set_dynamic_contrast_enabled(checked)
                 }
             }
 
             ColumnLayout {
-                visible: controller.dynamic_contrast_enabled()
+                visible: window.refreshed(controller.dynamic_contrast_enabled())
                 spacing: 8
 
                 RowLayout {
                     Label { text: "Apply to all monitors"; Layout.fillWidth: true }
                     Switch {
-                        checked: controller.dynamic_contrast_global()
+                        checked: window.refreshed(controller.dynamic_contrast_global())
                         onToggled: controller.set_dynamic_contrast_global(checked)
                     }
                 }
 
                 RowLayout {
-                    visible: !controller.dynamic_contrast_per_monitor_ratio()
+                    visible: !window.refreshed(controller.dynamic_contrast_per_monitor_ratio())
                     Label { text: "Contrast Ratio:"; Layout.preferredWidth: 120 }
                     Label { text: ratioSlider.value.toFixed(1); Layout.fillWidth: true; horizontalAlignment: Text.AlignRight }
                 }
                 Slider {
                     id: ratioSlider
-                    visible: !controller.dynamic_contrast_per_monitor_ratio()
+                    visible: !window.refreshed(controller.dynamic_contrast_per_monitor_ratio())
                     from: 0.1
                     to: 2.0
                     stepSize: 0.1
-                    value: controller.dynamic_contrast_ratio()
+                    value: window.refreshed(controller.dynamic_contrast_ratio())
                     Layout.fillWidth: true
                     onMoved: controller.set_dynamic_contrast_ratio(value)
                 }
@@ -115,7 +122,7 @@ ApplicationWindow {
                 RowLayout {
                     Label { text: "Per-monitor ratio"; Layout.fillWidth: true }
                     Switch {
-                        checked: controller.dynamic_contrast_per_monitor_ratio()
+                        checked: window.refreshed(controller.dynamic_contrast_per_monitor_ratio())
                         onToggled: controller.set_dynamic_contrast_per_monitor_ratio(checked)
                     }
                 }
@@ -123,9 +130,12 @@ ApplicationWindow {
                 Repeater {
                     model: controller.monitor_count
                     ColumnLayout {
-                        visible: controller.dynamic_contrast_per_monitor_ratio() && controller.supports_contrast(index)
+                        id: ratioDelegate
+                        required property int index
+                        visible: window.refreshed(window.backend.dynamic_contrast_per_monitor_ratio())
+                            && window.backend.supports_contrast(ratioDelegate.index)
                         RowLayout {
-                            Label { text: controller.monitor_names[index] + " Ratio:"; Layout.fillWidth: true }
+                            Label { text: window.backend.monitor_names[ratioDelegate.index] + " Ratio:"; Layout.fillWidth: true }
                             Label { text: perMonitorRatio.value.toFixed(1) }
                         }
                         Slider {
@@ -133,9 +143,9 @@ ApplicationWindow {
                             from: 0.1
                             to: 2.0
                             stepSize: 0.1
-                            value: controller.monitor_ratio(index)
+                            value: window.refreshed(window.backend.monitor_ratio(ratioDelegate.index))
                             Layout.fillWidth: true
-                            onMoved: controller.set_monitor_ratio(index, value)
+                            onMoved: window.backend.set_monitor_ratio(ratioDelegate.index, value)
                         }
                     }
                 }
@@ -153,6 +163,7 @@ ApplicationWindow {
             Repeater {
                 model: controller.monitor_count
                 MonitorCard {
+                    required property int index
                     controller: window.backend
                     monitorIndex: index
                     Layout.fillWidth: true

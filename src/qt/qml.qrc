@@ -1,6 +1,0 @@
-<RCC>
-  <qresource prefix="/qt/qml/com/brightless/qml">
-    <file alias="Main.qml">qml/Main.qml</file>
-    <file alias="MonitorCard.qml">qml/MonitorCard.qml</file>
-  </qresource>
-</RCC>

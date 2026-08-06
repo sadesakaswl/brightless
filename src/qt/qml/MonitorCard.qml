@@ -7,7 +7,7 @@ Frame {
 
     required property var controller
     required property int monitorIndex
-    property int revision: controller.revision
+    property int revision: root.controller.revision
 
     property var inputSourceChoices: [
         { text: "VGA", code: 1 },
@@ -29,14 +29,19 @@ Frame {
     ]
     property int inputSourceCode: {
         root.revision
-        return controller.input_source_code(root.monitorIndex)
+        return root.controller.input_source_code(root.monitorIndex)
     }
     property int powerModeCode: {
         root.revision
-        return controller.power_mode_code(root.monitorIndex)
+        return root.controller.power_mode_code(root.monitorIndex)
     }
     property var inputSourceModel: choicesWithCurrent(inputSourceChoices, inputSourceCode)
     property var powerModeModel: choicesWithCurrent(powerModeChoices, powerModeCode)
+
+    function refreshed(value) {
+        root.revision
+        return value
+    }
 
     function choiceIndex(choices, code) {
         for (var i = 0; i < choices.length; i++) {
@@ -64,7 +69,7 @@ Frame {
     }
 
     function sliderWheel(slider, wheel, applyValue) {
-        var step = controller.scroll_step()
+        var step = root.controller.scroll_step()
         if (wheel.angleDelta.y > 0) {
             slider.value = Math.min(slider.to, slider.value + step)
         } else if (wheel.angleDelta.y < 0) {
@@ -79,113 +84,114 @@ Frame {
         spacing: 8
 
         Label {
-            text: controller.monitor_names[root.monitorIndex]
+            text: root.controller.monitor_names[root.monitorIndex]
             font.bold: true
             Layout.fillWidth: true
         }
 
         RowLayout {
-            visible: controller.dynamic_contrast_enabled()
-                && !controller.dynamic_contrast_global()
-                && controller.supports_contrast(root.monitorIndex)
+            visible: root.refreshed(root.controller.dynamic_contrast_enabled())
+                && !root.controller.dynamic_contrast_global()
+                && root.controller.supports_contrast(root.monitorIndex)
             Label { text: "Dynamic Contrast:"; Layout.preferredWidth: 140 }
             Switch {
-                checked: controller.monitor_dynamic_contrast_enabled(root.monitorIndex)
-                onToggled: controller.set_monitor_dynamic_contrast_enabled(root.monitorIndex, checked)
+                checked: root.refreshed(root.controller.monitor_dynamic_contrast_enabled(root.monitorIndex))
+                onToggled: root.controller.set_monitor_dynamic_contrast_enabled(root.monitorIndex, checked)
             }
         }
 
         RowLayout {
-            visible: !controller.monitor_dynamic_contrast_enabled(root.monitorIndex)
+            visible: !root.refreshed(root.controller.monitor_dynamic_contrast_enabled(root.monitorIndex))
             Label { text: "Brightness:"; Layout.preferredWidth: 140 }
             Slider {
                 id: brightnessSlider
                 from: 0
                 to: 100
                 stepSize: 1
-                value: controller.brightness(root.monitorIndex)
+                value: root.refreshed(root.controller.brightness(root.monitorIndex))
                 Layout.fillWidth: true
-                onMoved: controller.set_brightness(root.monitorIndex, Math.round(value))
+                onMoved: root.controller.set_brightness(root.monitorIndex, Math.round(value))
                 MouseArea {
                     anchors.fill: parent
                     acceptedButtons: Qt.NoButton
                     hoverEnabled: true
-                    onWheel: (wheel) => root.sliderWheel(brightnessSlider, wheel, function(value) { controller.set_brightness(root.monitorIndex, value) })
+                    onWheel: (wheel) => root.sliderWheel(brightnessSlider, wheel, function(value) { root.controller.set_brightness(root.monitorIndex, value) })
                 }
             }
             Label { text: Math.round(brightnessSlider.value) + "%"; Layout.preferredWidth: 48; horizontalAlignment: Text.AlignRight }
         }
 
         RowLayout {
-            visible: controller.supports_contrast(root.monitorIndex)
-                && !controller.monitor_dynamic_contrast_enabled(root.monitorIndex)
+            visible: root.controller.supports_contrast(root.monitorIndex)
+                && !root.refreshed(root.controller.monitor_dynamic_contrast_enabled(root.monitorIndex))
             Label { text: "Contrast:"; Layout.preferredWidth: 140 }
             Slider {
                 id: contrastSlider
                 from: 0
                 to: 100
                 stepSize: 1
-                value: controller.contrast(root.monitorIndex)
+                value: root.refreshed(root.controller.contrast(root.monitorIndex))
                 Layout.fillWidth: true
-                onMoved: controller.set_contrast(root.monitorIndex, Math.round(value))
+                onMoved: root.controller.set_contrast(root.monitorIndex, Math.round(value))
                 MouseArea {
                     anchors.fill: parent
                     acceptedButtons: Qt.NoButton
                     hoverEnabled: true
-                    onWheel: (wheel) => root.sliderWheel(contrastSlider, wheel, function(value) { controller.set_contrast(root.monitorIndex, value) })
+                    onWheel: (wheel) => root.sliderWheel(contrastSlider, wheel, function(value) { root.controller.set_contrast(root.monitorIndex, value) })
                 }
             }
             Label { text: Math.round(contrastSlider.value) + "%"; Layout.preferredWidth: 48; horizontalAlignment: Text.AlignRight }
         }
 
         RowLayout {
-            visible: controller.supports_contrast(root.monitorIndex)
-                && controller.monitor_dynamic_contrast_enabled(root.monitorIndex)
+            visible: root.controller.supports_contrast(root.monitorIndex)
+                && root.refreshed(root.controller.monitor_dynamic_contrast_enabled(root.monitorIndex))
             Label { text: "Dynamic Contrast:"; Layout.preferredWidth: 140 }
             Slider {
                 id: dynamicContrastSlider
                 from: 0
                 to: 100
                 stepSize: 1
-                value: controller.brightness(root.monitorIndex)
+                value: root.refreshed(root.controller.brightness(root.monitorIndex))
                 Layout.fillWidth: true
-                onMoved: controller.set_dynamic_contrast_brightness(root.monitorIndex, Math.round(value))
+                onMoved: root.controller.set_dynamic_contrast_brightness(root.monitorIndex, Math.round(value))
                 MouseArea {
                     anchors.fill: parent
                     acceptedButtons: Qt.NoButton
                     hoverEnabled: true
-                    onWheel: (wheel) => root.sliderWheel(dynamicContrastSlider, wheel, function(value) { controller.set_dynamic_contrast_brightness(root.monitorIndex, value) })
+                    onWheel: (wheel) => root.sliderWheel(dynamicContrastSlider, wheel, function(value) { root.controller.set_dynamic_contrast_brightness(root.monitorIndex, value) })
                 }
             }
             Label { text: Math.round(dynamicContrastSlider.value) + "%"; Layout.preferredWidth: 48; horizontalAlignment: Text.AlignRight }
         }
 
         RowLayout {
-            visible: controller.supports_volume(root.monitorIndex)
+            visible: root.controller.supports_volume(root.monitorIndex)
             Label { text: "Volume:"; Layout.preferredWidth: 140 }
             Slider {
                 id: volumeSlider
                 from: 0
                 to: 100
                 stepSize: 1
-                value: controller.volume(root.monitorIndex)
+                value: root.refreshed(root.controller.volume(root.monitorIndex))
                 Layout.fillWidth: true
-                onMoved: controller.set_volume(root.monitorIndex, Math.round(value))
+                onMoved: root.controller.set_volume(root.monitorIndex, Math.round(value))
                 MouseArea {
                     anchors.fill: parent
                     acceptedButtons: Qt.NoButton
                     hoverEnabled: true
-                    onWheel: (wheel) => root.sliderWheel(volumeSlider, wheel, function(value) { controller.set_volume(root.monitorIndex, value) })
+                    onWheel: (wheel) => root.sliderWheel(volumeSlider, wheel, function(value) { root.controller.set_volume(root.monitorIndex, value) })
                 }
             }
             Label { text: Math.round(volumeSlider.value) + "%"; Layout.preferredWidth: 48; horizontalAlignment: Text.AlignRight }
         }
 
         RowLayout {
-            visible: controller.supports_input_source(root.monitorIndex) || controller.supports_power_mode(root.monitorIndex)
-            Label { text: "Input:"; Layout.preferredWidth: 140; visible: controller.supports_input_source(root.monitorIndex) }
+            visible: root.controller.supports_input_source(root.monitorIndex)
+                || root.controller.supports_power_mode(root.monitorIndex)
+            Label { text: "Input:"; Layout.preferredWidth: 140; visible: root.controller.supports_input_source(root.monitorIndex) }
             ComboBox {
-                visible: controller.supports_input_source(root.monitorIndex)
+                visible: root.controller.supports_input_source(root.monitorIndex)
                 textRole: "text"
                 valueRole: "code"
                 model: root.inputSourceModel
@@ -193,14 +199,14 @@ Frame {
                 Layout.fillWidth: true
                 onActivated: {
                     if (Number(currentValue) > 0) {
-                        controller.set_input_source(root.monitorIndex, currentValue)
+                        root.controller.set_input_source(root.monitorIndex, currentValue)
                     }
                 }
             }
 
-            Label { text: "Power:"; visible: controller.supports_power_mode(root.monitorIndex) }
+            Label { text: "Power:"; visible: root.controller.supports_power_mode(root.monitorIndex) }
             ComboBox {
-                visible: controller.supports_power_mode(root.monitorIndex)
+                visible: root.controller.supports_power_mode(root.monitorIndex)
                 textRole: "text"
                 valueRole: "code"
                 model: root.powerModeModel
@@ -208,7 +214,7 @@ Frame {
                 Layout.fillWidth: true
                 onActivated: {
                     if (Number(currentValue) > 0) {
-                        controller.set_power_mode(root.monitorIndex, currentValue)
+                        root.controller.set_power_mode(root.monitorIndex, currentValue)
                     }
                 }
             }

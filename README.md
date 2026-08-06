@@ -1,99 +1,77 @@
 # Brightless
 
+<p align="center">
+  <img src="resources/icon.png" alt="Brightless icon" width="192">
+</p>
+
 A modern DDC control application for Linux external monitors.
 
 ## Features
 
-- **Brightness, Contrast & Volume Control** — Adjust external monitor settings via DDC/CI protocol
-- **Input Source Selection** — Switch between HDMI, DisplayPort, VGA, DVI, USB-C
-- **Power Mode Control** — Turn monitor on, off, or to standby/suspend
-- **Auto-detect Monitors** — Discovers connected monitors via DRM and reads names from EDID
-- **Real-time Value Display** — Shows current values on startup
-- **Mouse Scroll Support** — Scroll on sliders to adjust values (configurable step: 1-10%)
-- **Settings Persistence** — Saves your preferences to `~/.config/brightless/settings.json`
-- **Selectable Modern UI** — Choose either Qt 6/QML or GTK4/libadwaita
-
-## Frontends
-
-Brightless supports two interfaces: Qt 6 with QML, and GTK4 with libadwaita.
-There is no default frontend; select exactly one Cargo feature.
+- **Brightness, Contrast & Volume Control** — Adjust external monitor settings via DDC/CI
+- **Input Source Selection** — Switch between HDMI, DisplayPort, VGA, DVI, and USB-C
+- **Power Mode Control** — Turn monitors on, off, or to standby/suspend
+- **Automatic Monitor Detection** — Discover DDC-capable displays through libddcutil
+- **Mouse Scroll Support** — Scroll over sliders with a configurable 1–10% step
+- **Dynamic Contrast** — Link brightness and contrast globally or per monitor
+- **Settings Persistence** — Save preferences in `~/.config/brightless/settings.json`
+- **Qt 6 UI** — Native C++23 backend with QML and Qt Quick Controls
 
 ## Requirements
 
-- Linux with DRM support
-- I2C dev permissions (`/dev/i2c-*`)
-- Rust 1.92+
-- GTK 4.14+ (for the GTK frontend)
-- libadwaita 1.8+ (for the GTK frontend)
-- DDC/CI support:
-  ```bash
-  # Debian/Ubuntu
-  sudo apt install libddc-dev
-  ```
-- Qt frontend dependencies:
-  ```bash
-  # Debian/Ubuntu
-  sudo apt install qt6-base-dev qt6-declarative-dev
+- Linux and DDC/CI-capable external monitors
+- Permission to access the system I²C devices
+- A C++23 compiler
+- CMake 3.21+
+- Qt 6.4+ (`Quick` and `QuickControls2`)
+- libddcutil 1.2+
+- pkg-config
 
-  # Fedora
-  sudo dnf install qt6-qtbase-devel qt6-qtdeclarative-devel
-
-  # Arch Linux
-  sudo pacman -S qt6-base qt6-declarative
-  ```
-- GTK frontend dependencies:
-  ```bash
-  # Debian/Ubuntu (supplies/requires the GTK4 development stack)
-  sudo apt install libadwaita-1-dev
-
-  # Fedora
-  sudo dnf install gtk4-devel libadwaita-devel
-
-  # Arch Linux
-  sudo pacman -S gtk4 libadwaita
-  ```
-
-## Building
-
-Build the Qt 6/QML frontend:
+For Debian/Ubuntu:
 
 ```bash
-cargo build --release --features qt
+sudo apt install cmake g++ pkg-config qt6-base-dev qt6-declarative-dev libddcutil-dev
 ```
 
-Build the GTK4/libadwaita frontend:
+For Fedora:
 
 ```bash
-cargo build --release --features gtk
+sudo dnf install cmake gcc-c++ pkgconf-pkg-config qt6-qtbase-devel qt6-qtdeclarative-devel libddcutil-devel
 ```
 
-## Usage
-
-Launch the Qt frontend directly:
+For Arch Linux:
 
 ```bash
-cargo run --features qt
+sudo pacman -S cmake gcc pkgconf qt6-declarative ddcutil
 ```
 
-Launch the GTK frontend directly:
+## Build
 
 ```bash
-cargo run --features gtk
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --parallel
+ctest --test-dir build --output-on-failure
 ```
 
-For an already-built release binary:
+## Run
 
 ```bash
-./target/release/brightless
+./build/brightless
+```
+
+Install it with:
+
+```bash
+cmake --install build --prefix ~/.local
 ```
 
 ### Controls
 
-- **Sliders** — Drag to adjust brightness/contrast/volume
-- **Dropdowns** — Select input source and power mode
-- **Mouse Scroll** — Scroll on any slider to change values (default: 2% per tick)
-- **Settings** — Click the gear icon in the titlebar to configure scroll step
+- **Sliders** — Drag to adjust brightness, contrast, or volume
+- **Dropdowns** — Select an input source or power mode
+- **Mouse wheel** — Scroll over a slider to change it
+- **Settings** — Use the gear button to configure scroll and dynamic contrast
 
 ## License
 
-GNU General Public License v3.0 — see [LICENSE](LICENSE) for details.
+GNU General Public License v3.0 — see [LICENSE](LICENSE).

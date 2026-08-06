@@ -1,6 +1,6 @@
 # Build artifacts
-/target/
-**/target/
+/build/
+/cmake-build-*/
 
 # IDE
 .idea/

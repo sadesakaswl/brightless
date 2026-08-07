@@ -101,6 +101,9 @@ Frame {
                 && root.controller.supports_contrast(root.monitorIndex)
             Label { text: qsTr("Dynamic Contrast:"); Layout.fillWidth: true }
             Switch {
+                Accessible.name: qsTr("Dynamic Contrast")
+                ToolTip.visible: hovered
+                ToolTip.text: qsTr("Adjust this monitor's brightness and contrast together.")
                 checked: root.refreshed(root.controller.monitor_dynamic_contrast_enabled(root.monitorIndex))
                 onToggled: root.controller.set_monitor_dynamic_contrast_enabled(root.monitorIndex, checked)
             }
@@ -122,6 +125,9 @@ Frame {
                 to: 100
                 stepSize: 1
                 value: root.refreshed(root.controller.brightness(root.monitorIndex))
+                Accessible.name: qsTr("Brightness")
+                ToolTip.visible: hovered
+                ToolTip.text: qsTr("Set this monitor's brightness to %1%.").arg(Math.round(value))
                 Layout.fillWidth: true
                 onMoved: root.controller.set_brightness(root.monitorIndex, Math.round(value))
                 MouseArea {
@@ -151,6 +157,9 @@ Frame {
                 to: 100
                 stepSize: 1
                 value: root.refreshed(root.controller.contrast(root.monitorIndex))
+                Accessible.name: qsTr("Contrast")
+                ToolTip.visible: hovered
+                ToolTip.text: qsTr("Set this monitor's contrast to %1%.").arg(Math.round(value))
                 Layout.fillWidth: true
                 onMoved: root.controller.set_contrast(root.monitorIndex, Math.round(value))
                 MouseArea {
@@ -180,6 +189,9 @@ Frame {
                 to: 100
                 stepSize: 1
                 value: root.refreshed(root.controller.brightness(root.monitorIndex))
+                Accessible.name: qsTr("Dynamic Contrast")
+                ToolTip.visible: hovered
+                ToolTip.text: qsTr("Set brightness to %1% and adjust contrast automatically.").arg(Math.round(value))
                 Layout.fillWidth: true
                 onMoved: root.controller.set_dynamic_contrast_brightness(root.monitorIndex, Math.round(value))
                 MouseArea {
@@ -208,6 +220,9 @@ Frame {
                 to: 100
                 stepSize: 1
                 value: root.refreshed(root.controller.volume(root.monitorIndex))
+                Accessible.name: qsTr("Volume")
+                ToolTip.visible: hovered
+                ToolTip.text: qsTr("Set this monitor's speaker volume to %1%.").arg(Math.round(value))
                 Layout.fillWidth: true
                 onMoved: root.controller.set_volume(root.monitorIndex, Math.round(value))
                 MouseArea {

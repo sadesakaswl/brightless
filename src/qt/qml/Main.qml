@@ -39,6 +39,8 @@ ApplicationWindow {
             ToolButton {
                 text: "⚙"
                 Accessible.name: qsTr("Settings")
+                ToolTip.visible: hovered
+                ToolTip.text: qsTr("Open the settings window.")
                 onClicked: settingsWindow.open()
             }
         }
@@ -92,10 +94,10 @@ ApplicationWindow {
             TabBar {
                 id: settingsTabs
                 Layout.fillWidth: true
-                TabButton { text: qsTr("Appearance") }
-                TabButton { text: qsTr("Behaviour") }
-                TabButton { text: qsTr("System") }
-                TabButton { text: qsTr("About") }
+                TabButton { text: qsTr("Appearance"); ToolTip.visible: hovered; ToolTip.text: qsTr("Choose which monitor controls and icons are shown.") }
+                TabButton { text: qsTr("Behaviour"); ToolTip.visible: hovered; ToolTip.text: qsTr("Adjust scrolling, DDC timing, and dynamic contrast.") }
+                TabButton { text: qsTr("System"); ToolTip.visible: hovered; ToolTip.text: qsTr("Configure startup and window-closing behaviour.") }
+                TabButton { text: qsTr("About"); ToolTip.visible: hovered; ToolTip.text: qsTr("View version, source code, and license information.") }
             }
 
             StackLayout {
@@ -121,6 +123,10 @@ ApplicationWindow {
                             }
                             Switch {
                                 Accessible.name: hideBrightnessLabel.text
+                                ToolTip.visible: hovered
+                                ToolTip.text: window.refreshed(controller.dynamic_contrast_enabled())
+                                    ? qsTr("Remove the dynamic contrast control from monitor cards.")
+                                    : qsTr("Remove the brightness control from monitor cards.")
                                 checked: controller.hide_brightness
                                 onToggled: controller.hide_brightness = checked
                             }
@@ -132,6 +138,8 @@ ApplicationWindow {
                             Label { text: qsTr("Hide Contrast Option"); Layout.fillWidth: true }
                             Switch {
                                 Accessible.name: qsTr("Hide Contrast Option")
+                                ToolTip.visible: hovered
+                                ToolTip.text: qsTr("Remove the contrast control from monitor cards.")
                                 checked: controller.hide_contrast
                                 onToggled: controller.hide_contrast = checked
                             }
@@ -142,6 +150,8 @@ ApplicationWindow {
                             Label { text: qsTr("Hide Volume Option"); Layout.fillWidth: true }
                             Switch {
                                 Accessible.name: qsTr("Hide Volume Option")
+                                ToolTip.visible: hovered
+                                ToolTip.text: qsTr("Remove the volume control from monitor cards.")
                                 checked: controller.hide_volume
                                 onToggled: controller.hide_volume = checked
                             }
@@ -152,6 +162,8 @@ ApplicationWindow {
                             Label { text: qsTr("Hide Input Option"); Layout.fillWidth: true }
                             Switch {
                                 Accessible.name: qsTr("Hide Input Option")
+                                ToolTip.visible: hovered
+                                ToolTip.text: qsTr("Remove the input-source control from monitor cards.")
                                 checked: controller.hide_input
                                 onToggled: controller.hide_input = checked
                             }
@@ -162,6 +174,8 @@ ApplicationWindow {
                             Label { text: qsTr("Hide Tray Icon"); Layout.fillWidth: true }
                             Switch {
                                 Accessible.name: qsTr("Hide Tray Icon")
+                                ToolTip.visible: hovered
+                                ToolTip.text: qsTr("Remove Brightless from the system tray.")
                                 checked: controller.hide_tray_icon
                                 onToggled: controller.hide_tray_icon = checked
                             }
@@ -187,6 +201,9 @@ ApplicationWindow {
                             to: 10
                             stepSize: 1
                             value: window.refreshed(controller.scroll_step())
+                            Accessible.name: qsTr("Scroll Step")
+                            ToolTip.visible: hovered
+                            ToolTip.text: qsTr("Change monitor values by %1% for each mouse-wheel step.").arg(Math.round(value))
                             Layout.fillWidth: true
                             onMoved: controller.set_scroll_step(Math.round(value))
                         }
@@ -205,6 +222,10 @@ ApplicationWindow {
                             stepSize: 50
                             value: window.refreshed(controller.ddc_delay())
                             Accessible.name: ddcDelayLabel.text
+                            ToolTip.visible: hovered
+                            ToolTip.text: Math.round(value) === 0
+                                ? qsTr("Send monitor control updates immediately.")
+                                : qsTr("Wait %1 ms before sending monitor control updates.").arg(Math.round(value))
                             Layout.fillWidth: true
                             onMoved: controller.set_ddc_delay(Math.round(value))
                         }
@@ -215,6 +236,9 @@ ApplicationWindow {
                             Layout.fillWidth: true
                             Label { text: qsTr("Enable Dynamic Contrast"); Layout.fillWidth: true }
                             Switch {
+                                Accessible.name: qsTr("Enable Dynamic Contrast")
+                                ToolTip.visible: hovered
+                                ToolTip.text: qsTr("Adjust brightness and contrast together using a configurable ratio.")
                                 checked: window.refreshed(controller.dynamic_contrast_enabled())
                                 onToggled: controller.set_dynamic_contrast_enabled(checked)
                             }
@@ -229,6 +253,9 @@ ApplicationWindow {
                                 Layout.fillWidth: true
                                 Label { text: qsTr("Apply to all monitors"); Layout.fillWidth: true }
                                 Switch {
+                                    Accessible.name: qsTr("Apply to all monitors")
+                                    ToolTip.visible: hovered
+                                    ToolTip.text: qsTr("Use dynamic contrast on every compatible monitor.")
                                     checked: window.refreshed(controller.dynamic_contrast_global())
                                     onToggled: controller.set_dynamic_contrast_global(checked)
                                 }
@@ -247,6 +274,9 @@ ApplicationWindow {
                                 to: 2.0
                                 stepSize: 0.1
                                 value: window.refreshed(controller.dynamic_contrast_ratio())
+                                Accessible.name: qsTr("Contrast Ratio")
+                                ToolTip.visible: hovered
+                                ToolTip.text: qsTr("Set contrast to %1 times brightness.").arg(value.toFixed(1))
                                 Layout.fillWidth: true
                                 onMoved: controller.set_dynamic_contrast_ratio(value)
                             }
@@ -255,6 +285,9 @@ ApplicationWindow {
                                 Layout.fillWidth: true
                                 Label { text: qsTr("Per-monitor ratio"); Layout.fillWidth: true }
                                 Switch {
+                                    Accessible.name: qsTr("Per-monitor ratio")
+                                    ToolTip.visible: hovered
+                                    ToolTip.text: qsTr("Allow each monitor to use its own contrast ratio.")
                                     checked: window.refreshed(controller.dynamic_contrast_per_monitor_ratio())
                                     onToggled: controller.set_dynamic_contrast_per_monitor_ratio(checked)
                                 }
@@ -283,6 +316,9 @@ ApplicationWindow {
                                         to: 2.0
                                         stepSize: 0.1
                                         value: window.refreshed(window.backend.monitor_ratio(ratioDelegate.index))
+                                        Accessible.name: qsTr("%1 Ratio").arg(window.backend.monitor_names[ratioDelegate.index])
+                                        ToolTip.visible: hovered
+                                        ToolTip.text: qsTr("Set this monitor's contrast to %1 times its brightness.").arg(value.toFixed(1))
                                         Layout.fillWidth: true
                                         onMoved: window.backend.set_monitor_ratio(ratioDelegate.index, value)
                                     }
@@ -304,6 +340,8 @@ ApplicationWindow {
                             Label { text: qsTr("Autostart on login"); Layout.fillWidth: true }
                             Switch {
                                 Accessible.name: qsTr("Autostart on login")
+                                ToolTip.visible: hovered
+                                ToolTip.text: qsTr("Launch Brightless automatically when you log in.")
                                 checked: controller.autostart
                                 onToggled: controller.autostart = checked
                             }
@@ -315,6 +353,8 @@ ApplicationWindow {
                             Label { text: qsTr("Close to tray icon"); Layout.fillWidth: true }
                             Switch {
                                 Accessible.name: qsTr("Close to tray icon")
+                                ToolTip.visible: hovered
+                                ToolTip.text: qsTr("Keep Brightless running after its window closes.")
                                 checked: controller.close_to_tray
                                 onToggled: controller.close_to_tray = checked
                             }

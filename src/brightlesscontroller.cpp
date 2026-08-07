@@ -12,10 +12,13 @@
 #include <QJsonObject>
 #include <QSaveFile>
 #include <QStandardPaths>
+#include <QThreadPool>
 
 #include <algorithm>
 #include <cstdint>
 #include <limits>
+#include <map>
+#include <mutex>
 #include <optional>
 
 namespace {
@@ -37,17 +40,6 @@ std::optional<VcpValue> readVcp(DDCA_Display_Handle handle, std::uint8_t code)
         static_cast<std::uint16_t>((static_cast<std::uint16_t>(value.sh) << 8) | value.sl),
         static_cast<std::uint16_t>((static_cast<std::uint16_t>(value.mh) << 8) | value.ml),
     };
-}
-
-void writeVcp(DDCA_Display_Ref reference, std::uint8_t code, std::uint16_t value)
-{
-    DDCA_Display_Handle handle = nullptr;
-    if (ddca_open_display2(reference, false, &handle) != 0) {
-        return;
-    }
-    ddca_set_non_table_vcp_value(handle, code, static_cast<std::uint8_t>(value >> 8),
-                                 static_cast<std::uint8_t>(value & 0xff));
-    ddca_close_display(handle);
 }
 
 int percentFromVcp(const VcpValue &value)
@@ -156,15 +148,104 @@ struct BrightlessController::Monitor
     std::uint16_t maximumBrightness = 0;
     std::uint16_t maximumContrast = 0;
     std::uint16_t maximumVolume = 0;
+    std::map<std::uint8_t, std::uint16_t> pendingWrites;
+};
+
+struct BrightlessController::DdcWorker
+{
+    using Values = std::map<std::uint8_t, std::uint16_t>;
+    using Writes = std::map<DDCA_Display_Ref, Values>;
+
+    DdcWorker()
+    {
+        pool_.setMaxThreadCount(1);
+    }
+
+    ~DdcWorker()
+    {
+        wait();
+    }
+
+    void submit(Writes writes)
+    {
+        if (writes.empty()) {
+            return;
+        }
+
+        bool start = false;
+        {
+            const std::scoped_lock lock(mutex_);
+            for (const auto &[reference, values] : writes) {
+                auto &latest = pending_[reference];
+                for (const auto &[code, value] : values) {
+                    latest.insert_or_assign(code, value);
+                }
+            }
+            if (!running_) {
+                running_ = true;
+                start = true;
+            }
+        }
+
+        if (start) {
+            pool_.start([this] { run(); });
+        }
+    }
+
+    void wait()
+    {
+        pool_.waitForDone();
+    }
+
+private:
+    void run()
+    {
+        while (true) {
+            Writes writes;
+            {
+                const std::scoped_lock lock(mutex_);
+                if (pending_.empty()) {
+                    running_ = false;
+                    return;
+                }
+                writes.swap(pending_);
+            }
+
+            for (const auto &[reference, values] : writes) {
+                DDCA_Display_Handle handle = nullptr;
+                if (ddca_open_display2(reference, false, &handle) != 0) {
+                    continue;
+                }
+                for (const auto &[code, value] : values) {
+                    ddca_set_non_table_vcp_value(handle, code,
+                                                 static_cast<std::uint8_t>(value >> 8),
+                                                 static_cast<std::uint8_t>(value & 0xff));
+                }
+                ddca_close_display(handle);
+            }
+        }
+    }
+
+    QThreadPool pool_;
+    std::mutex mutex_;
+    Writes pending_;
+    bool running_ = false;
 };
 
 BrightlessController::BrightlessController(QObject *parent)
     : QObject(parent)
+    , ddcWorker_(std::make_unique<DdcWorker>())
 {
+    ddcTimer_.setSingleShot(true);
+    connect(&ddcTimer_, &QTimer::timeout, this, &BrightlessController::flushDdcWrites);
     loadSettings();
 }
 
-BrightlessController::~BrightlessController() = default;
+BrightlessController::~BrightlessController()
+{
+    flushDdcWrites();
+    ddcWorker_->wait();
+}
 
 QString BrightlessController::startupError() const
 {
@@ -275,6 +356,8 @@ int BrightlessController::adjustAllBrightness(int direction)
 
 void BrightlessController::initialize()
 {
+    flushDdcWrites();
+    ddcWorker_->wait();
     monitors_.clear();
     QString error;
 
@@ -365,8 +448,8 @@ void BrightlessController::set_brightness(int index, int value)
 
     monitor->brightness = brightless::clampPercent(value);
     if (monitor->maximumBrightness > 0) {
-        writeVcp(monitor->reference, 0x10,
-                 vcpFromPercent(monitor->brightness, monitor->maximumBrightness));
+        sendVcp(*monitor,
+                {{0x10, vcpFromPercent(monitor->brightness, monitor->maximumBrightness)}});
     }
     bumpRevision();
 }
@@ -386,8 +469,8 @@ void BrightlessController::set_contrast(int index, int value)
 
     monitor->contrast = brightless::clampPercent(value);
     if (monitor->maximumContrast > 0) {
-        writeVcp(monitor->reference, 0x12,
-                 vcpFromPercent(monitor->contrast, monitor->maximumContrast));
+        sendVcp(*monitor,
+                {{0x12, vcpFromPercent(monitor->contrast, monitor->maximumContrast)}});
     }
     bumpRevision();
 }
@@ -407,8 +490,8 @@ void BrightlessController::set_volume(int index, int value)
 
     monitor->volume = brightless::clampPercent(value);
     if (monitor->maximumVolume > 0) {
-        writeVcp(monitor->reference, 0x62,
-                 vcpFromPercent(monitor->volume, monitor->maximumVolume));
+        sendVcp(*monitor,
+                {{0x62, vcpFromPercent(monitor->volume, monitor->maximumVolume)}});
     }
     bumpRevision();
 }
@@ -427,7 +510,7 @@ void BrightlessController::set_input_source(int index, int code)
     }
 
     monitor->inputSourceCode = std::clamp(code, 0, 255);
-    writeVcp(monitor->reference, 0x60, static_cast<std::uint16_t>(monitor->inputSourceCode));
+    sendVcp(*monitor, {{0x60, static_cast<std::uint16_t>(monitor->inputSourceCode)}});
     bumpRevision();
 }
 
@@ -445,7 +528,7 @@ void BrightlessController::set_power_mode(int index, int code)
     }
 
     monitor->powerModeCode = std::clamp(code, 0, 255);
-    writeVcp(monitor->reference, 0xd6, static_cast<std::uint16_t>(monitor->powerModeCode));
+    sendVcp(*monitor, {{0xd6, static_cast<std::uint16_t>(monitor->powerModeCode)}});
     bumpRevision();
 }
 
@@ -482,6 +565,28 @@ void BrightlessController::set_scroll_step(int value)
 {
     scrollStep_ = std::clamp(value, 1, 10);
     saveSettings();
+    bumpRevision();
+}
+
+int BrightlessController::ddc_delay() const
+{
+    return ddcDelay_;
+}
+
+void BrightlessController::set_ddc_delay(int value)
+{
+    const auto delay = std::clamp(value, 0, 1500);
+    if (ddcDelay_ == delay) {
+        return;
+    }
+
+    ddcDelay_ = delay;
+    saveSettings();
+    if (ddcDelay_ == 0) {
+        flushDdcWrites();
+    } else if (ddcTimer_.isActive()) {
+        ddcTimer_.start(ddcDelay_);
+    }
     bumpRevision();
 }
 
@@ -589,21 +694,48 @@ void BrightlessController::set_dynamic_contrast_brightness(int index, int value)
     monitor->contrast = brightless::contrastForDynamicBrightness(
         monitor->brightness, monitor->dynamicContrastRatio);
 
-    DDCA_Display_Handle handle = nullptr;
-    if (ddca_open_display2(monitor->reference, false, &handle) == 0) {
-        if (monitor->maximumBrightness > 0) {
-            const auto raw = vcpFromPercent(monitor->brightness, monitor->maximumBrightness);
-            ddca_set_non_table_vcp_value(handle, 0x10, static_cast<std::uint8_t>(raw >> 8),
-                                         static_cast<std::uint8_t>(raw & 0xff));
-        }
-        if (monitor->maximumContrast > 0) {
-            const auto raw = vcpFromPercent(monitor->contrast, monitor->maximumContrast);
-            ddca_set_non_table_vcp_value(handle, 0x12, static_cast<std::uint8_t>(raw >> 8),
-                                         static_cast<std::uint8_t>(raw & 0xff));
-        }
-        ddca_close_display(handle);
+    if (monitor->maximumBrightness > 0 && monitor->maximumContrast > 0) {
+        sendVcp(*monitor,
+                {
+                    {0x10, vcpFromPercent(monitor->brightness, monitor->maximumBrightness)},
+                    {0x12, vcpFromPercent(monitor->contrast, monitor->maximumContrast)},
+                });
+    } else if (monitor->maximumBrightness > 0) {
+        sendVcp(*monitor,
+                {{0x10, vcpFromPercent(monitor->brightness, monitor->maximumBrightness)}});
+    } else if (monitor->maximumContrast > 0) {
+        sendVcp(*monitor,
+                {{0x12, vcpFromPercent(monitor->contrast, monitor->maximumContrast)}});
     }
     bumpRevision();
+}
+
+void BrightlessController::sendVcp(
+    Monitor &monitor,
+    std::initializer_list<std::pair<std::uint8_t, std::uint16_t>> writes)
+{
+    for (const auto &[code, value] : writes) {
+        monitor.pendingWrites.insert_or_assign(code, value);
+    }
+
+    if (ddcDelay_ == 0) {
+        flushDdcWrites();
+    } else if (writes.size() > 0) {
+        // ponytail: one timer debounces all monitors; split timers if simultaneous use matters.
+        ddcTimer_.start(ddcDelay_);
+    }
+}
+
+void BrightlessController::flushDdcWrites()
+{
+    ddcTimer_.stop();
+    DdcWorker::Writes writes;
+    for (const auto &monitor : monitors_) {
+        if (!monitor->pendingWrites.empty()) {
+            writes.emplace(monitor->reference, std::exchange(monitor->pendingWrites, {}));
+        }
+    }
+    ddcWorker_->submit(std::move(writes));
 }
 
 BrightlessController::Monitor *BrightlessController::monitorAt(int index)
@@ -653,6 +785,9 @@ void BrightlessController::loadSettings()
     const auto object = document.object();
     if (const auto value = object.value(QStringLiteral("scroll_step")); value.isDouble()) {
         scrollStep_ = std::clamp(value.toInt(scrollStep_), 1, 10);
+    }
+    if (const auto value = object.value(QStringLiteral("ddc_delay")); value.isDouble()) {
+        ddcDelay_ = std::clamp(value.toInt(ddcDelay_), 0, 1500);
     }
     if (const auto value = object.value(QStringLiteral("close_to_tray")); value.isBool()) {
         closeToTray_ = value.toBool();
@@ -719,6 +854,7 @@ void BrightlessController::saveSettings() const
 
     QJsonObject object;
     object.insert(QStringLiteral("scroll_step"), scrollStep_);
+    object.insert(QStringLiteral("ddc_delay"), ddcDelay_);
     object.insert(QStringLiteral("close_to_tray"), closeToTray_);
     if (!savedWindowSize_.isEmpty()) {
         object.insert(QStringLiteral("window_width"), savedWindowSize_.width());

@@ -4,9 +4,13 @@
 #include <QObject>
 #include <QSize>
 #include <QStringList>
+#include <QTimer>
 #include <QtQml/qqmlregistration.h>
 
+#include <cstdint>
+#include <initializer_list>
 #include <memory>
+#include <utility>
 #include <vector>
 
 class BrightlessController : public QObject
@@ -54,6 +58,8 @@ public:
 
     Q_INVOKABLE int scroll_step() const;
     Q_INVOKABLE void set_scroll_step(int value);
+    Q_INVOKABLE int ddc_delay() const;
+    Q_INVOKABLE void set_ddc_delay(int value);
     Q_INVOKABLE bool dynamic_contrast_enabled() const;
     Q_INVOKABLE void set_dynamic_contrast_enabled(bool value);
     Q_INVOKABLE bool dynamic_contrast_global() const;
@@ -78,19 +84,26 @@ signals:
 
 private:
     struct Monitor;
+    struct DdcWorker;
 
     Monitor *monitorAt(int index);
     const Monitor *monitorAt(int index) const;
     void bumpRevision();
     void refreshDynamicContrastState();
+    void sendVcp(Monitor &monitor,
+                 std::initializer_list<std::pair<std::uint8_t, std::uint16_t>> writes);
+    void flushDdcWrites();
     void loadSettings();
     void saveSettings() const;
 
     QString startupError_;
     std::vector<std::unique_ptr<Monitor>> monitors_;
     int revision_ = 0;
+    QTimer ddcTimer_;
+    std::unique_ptr<DdcWorker> ddcWorker_;
 
     int scrollStep_ = 2;
+    int ddcDelay_ = 0;
     bool closeToTray_ = true;
     QSize savedWindowSize_;
     bool dynamicContrastEnabled_ = false;

@@ -43,6 +43,12 @@ qt_add_translations(brightless
         translations/brightless_it.ts
         translations/brightless_tr.ts
         translations/brightless_es.ts
+        translations/brightless_pl.ts
+        translations/brightless_pt.ts
+        translations/brightless_zh.ts
+        translations/brightless_ko.ts
+        translations/brightless_ja.ts
+        translations/brightless_ru.ts
 )
 
 target_include_directories(brightless PRIVATE src)

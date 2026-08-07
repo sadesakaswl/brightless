@@ -16,20 +16,36 @@ int main(int argc, char *argv[])
     QCoreApplication app(argc, argv);
 
     BrightlessController controller;
+    if (controller.ddc_delay() != 0) {
+        return 2;
+    }
+    controller.set_ddc_delay(1600);
+    if (controller.ddc_delay() != 1500) {
+        return 3;
+    }
+    controller.set_ddc_delay(-1);
+    if (controller.ddc_delay() != 0) {
+        return 4;
+    }
+    controller.set_ddc_delay(750);
+    if (BrightlessController restored; restored.ddc_delay() != 750) {
+        return 5;
+    }
+
     const auto path = QDir(config.path()).filePath(QStringLiteral("autostart/brightless.desktop"));
     if (controller.autostart() || QFileInfo::exists(path)) {
-        return 2;
+        return 6;
     }
 
     controller.setAutostart(true);
     QFile file(path);
     if (!controller.autostart() || !file.open(QIODevice::ReadOnly)) {
-        return 3;
+        return 7;
     }
     const auto entry = file.readAll();
     if (!entry.startsWith("[Desktop Entry]\n")
         || !entry.contains(QCoreApplication::applicationFilePath().toUtf8())) {
-        return 4;
+        return 8;
     }
 
     controller.setAutostart(false);

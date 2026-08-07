@@ -4,7 +4,7 @@
 <context>
     <name>BrightlessController</name>
     <message>
-        <location filename="../src/brightlesscontroller.cpp" line="+81"/>
+        <location filename="../src/brightlesscontroller.cpp" line="+73"/>
         <source>Monitor %1</source>
         <translation>Monitor %1</translation>
     </message>
@@ -14,7 +14,7 @@
         <translation>unbekannter Fehler</translation>
     </message>
     <message>
-        <location line="+198"/>
+        <location line="+289"/>
         <source>Failed to detect displays</source>
         <translation>Bildschirme konnten nicht erkannt werden</translation>
     </message>
@@ -60,6 +60,16 @@
     </message>
     <message>
         <location line="+12"/>
+        <source>Delay to send DDC signal</source>
+        <translation>Verzögerung vor dem Senden des DDC-Signals</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Instant</source>
+        <translation>Sofort</translation>
+    </message>
+    <message>
+        <location line="+15"/>
         <source>Dynamic Contrast</source>
         <translation>Dynamischer Kontrast</translation>
     </message>
@@ -161,7 +171,7 @@
 <context>
     <name>Tray</name>
     <message>
-        <location filename="../src/main.cpp" line="+83"/>
+        <location filename="../src/main.cpp" line="+125"/>
         <source>Show Brightless</source>
         <translation>Brightless anzeigen</translation>
     </message>

@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="fr_FR" sourcelanguage="en">
+<TS version="2.1" language="pl_PL" sourcelanguage="en">
 <context>
     <name>BrightlessController</name>
     <message>
         <location filename="../src/brightlesscontroller.cpp" line="+73"/>
         <source>Monitor %1</source>
-        <translation>Moniteur %1</translation>
+        <translation>Monitor %1</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>unknown error</source>
-        <translation>erreur inconnue</translation>
+        <translation>nieznany błąd</translation>
     </message>
     <message>
         <location line="+289"/>
         <source>Failed to detect displays</source>
-        <translation>Échec de la détection des écrans</translation>
+        <translation>Nie udało się wykryć monitorów</translation>
     </message>
     <message>
         <location line="+53"/>
         <source>No DDC monitors found</source>
-        <translation>Aucun moniteur DDC trouvé</translation>
+        <translation>Nie znaleziono monitorów DDC</translation>
     </message>
 </context>
 <context>
@@ -29,74 +29,74 @@
     <message>
         <location filename="../src/qt/qml/Main.qml" line="+41"/>
         <source>Settings</source>
-        <translation>Paramètres</translation>
+        <translation>Ustawienia</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Error</source>
-        <translation>Erreur</translation>
+        <translation>Błąd</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Error: %1</source>
-        <translation>Erreur : %1</translation>
+        <translation>Błąd: %1</translation>
     </message>
     <message>
         <location line="+29"/>
         <location line="+2"/>
         <source>Autostart on login</source>
-        <translation>Démarrer à la connexion</translation>
+        <translation>Uruchamiaj przy logowaniu</translation>
     </message>
     <message>
         <location line="+8"/>
         <location line="+2"/>
         <source>Close to tray icon</source>
-        <translation>Fermer dans la zone de notification</translation>
+        <translation>Zamykaj do zasobnika systemowego</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Scroll Step:</source>
-        <translation>Incrément de défilement :</translation>
+        <translation>Krok przewijania:</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Delay to send DDC signal</source>
-        <translation>Délai avant l’envoi du signal DDC</translation>
+        <translation>Opóźnienie wysłania sygnału DDC</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Instant</source>
-        <translation>Instantané</translation>
+        <translation>Natychmiast</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Dynamic Contrast</source>
-        <translation>Contraste dynamique</translation>
+        <translation>Kontrast dynamiczny</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Enable Dynamic Contrast</source>
-        <translation>Activer le contraste dynamique</translation>
+        <translation>Włącz kontrast dynamiczny</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Apply to all monitors</source>
-        <translation>Appliquer à tous les moniteurs</translation>
+        <translation>Zastosuj do wszystkich monitorów</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Contrast Ratio:</source>
-        <translation>Rapport de contraste :</translation>
+        <translation>Współczynnik kontrastu:</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Per-monitor ratio</source>
-        <translation>Rapport par moniteur</translation>
+        <translation>Współczynnik dla każdego monitora</translation>
     </message>
     <message>
         <location line="+18"/>
         <source>%1 Ratio:</source>
-        <translation>Rapport de %1 :</translation>
+        <translation>Współczynnik dla %1:</translation>
     </message>
 </context>
 <context>
@@ -104,68 +104,68 @@
     <message>
         <location filename="../src/qt/qml/MonitorCard.qml" line="+26"/>
         <source>On</source>
-        <translation>Allumé</translation>
+        <translation>Włączony</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Standby</source>
-        <translation>Veille</translation>
+        <translation>Czuwanie</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Suspend</source>
-        <translation>Suspension</translation>
+        <translation>Uśpienie</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Off</source>
-        <translation>Éteint</translation>
+        <translation>Wyłączony</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Normal</source>
-        <translation>Normal</translation>
+        <translation>Normalny</translation>
     </message>
     <message>
         <location line="+33"/>
         <source>Unknown</source>
-        <translation>Inconnu</translation>
+        <translation>Nieznany</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Current (%1)</source>
-        <translation>Actuel (%1)</translation>
+        <translation>Bieżący (%1)</translation>
     </message>
     <message>
         <location line="+37"/>
         <location line="+68"/>
         <source>Dynamic Contrast:</source>
-        <translation>Contraste dynamique :</translation>
+        <translation>Kontrast dynamiczny:</translation>
     </message>
     <message>
         <location line="-56"/>
         <source>Brightness:</source>
-        <translation>Luminosité :</translation>
+        <translation>Jasność:</translation>
     </message>
     <message>
         <location line="+28"/>
         <source>Contrast:</source>
-        <translation>Contraste :</translation>
+        <translation>Kontrast:</translation>
     </message>
     <message>
         <location line="+55"/>
         <source>Volume:</source>
-        <translation>Volume :</translation>
+        <translation>Głośność:</translation>
     </message>
     <message>
         <location line="+28"/>
         <source>Input:</source>
-        <translation>Entrée :</translation>
+        <translation>Wejście:</translation>
     </message>
     <message>
         <location line="+18"/>
         <source>Power:</source>
-        <translation>Alimentation :</translation>
+        <translation>Zasilanie:</translation>
     </message>
 </context>
 <context>
@@ -173,12 +173,12 @@
     <message>
         <location filename="../src/main.cpp" line="+125"/>
         <source>Show Brightless</source>
-        <translation>Afficher Brightless</translation>
+        <translation>Pokaż Brightless</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Quit</source>
-        <translation>Quitter</translation>
+        <translation>Zakończ</translation>
     </message>
 </context>
 </TS>

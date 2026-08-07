@@ -110,6 +110,24 @@ ApplicationWindow {
                 onMoved: controller.set_scroll_step(Math.round(value))
             }
 
+            Label { id: ddcDelayLabel; text: qsTr("Delay to send DDC signal") }
+            Label {
+                text: Math.round(ddcDelaySlider.value) === 0
+                    ? qsTr("Instant")
+                    : Math.round(ddcDelaySlider.value) + " ms"
+                Layout.alignment: Qt.AlignRight
+            }
+            Slider {
+                id: ddcDelaySlider
+                from: 0
+                to: 1500
+                stepSize: 50
+                value: window.refreshed(controller.ddc_delay())
+                Accessible.name: ddcDelayLabel.text
+                Layout.fillWidth: true
+                onMoved: controller.set_ddc_delay(Math.round(value))
+            }
+
             Label { text: qsTr("Dynamic Contrast"); font.bold: true }
 
             RowLayout {

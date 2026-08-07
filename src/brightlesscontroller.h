@@ -23,6 +23,11 @@ class BrightlessController : public QObject
     Q_PROPERTY(int revision READ revision NOTIFY revisionChanged)
     Q_PROPERTY(bool close_to_tray READ closeToTray WRITE setCloseToTray NOTIFY closeToTrayChanged)
     Q_PROPERTY(bool autostart READ autostart WRITE setAutostart NOTIFY autostartChanged)
+    Q_PROPERTY(bool hide_brightness READ hideBrightness WRITE setHideBrightness NOTIFY visibilitySettingsChanged)
+    Q_PROPERTY(bool hide_contrast READ hideContrast WRITE setHideContrast NOTIFY visibilitySettingsChanged)
+    Q_PROPERTY(bool hide_volume READ hideVolume WRITE setHideVolume NOTIFY visibilitySettingsChanged)
+    Q_PROPERTY(bool hide_input READ hideInput WRITE setHideInput NOTIFY visibilitySettingsChanged)
+    Q_PROPERTY(bool hide_tray_icon READ hideTrayIcon WRITE setHideTrayIcon NOTIFY visibilitySettingsChanged)
 
 public:
     explicit BrightlessController(QObject *parent = nullptr);
@@ -36,6 +41,16 @@ public:
     void setCloseToTray(bool value);
     bool autostart() const;
     void setAutostart(bool value);
+    bool hideBrightness() const;
+    void setHideBrightness(bool value);
+    bool hideContrast() const;
+    void setHideContrast(bool value);
+    bool hideVolume() const;
+    void setHideVolume(bool value);
+    bool hideInput() const;
+    void setHideInput(bool value);
+    bool hideTrayIcon() const;
+    void setHideTrayIcon(bool value);
     QSize savedWindowSize() const;
     void saveWindowSize(const QSize &size);
     int adjustAllBrightness(int direction);
@@ -81,6 +96,7 @@ signals:
     void revisionChanged();
     void closeToTrayChanged();
     void autostartChanged();
+    void visibilitySettingsChanged();
 
 private:
     struct Monitor;
@@ -88,6 +104,7 @@ private:
 
     Monitor *monitorAt(int index);
     const Monitor *monitorAt(int index) const;
+    void setVisibilitySetting(bool &setting, bool value);
     void bumpRevision();
     void refreshDynamicContrastState();
     void sendVcp(Monitor &monitor,
@@ -105,6 +122,11 @@ private:
     int scrollStep_ = 2;
     int ddcDelay_ = 0;
     bool closeToTray_ = true;
+    bool hideBrightness_ = false;
+    bool hideContrast_ = false;
+    bool hideVolume_ = false;
+    bool hideInput_ = false;
+    bool hideTrayIcon_ = false;
     QSize savedWindowSize_;
     bool dynamicContrastEnabled_ = false;
     bool dynamicContrastGlobal_ = true;

@@ -32,6 +32,31 @@ int main(int argc, char *argv[])
         return 5;
     }
 
+    if (controller.hideBrightness() || controller.hideContrast() || controller.hideVolume()
+        || controller.hideInput() || controller.hideTrayIcon()) {
+        return 9;
+    }
+    controller.setHideBrightness(true);
+    controller.setHideContrast(true);
+    controller.setHideVolume(true);
+    controller.setHideInput(true);
+    controller.setHideTrayIcon(true);
+    if (!controller.hideBrightness() || !controller.hideContrast() || !controller.hideVolume()
+        || !controller.hideInput() || !controller.hideTrayIcon() || !controller.closeToTray()) {
+        return 10;
+    }
+    controller.setCloseToTray(false);
+    controller.setHideTrayIcon(false);
+    if (controller.closeToTray() || controller.hideTrayIcon()) {
+        return 11;
+    }
+    controller.setHideTrayIcon(true);
+    if (BrightlessController restored;
+        !restored.hideBrightness() || !restored.hideContrast() || !restored.hideVolume()
+        || !restored.hideInput() || !restored.hideTrayIcon() || restored.closeToTray()) {
+        return 12;
+    }
+
     const auto path = QDir(config.path()).filePath(QStringLiteral("autostart/brightless.desktop"));
     if (controller.autostart() || QFileInfo::exists(path)) {
         return 6;

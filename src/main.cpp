@@ -13,7 +13,6 @@
 #include <QQmlApplicationEngine>
 #include <QQmlProperty>
 #include <QScreen>
-#include <QSystemTrayIcon>
 #include <QTranslator>
 #include <QUrl>
 #include <QWindow>
@@ -56,6 +55,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     QApplication::setApplicationName(QStringLiteral("Brightless"));
     QApplication::setApplicationDisplayName(QStringLiteral("Brightless"));
+    QApplication::setApplicationVersion(QString::fromLatin1(BRIGHTLESS_VERSION));
     QApplication::setWindowIcon(
         QIcon(QStringLiteral(":/qt/qml/com/brightless/icon.png")));
 
@@ -112,8 +112,8 @@ int main(int argc, char *argv[])
                                  QDBusConnection::sessionBus());
     std::unique_ptr<KStatusNotifierItem> trayIcon;
     const auto updateTray = [&app, &brightnessOsd, &trayIcon, controller, window, showWindow] {
-        const auto enabled = controller->closeToTray();
-        if (enabled && !trayIcon) {
+        const auto visible = !controller->hideTrayIcon();
+        if (visible && !trayIcon) {
             trayIcon = std::make_unique<KStatusNotifierItem>(QStringLiteral("brightless"));
             trayIcon->setCategory(KStatusNotifierItem::Hardware);
             trayIcon->setIconByPixmap(QApplication::windowIcon());
@@ -143,12 +143,13 @@ int main(int argc, char *argv[])
                                  }
                              });
             trayIcon->setStatus(KStatusNotifierItem::Active);
-        } else if (!enabled) {
+        } else if (!visible) {
             trayIcon.reset();
         }
-        app.setQuitOnLastWindowClosed(!enabled || !QSystemTrayIcon::isSystemTrayAvailable());
+        app.setQuitOnLastWindowClosed(!controller->closeToTray());
     };
     QObject::connect(controller, &BrightlessController::closeToTrayChanged, &app, updateTray);
+    QObject::connect(controller, &BrightlessController::visibilitySettingsChanged, &app, updateTray);
     updateTray();
 
     return app.exec();

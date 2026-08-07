@@ -52,6 +52,7 @@ qt_add_translations(brightless
 )
 
 target_include_directories(brightless PRIVATE src)
+target_compile_definitions(brightless PRIVATE BRIGHTLESS_VERSION="${PROJECT_VERSION}")
 target_link_libraries(brightless PRIVATE
     Qt6::DBus
     Qt6::Quick

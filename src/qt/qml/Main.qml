@@ -39,7 +39,7 @@ ApplicationWindow {
             ToolButton {
                 text: "⚙"
                 Accessible.name: qsTr("Settings")
-                onClicked: settingsPopup.open()
+                onClicked: settingsWindow.open()
             }
         }
     }
@@ -57,150 +57,305 @@ ApplicationWindow {
         }
     }
 
-    Popup {
-        id: settingsPopup
-        modal: false
-        focus: true
-        x: Math.max(0, window.width - width - 12)
-        y: 12
-        width: Math.min(340, window.width - 24)
-        height: Math.min(settingsColumn.implicitHeight + topPadding + bottomPadding, window.height - 24)
-        padding: 12
+    ApplicationWindow {
+        id: settingsWindow
+        title: qsTr("Settings")
+        visible: false
+        flags: Qt.Dialog
+        transientParent: window
+        width: Math.min(420, window.width - 24)
+        height: Math.min(520, window.height - 24)
+        color: palette.window
 
-        contentItem: ScrollView {
-            id: settingsScroll
-            clip: true
-            contentWidth: availableWidth
-            ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+        function open() {
+            x = window.x + Math.round((window.width - width) / 2)
+            y = window.y + Math.round((window.height - height) / 2)
+            show()
+            requestActivate()
+        }
 
-            ColumnLayout {
-                id: settingsColumn
-                width: settingsScroll.availableWidth
-                spacing: 12
+        onActiveChanged: {
+            if (visible && !active)
+                Qt.callLater(() => close())
+        }
 
-            RowLayout {
+        Shortcut {
+            sequence: "Esc"
+            onActivated: settingsWindow.close()
+        }
+
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.margins: 12
+            spacing: 12
+
+            TabBar {
+                id: settingsTabs
                 Layout.fillWidth: true
-                Label { text: qsTr("Autostart on login"); Layout.fillWidth: true }
-                Switch {
-                    Accessible.name: qsTr("Autostart on login")
-                    checked: controller.autostart
-                    onToggled: controller.autostart = checked
-                }
+                TabButton { text: qsTr("Appearance") }
+                TabButton { text: qsTr("Behaviour") }
+                TabButton { text: qsTr("System") }
+                TabButton { text: qsTr("About") }
             }
 
-            RowLayout {
+            StackLayout {
+                currentIndex: settingsTabs.currentIndex
                 Layout.fillWidth: true
-                Label { text: qsTr("Close to tray icon"); Layout.fillWidth: true }
-                Switch {
-                    Accessible.name: qsTr("Close to tray icon")
-                    checked: controller.close_to_tray
-                    onToggled: controller.close_to_tray = checked
-                }
-            }
+                Layout.fillHeight: true
 
-            Label { text: qsTr("Scroll Step:") }
-            Label { text: scrollStepSlider.value.toFixed(0) + "%"; Layout.alignment: Qt.AlignRight }
-            Slider {
-                id: scrollStepSlider
-                from: 1
-                to: 10
-                stepSize: 1
-                value: window.refreshed(controller.scroll_step())
-                Layout.fillWidth: true
-                onMoved: controller.set_scroll_step(Math.round(value))
-            }
-
-            Label { id: ddcDelayLabel; text: qsTr("Delay to send DDC signal") }
-            Label {
-                text: Math.round(ddcDelaySlider.value) === 0
-                    ? qsTr("Instant")
-                    : Math.round(ddcDelaySlider.value) + " ms"
-                Layout.alignment: Qt.AlignRight
-            }
-            Slider {
-                id: ddcDelaySlider
-                from: 0
-                to: 1500
-                stepSize: 50
-                value: window.refreshed(controller.ddc_delay())
-                Accessible.name: ddcDelayLabel.text
-                Layout.fillWidth: true
-                onMoved: controller.set_ddc_delay(Math.round(value))
-            }
-
-            Label { text: qsTr("Dynamic Contrast"); font.bold: true }
-
-            RowLayout {
-                Label { text: qsTr("Enable Dynamic Contrast"); Layout.fillWidth: true }
-                Switch {
-                    checked: window.refreshed(controller.dynamic_contrast_enabled())
-                    onToggled: controller.set_dynamic_contrast_enabled(checked)
-                }
-            }
-
-            ColumnLayout {
-                visible: window.refreshed(controller.dynamic_contrast_enabled())
-                spacing: 8
-
-                RowLayout {
-                    Label { text: qsTr("Apply to all monitors"); Layout.fillWidth: true }
-                    Switch {
-                        checked: window.refreshed(controller.dynamic_contrast_global())
-                        onToggled: controller.set_dynamic_contrast_global(checked)
-                    }
-                }
-
-                RowLayout {
-                    visible: !window.refreshed(controller.dynamic_contrast_per_monitor_ratio())
-                    Label { text: qsTr("Contrast Ratio:"); Layout.preferredWidth: 120 }
-                    Label { text: ratioSlider.value.toFixed(1); Layout.fillWidth: true; horizontalAlignment: Text.AlignRight }
-                }
-                Slider {
-                    id: ratioSlider
-                    visible: !window.refreshed(controller.dynamic_contrast_per_monitor_ratio())
-                    from: 0.1
-                    to: 2.0
-                    stepSize: 0.1
-                    value: window.refreshed(controller.dynamic_contrast_ratio())
-                    Layout.fillWidth: true
-                    onMoved: controller.set_dynamic_contrast_ratio(value)
-                }
-
-                RowLayout {
-                    Label { text: qsTr("Per-monitor ratio"); Layout.fillWidth: true }
-                    Switch {
-                        checked: window.refreshed(controller.dynamic_contrast_per_monitor_ratio())
-                        onToggled: controller.set_dynamic_contrast_per_monitor_ratio(checked)
-                    }
-                }
-
-                Repeater {
-                    model: controller.monitor_count
+                Item {
                     ColumnLayout {
-                        id: ratioDelegate
-                        required property int index
-                        Layout.fillWidth: true
-                        visible: window.refreshed(window.backend.dynamic_contrast_per_monitor_ratio())
-                            && window.backend.supports_contrast(ratioDelegate.index)
+                        anchors.top: parent.top
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        spacing: 12
+
                         RowLayout {
                             Layout.fillWidth: true
                             Label {
-                                text: qsTr("%1 Ratio:").arg(window.backend.monitor_names[ratioDelegate.index])
-                                elide: Text.ElideRight
+                                id: hideBrightnessLabel
+                                text: window.refreshed(controller.dynamic_contrast_enabled())
+                                    ? qsTr("Hide Dynamic Contrast Option")
+                                    : qsTr("Hide Brightness Option")
                                 Layout.fillWidth: true
                             }
-                            Label { text: perMonitorRatio.value.toFixed(1) }
+                            Switch {
+                                Accessible.name: hideBrightnessLabel.text
+                                checked: controller.hide_brightness
+                                onToggled: controller.hide_brightness = checked
+                            }
                         }
-                        Slider {
-                            id: perMonitorRatio
-                            from: 0.1
-                            to: 2.0
-                            stepSize: 0.1
-                            value: window.refreshed(window.backend.monitor_ratio(ratioDelegate.index))
+
+                        RowLayout {
                             Layout.fillWidth: true
-                            onMoved: window.backend.set_monitor_ratio(ratioDelegate.index, value)
+                            visible: !window.refreshed(controller.dynamic_contrast_enabled())
+                            Label { text: qsTr("Hide Contrast Option"); Layout.fillWidth: true }
+                            Switch {
+                                Accessible.name: qsTr("Hide Contrast Option")
+                                checked: controller.hide_contrast
+                                onToggled: controller.hide_contrast = checked
+                            }
+                        }
+
+                        RowLayout {
+                            Layout.fillWidth: true
+                            Label { text: qsTr("Hide Volume Option"); Layout.fillWidth: true }
+                            Switch {
+                                Accessible.name: qsTr("Hide Volume Option")
+                                checked: controller.hide_volume
+                                onToggled: controller.hide_volume = checked
+                            }
+                        }
+
+                        RowLayout {
+                            Layout.fillWidth: true
+                            Label { text: qsTr("Hide Input Option"); Layout.fillWidth: true }
+                            Switch {
+                                Accessible.name: qsTr("Hide Input Option")
+                                checked: controller.hide_input
+                                onToggled: controller.hide_input = checked
+                            }
+                        }
+
+                        RowLayout {
+                            Layout.fillWidth: true
+                            Label { text: qsTr("Hide Tray Icon"); Layout.fillWidth: true }
+                            Switch {
+                                Accessible.name: qsTr("Hide Tray Icon")
+                                checked: controller.hide_tray_icon
+                                onToggled: controller.hide_tray_icon = checked
+                            }
                         }
                     }
+                }
+
+                ScrollView {
+                    id: behaviourScroll
+                    clip: true
+                    contentWidth: availableWidth
+                    ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+
+                    ColumnLayout {
+                        width: behaviourScroll.availableWidth
+                        spacing: 12
+
+                        Label { text: qsTr("Scroll Step:") }
+                        Label { text: scrollStepSlider.value.toFixed(0) + "%"; Layout.alignment: Qt.AlignRight }
+                        Slider {
+                            id: scrollStepSlider
+                            from: 1
+                            to: 10
+                            stepSize: 1
+                            value: window.refreshed(controller.scroll_step())
+                            Layout.fillWidth: true
+                            onMoved: controller.set_scroll_step(Math.round(value))
+                        }
+
+                        Label { id: ddcDelayLabel; text: qsTr("Delay to send DDC signal") }
+                        Label {
+                            text: Math.round(ddcDelaySlider.value) === 0
+                                ? qsTr("Instant")
+                                : Math.round(ddcDelaySlider.value) + " ms"
+                            Layout.alignment: Qt.AlignRight
+                        }
+                        Slider {
+                            id: ddcDelaySlider
+                            from: 0
+                            to: 1500
+                            stepSize: 50
+                            value: window.refreshed(controller.ddc_delay())
+                            Accessible.name: ddcDelayLabel.text
+                            Layout.fillWidth: true
+                            onMoved: controller.set_ddc_delay(Math.round(value))
+                        }
+
+                        Label { text: qsTr("Dynamic Contrast"); font.bold: true }
+
+                        RowLayout {
+                            Layout.fillWidth: true
+                            Label { text: qsTr("Enable Dynamic Contrast"); Layout.fillWidth: true }
+                            Switch {
+                                checked: window.refreshed(controller.dynamic_contrast_enabled())
+                                onToggled: controller.set_dynamic_contrast_enabled(checked)
+                            }
+                        }
+
+                        ColumnLayout {
+                            Layout.fillWidth: true
+                            visible: window.refreshed(controller.dynamic_contrast_enabled())
+                            spacing: 8
+
+                            RowLayout {
+                                Layout.fillWidth: true
+                                Label { text: qsTr("Apply to all monitors"); Layout.fillWidth: true }
+                                Switch {
+                                    checked: window.refreshed(controller.dynamic_contrast_global())
+                                    onToggled: controller.set_dynamic_contrast_global(checked)
+                                }
+                            }
+
+                            RowLayout {
+                                Layout.fillWidth: true
+                                visible: !window.refreshed(controller.dynamic_contrast_per_monitor_ratio())
+                                Label { text: qsTr("Contrast Ratio:"); Layout.preferredWidth: 120 }
+                                Label { text: ratioSlider.value.toFixed(1); Layout.fillWidth: true; horizontalAlignment: Text.AlignRight }
+                            }
+                            Slider {
+                                id: ratioSlider
+                                visible: !window.refreshed(controller.dynamic_contrast_per_monitor_ratio())
+                                from: 0.1
+                                to: 2.0
+                                stepSize: 0.1
+                                value: window.refreshed(controller.dynamic_contrast_ratio())
+                                Layout.fillWidth: true
+                                onMoved: controller.set_dynamic_contrast_ratio(value)
+                            }
+
+                            RowLayout {
+                                Layout.fillWidth: true
+                                Label { text: qsTr("Per-monitor ratio"); Layout.fillWidth: true }
+                                Switch {
+                                    checked: window.refreshed(controller.dynamic_contrast_per_monitor_ratio())
+                                    onToggled: controller.set_dynamic_contrast_per_monitor_ratio(checked)
+                                }
+                            }
+
+                            Repeater {
+                                model: controller.monitor_count
+                                ColumnLayout {
+                                    id: ratioDelegate
+                                    required property int index
+                                    Layout.fillWidth: true
+                                    visible: window.refreshed(window.backend.dynamic_contrast_per_monitor_ratio())
+                                        && window.backend.supports_contrast(ratioDelegate.index)
+                                    RowLayout {
+                                        Layout.fillWidth: true
+                                        Label {
+                                            text: qsTr("%1 Ratio:").arg(window.backend.monitor_names[ratioDelegate.index])
+                                            elide: Text.ElideRight
+                                            Layout.fillWidth: true
+                                        }
+                                        Label { text: perMonitorRatio.value.toFixed(1) }
+                                    }
+                                    Slider {
+                                        id: perMonitorRatio
+                                        from: 0.1
+                                        to: 2.0
+                                        stepSize: 0.1
+                                        value: window.refreshed(window.backend.monitor_ratio(ratioDelegate.index))
+                                        Layout.fillWidth: true
+                                        onMoved: window.backend.set_monitor_ratio(ratioDelegate.index, value)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Item {
+                    ColumnLayout {
+                        anchors.top: parent.top
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        spacing: 12
+
+                        RowLayout {
+                            Layout.fillWidth: true
+                            Label { text: qsTr("Autostart on login"); Layout.fillWidth: true }
+                            Switch {
+                                Accessible.name: qsTr("Autostart on login")
+                                checked: controller.autostart
+                                onToggled: controller.autostart = checked
+                            }
+                        }
+
+                        RowLayout {
+                            Layout.fillWidth: true
+                            enabled: !controller.hide_tray_icon
+                            Label { text: qsTr("Close to tray icon"); Layout.fillWidth: true }
+                            Switch {
+                                Accessible.name: qsTr("Close to tray icon")
+                                checked: controller.close_to_tray
+                                onToggled: controller.close_to_tray = checked
+                            }
+                        }
+                    }
+                }
+
+                Item {
+                    ColumnLayout {
+                        anchors.top: parent.top
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        spacing: 8
+
+                        Image {
+                            source: "qrc:/qt/qml/com/brightless/icon.png"
+                            fillMode: Image.PreserveAspectFit
+                            Layout.preferredWidth: 96
+                            Layout.preferredHeight: 96
+                            Layout.alignment: Qt.AlignHCenter
+                        }
+                        Label {
+                            text: "Brightless"
+                            font.bold: true
+                            Layout.alignment: Qt.AlignHCenter
+                        }
+                        Label {
+                            text: qsTr("Version %1").arg(Qt.application.version)
+                            Layout.alignment: Qt.AlignHCenter
+                        }
+                        Label {
+                            text: "<a href=\"https://github.com/sadesakaswl/brightless\">github.com/sadesakaswl/brightless</a>"
+                            textFormat: Text.RichText
+                            Accessible.name: qsTr("Brightless repository")
+                            Layout.alignment: Qt.AlignHCenter
+                            onLinkActivated: (link) => Qt.openUrlExternally(link)
+                        }
+                        Label {
+                            text: qsTr("GNU General Public License v3.0")
+                            Layout.alignment: Qt.AlignHCenter
+                        }
                     }
                 }
             }

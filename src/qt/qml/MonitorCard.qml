@@ -10,6 +10,8 @@ Frame {
     property int revision: root.controller.revision
     readonly property bool compact: width < 560
     readonly property int labelWidth: compact ? 100 : 140
+    readonly property bool showInput: !root.controller.hide_input
+        && root.controller.supports_input_source(root.monitorIndex)
 
     property var inputSourceChoices: [
         { text: "VGA", code: 1 },
@@ -107,7 +109,8 @@ Frame {
         GridLayout {
             Layout.fillWidth: true
             columns: root.compact ? 2 : 3
-            visible: !root.refreshed(root.controller.monitor_dynamic_contrast_enabled(root.monitorIndex))
+            visible: !root.controller.hide_brightness
+                && !root.refreshed(root.controller.monitor_dynamic_contrast_enabled(root.monitorIndex))
             Label {
                 text: qsTr("Brightness:")
                 Layout.columnSpan: root.compact ? 2 : 1
@@ -134,7 +137,8 @@ Frame {
         GridLayout {
             Layout.fillWidth: true
             columns: root.compact ? 2 : 3
-            visible: root.controller.supports_contrast(root.monitorIndex)
+            visible: !root.controller.hide_contrast
+                && root.controller.supports_contrast(root.monitorIndex)
                 && !root.refreshed(root.controller.monitor_dynamic_contrast_enabled(root.monitorIndex))
             Label {
                 text: qsTr("Contrast:")
@@ -162,7 +166,8 @@ Frame {
         GridLayout {
             Layout.fillWidth: true
             columns: root.compact ? 2 : 3
-            visible: root.controller.supports_contrast(root.monitorIndex)
+            visible: !root.controller.hide_brightness
+                && root.controller.supports_contrast(root.monitorIndex)
                 && root.refreshed(root.controller.monitor_dynamic_contrast_enabled(root.monitorIndex))
             Label {
                 text: qsTr("Dynamic Contrast:")
@@ -190,7 +195,8 @@ Frame {
         GridLayout {
             Layout.fillWidth: true
             columns: root.compact ? 2 : 3
-            visible: root.controller.supports_volume(root.monitorIndex)
+            visible: !root.controller.hide_volume
+                && root.controller.supports_volume(root.monitorIndex)
             Label {
                 text: qsTr("Volume:")
                 Layout.columnSpan: root.compact ? 2 : 1
@@ -216,16 +222,15 @@ Frame {
 
         GridLayout {
             Layout.fillWidth: true
-            columns: root.compact ? 2 : 4
-            visible: root.controller.supports_input_source(root.monitorIndex)
-                || root.controller.supports_power_mode(root.monitorIndex)
+            columns: root.compact || !root.showInput ? 2 : 4
+            visible: root.showInput || root.controller.supports_power_mode(root.monitorIndex)
             Label {
                 text: qsTr("Input:")
-                visible: root.controller.supports_input_source(root.monitorIndex)
+                visible: root.showInput
                 Layout.preferredWidth: root.labelWidth
             }
             ComboBox {
-                visible: root.controller.supports_input_source(root.monitorIndex)
+                visible: root.showInput
                 textRole: "text"
                 valueRole: "code"
                 model: root.inputSourceModel

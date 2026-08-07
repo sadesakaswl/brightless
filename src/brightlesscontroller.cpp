@@ -287,6 +287,56 @@ void BrightlessController::setCloseToTray(bool value)
     emit closeToTrayChanged();
 }
 
+bool BrightlessController::hideBrightness() const
+{
+    return hideBrightness_;
+}
+
+void BrightlessController::setHideBrightness(bool value)
+{
+    setVisibilitySetting(hideBrightness_, value);
+}
+
+bool BrightlessController::hideContrast() const
+{
+    return hideContrast_;
+}
+
+void BrightlessController::setHideContrast(bool value)
+{
+    setVisibilitySetting(hideContrast_, value);
+}
+
+bool BrightlessController::hideVolume() const
+{
+    return hideVolume_;
+}
+
+void BrightlessController::setHideVolume(bool value)
+{
+    setVisibilitySetting(hideVolume_, value);
+}
+
+bool BrightlessController::hideInput() const
+{
+    return hideInput_;
+}
+
+void BrightlessController::setHideInput(bool value)
+{
+    setVisibilitySetting(hideInput_, value);
+}
+
+bool BrightlessController::hideTrayIcon() const
+{
+    return hideTrayIcon_;
+}
+
+void BrightlessController::setHideTrayIcon(bool value)
+{
+    setVisibilitySetting(hideTrayIcon_, value);
+}
+
 bool BrightlessController::autostart() const
 {
     const auto path = autostartPath();
@@ -752,6 +802,16 @@ const BrightlessController::Monitor *BrightlessController::monitorAt(int index) 
         : nullptr;
 }
 
+void BrightlessController::setVisibilitySetting(bool &setting, bool value)
+{
+    if (setting == value) {
+        return;
+    }
+    setting = value;
+    saveSettings();
+    emit visibilitySettingsChanged();
+}
+
 void BrightlessController::bumpRevision()
 {
     revision_ = revision_ == std::numeric_limits<int>::max() ? 0 : revision_ + 1;
@@ -788,6 +848,21 @@ void BrightlessController::loadSettings()
     }
     if (const auto value = object.value(QStringLiteral("ddc_delay")); value.isDouble()) {
         ddcDelay_ = std::clamp(value.toInt(ddcDelay_), 0, 1500);
+    }
+    if (const auto value = object.value(QStringLiteral("hide_brightness")); value.isBool()) {
+        hideBrightness_ = value.toBool();
+    }
+    if (const auto value = object.value(QStringLiteral("hide_contrast")); value.isBool()) {
+        hideContrast_ = value.toBool();
+    }
+    if (const auto value = object.value(QStringLiteral("hide_volume")); value.isBool()) {
+        hideVolume_ = value.toBool();
+    }
+    if (const auto value = object.value(QStringLiteral("hide_input")); value.isBool()) {
+        hideInput_ = value.toBool();
+    }
+    if (const auto value = object.value(QStringLiteral("hide_tray_icon")); value.isBool()) {
+        hideTrayIcon_ = value.toBool();
     }
     if (const auto value = object.value(QStringLiteral("close_to_tray")); value.isBool()) {
         closeToTray_ = value.toBool();
@@ -856,6 +931,11 @@ void BrightlessController::saveSettings() const
     object.insert(QStringLiteral("scroll_step"), scrollStep_);
     object.insert(QStringLiteral("ddc_delay"), ddcDelay_);
     object.insert(QStringLiteral("close_to_tray"), closeToTray_);
+    object.insert(QStringLiteral("hide_brightness"), hideBrightness_);
+    object.insert(QStringLiteral("hide_contrast"), hideContrast_);
+    object.insert(QStringLiteral("hide_volume"), hideVolume_);
+    object.insert(QStringLiteral("hide_input"), hideInput_);
+    object.insert(QStringLiteral("hide_tray_icon"), hideTrayIcon_);
     if (!savedWindowSize_.isEmpty()) {
         object.insert(QStringLiteral("window_width"), savedWindowSize_.width());
         object.insert(QStringLiteral("window_height"), savedWindowSize_.height());

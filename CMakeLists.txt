@@ -71,6 +71,14 @@ install(TARGETS brightless RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 include(CTest)
 if(BUILD_TESTING)
+    find_package(Python3 REQUIRED COMPONENTS Interpreter)
+    add_test(NAME translations
+        COMMAND ${Python3_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/translations_test.py
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/qt/qml
+            ${CMAKE_CURRENT_SOURCE_DIR}/translations
+    )
+
     add_executable(brightless_model_test tests/model_test.cpp)
     target_include_directories(brightless_model_test PRIVATE src)
     add_test(NAME model COMMAND brightless_model_test)

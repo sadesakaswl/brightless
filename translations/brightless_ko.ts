@@ -14,7 +14,7 @@
         <translation>알 수 없는 오류</translation>
     </message>
     <message>
-        <location line="+339"/>
+        <location line="+366"/>
         <source>Failed to detect displays</source>
         <translation>디스플레이를 감지하지 못했습니다</translation>
     </message>
@@ -64,13 +64,13 @@
         <translation>로그인할 때 Brightless를 자동으로 실행합니다.</translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+29"/>
         <location line="+2"/>
         <source>Close to tray icon</source>
         <translation>닫을 때 시스템 트레이로 최소화</translation>
     </message>
     <message>
-        <location line="-159"/>
+        <location line="-179"/>
         <source>Scroll Step:</source>
         <translation>스크롤 단계:</translation>
     </message>
@@ -272,7 +272,18 @@
         <translation>%1 비율:</translation>
     </message>
     <message>
-        <location line="+50"/>
+        <location line="+51"/>
+        <location line="+5"/>
+        <source>Autostart as tray icon</source>
+        <translation>트레이 아이콘으로 자동 시작</translation>
+    </message>
+    <message>
+        <location line="-8"/>
+        <source>Start Brightless on login without opening its window.</source>
+        <translation>창을 열지 않고 로그인할 때 Brightless를 시작합니다.</translation>
+    </message>
+    <message>
+        <location line="+22"/>
         <source>Keep Brightless running after its window closes.</source>
         <translation>창을 닫은 후에도 Brightless를 계속 실행합니다.</translation>
     </message>
@@ -410,7 +421,7 @@
 <context>
     <name>Tray</name>
     <message>
-        <location filename="../src/main.cpp" line="+125"/>
+        <location filename="../src/main.cpp" line="+131"/>
         <source>Show Brightless</source>
         <translation>Brightless 표시</translation>
     </message>

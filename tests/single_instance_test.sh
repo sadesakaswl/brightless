@@ -13,7 +13,7 @@ cleanup()
 trap cleanup EXIT
 
 export QT_QPA_PLATFORM=offscreen XDG_CONFIG_HOME="$config"
-"$binary" >"$config/first.log" 2>&1 &
+"$binary" --autostart >"$config/first.log" 2>&1 &
 first=$!
 
 ready=false
@@ -28,5 +28,6 @@ for _ in $(seq 1 100); do
     sleep 0.05
 done
 $ready
+timeout 20 "$binary" --autostart
 timeout 20 "$binary"
 kill -0 "$first"

@@ -58,6 +58,7 @@ int main(int argc, char *argv[])
     QApplication::setApplicationVersion(QString::fromLatin1(BRIGHTLESS_VERSION));
     QApplication::setWindowIcon(
         QIcon(QStringLiteral(":/qt/qml/com/brightless/icon.png")));
+    const auto autostartLaunch = app.arguments().contains(QStringLiteral("--autostart"));
 
     const auto serviceName = QStringLiteral("com.brightless.Application");
     const auto objectPath = QStringLiteral("/com/brightless/Application");
@@ -66,6 +67,9 @@ int main(int argc, char *argv[])
     if (sessionBus.isConnected()
         && sessionBus.registerObject(objectPath, &activation, QDBusConnection::ExportAllSlots)
         && !sessionBus.registerService(serviceName)) {
+        if (autostartLaunch) {
+            return 0;
+        }
         QDBusInterface runningApplication(serviceName, objectPath, serviceName, sessionBus);
         const auto reply = runningApplication.call(QStringLiteral("activate"),
                                                    qEnvironmentVariable("XDG_ACTIVATION_TOKEN"));
@@ -104,6 +108,8 @@ int main(int argc, char *argv[])
     });
 
     activation.setWindow(window);
+    window->setVisible(!autostartLaunch || !controller->autostartAsTrayIcon()
+                       || controller->hideTrayIcon());
     const auto showWindow = [&activation] { activation.activate(); };
 
     QDBusInterface brightnessOsd(QStringLiteral("org.kde.plasmashell"),

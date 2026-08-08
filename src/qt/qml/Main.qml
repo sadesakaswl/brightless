@@ -11,7 +11,7 @@ ApplicationWindow {
     height: Math.min(Screen.desktopAvailableHeight, Math.max(minimumHeight, monitorColumn.implicitHeight + header.height + 48))
     minimumWidth: 360
     minimumHeight: 320
-    visible: true
+    visible: false
     title: "Brightless"
 
     BrightlessController {
@@ -344,6 +344,26 @@ ApplicationWindow {
                                 ToolTip.text: qsTr("Launch Brightless automatically when you log in.")
                                 checked: controller.autostart
                                 onToggled: controller.autostart = checked
+                            }
+                        }
+
+                        RowLayout {
+                            id: autostartTrayRow
+                            readonly property bool optionEnabled: controller.autostart && !controller.hide_tray_icon
+                            Layout.fillWidth: true
+                            ToolTip.visible: autostartTrayHover.hovered
+                            ToolTip.text: qsTr("Start Brightless on login without opening its window.")
+                            HoverHandler { id: autostartTrayHover }
+                            Label {
+                                text: qsTr("Autostart as tray icon")
+                                enabled: autostartTrayRow.optionEnabled
+                                Layout.fillWidth: true
+                            }
+                            Switch {
+                                Accessible.name: qsTr("Autostart as tray icon")
+                                enabled: autostartTrayRow.optionEnabled
+                                checked: controller.autostart_as_tray_icon
+                                onToggled: controller.autostart_as_tray_icon = checked
                             }
                         }
 

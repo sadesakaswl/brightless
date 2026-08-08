@@ -14,7 +14,7 @@
         <translation>unbekannter Fehler</translation>
     </message>
     <message>
-        <location line="+339"/>
+        <location line="+366"/>
         <source>Failed to detect displays</source>
         <translation>Bildschirme konnten nicht erkannt werden</translation>
     </message>
@@ -64,13 +64,13 @@
         <translation>Brightless bei der Anmeldung automatisch starten.</translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+29"/>
         <location line="+2"/>
         <source>Close to tray icon</source>
         <translation>In den Systembereich schließen</translation>
     </message>
     <message>
-        <location line="-159"/>
+        <location line="-179"/>
         <source>Scroll Step:</source>
         <translation>Scroll-Schritt:</translation>
     </message>
@@ -272,7 +272,18 @@
         <translation>Verhältnis für %1:</translation>
     </message>
     <message>
-        <location line="+50"/>
+        <location line="+51"/>
+        <location line="+5"/>
+        <source>Autostart as tray icon</source>
+        <translation>Als Symbol im Systembereich automatisch starten</translation>
+    </message>
+    <message>
+        <location line="-8"/>
+        <source>Start Brightless on login without opening its window.</source>
+        <translation>Brightless beim Anmelden starten, ohne das Fenster zu öffnen.</translation>
+    </message>
+    <message>
+        <location line="+22"/>
         <source>Keep Brightless running after its window closes.</source>
         <translation>Brightless nach dem Schließen des Fensters weiter ausführen.</translation>
     </message>
@@ -410,7 +421,7 @@
 <context>
     <name>Tray</name>
     <message>
-        <location filename="../src/main.cpp" line="+125"/>
+        <location filename="../src/main.cpp" line="+131"/>
         <source>Show Brightless</source>
         <translation>Brightless anzeigen</translation>
     </message>

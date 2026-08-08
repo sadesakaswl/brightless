@@ -14,7 +14,7 @@
         <translation>未知错误</translation>
     </message>
     <message>
-        <location line="+339"/>
+        <location line="+366"/>
         <source>Failed to detect displays</source>
         <translation>检测显示器失败</translation>
     </message>
@@ -64,13 +64,13 @@
         <translation>登录时自动启动 Brightless。</translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+29"/>
         <location line="+2"/>
         <source>Close to tray icon</source>
         <translation>关闭到系统托盘</translation>
     </message>
     <message>
-        <location line="-159"/>
+        <location line="-179"/>
         <source>Scroll Step:</source>
         <translation>滚动步长：</translation>
     </message>
@@ -272,7 +272,18 @@
         <translation>%1 比率：</translation>
     </message>
     <message>
-        <location line="+50"/>
+        <location line="+51"/>
+        <location line="+5"/>
+        <source>Autostart as tray icon</source>
+        <translation>自动启动到系统托盘</translation>
+    </message>
+    <message>
+        <location line="-8"/>
+        <source>Start Brightless on login without opening its window.</source>
+        <translation>登录时启动 Brightless，但不打开窗口。</translation>
+    </message>
+    <message>
+        <location line="+22"/>
         <source>Keep Brightless running after its window closes.</source>
         <translation>关闭窗口后让 Brightless 继续运行。</translation>
     </message>
@@ -410,7 +421,7 @@
 <context>
     <name>Tray</name>
     <message>
-        <location filename="../src/main.cpp" line="+125"/>
+        <location filename="../src/main.cpp" line="+131"/>
         <source>Show Brightless</source>
         <translation>显示 Brightless</translation>
     </message>

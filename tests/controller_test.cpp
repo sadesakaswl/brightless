@@ -57,6 +57,14 @@ int main(int argc, char *argv[])
         return 12;
     }
 
+    if (controller.autostartAsTrayIcon()) {
+        return 13;
+    }
+    controller.setAutostartAsTrayIcon(true);
+    if (BrightlessController restored; !restored.autostartAsTrayIcon()) {
+        return 14;
+    }
+
     const auto path = QDir(config.path()).filePath(QStringLiteral("autostart/brightless.desktop"));
     if (controller.autostart() || QFileInfo::exists(path)) {
         return 6;
@@ -69,8 +77,15 @@ int main(int argc, char *argv[])
     }
     const auto entry = file.readAll();
     if (!entry.startsWith("[Desktop Entry]\n")
-        || !entry.contains(QCoreApplication::applicationFilePath().toUtf8())) {
+        || !entry.contains(QCoreApplication::applicationFilePath().toUtf8())
+        || !entry.contains(" --autostart\n")) {
         return 8;
+    }
+
+    controller.setAutostartAsTrayIcon(false);
+    QFile updatedFile(path);
+    if (!updatedFile.open(QIODevice::ReadOnly) || updatedFile.readAll() != entry) {
+        return 15;
     }
 
     controller.setAutostart(false);

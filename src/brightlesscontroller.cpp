@@ -123,9 +123,29 @@ QByteArray autostartEntry()
     }
 
     return QStringLiteral("[Desktop Entry]\nType=Application\nName=Brightless\n"
-                          "Exec=\"%1\"\nTerminal=false\n")
+                          "Exec=\"%1\" --autostart\nTerminal=false\n")
         .arg(executable)
         .toUtf8();
+}
+
+bool writeAutostartEntry()
+{
+    const auto path = autostartPath();
+    const auto data = autostartEntry();
+    if (path.isEmpty() || data.isEmpty()
+        || !QDir().mkpath(QFileInfo(path).absolutePath())) {
+        return false;
+    }
+
+    QSaveFile file(path);
+    if (!file.open(QIODevice::WriteOnly)) {
+        return false;
+    }
+    if (file.write(data) != data.size()) {
+        file.cancelWriting();
+        return false;
+    }
+    return file.commit();
 }
 
 } // namespace
@@ -349,23 +369,30 @@ void BrightlessController::setAutostart(bool value)
         return;
     }
 
-    const auto path = autostartPath();
     if (value) {
-        const auto data = autostartEntry();
-        if (!path.isEmpty() && !data.isEmpty() && QDir().mkpath(QFileInfo(path).absolutePath())) {
-            QSaveFile file(path);
-            if (file.open(QIODevice::WriteOnly)) {
-                if (file.write(data) == data.size()) {
-                    file.commit();
-                } else {
-                    file.cancelWriting();
-                }
-            }
+        writeAutostartEntry();
+    } else {
+        const auto path = autostartPath();
+        if (!path.isEmpty()) {
+            QFile::remove(path);
         }
-    } else if (!path.isEmpty()) {
-        QFile::remove(path);
     }
     emit autostartChanged();
+}
+
+bool BrightlessController::autostartAsTrayIcon() const
+{
+    return autostartAsTrayIcon_;
+}
+
+void BrightlessController::setAutostartAsTrayIcon(bool value)
+{
+    if (autostartAsTrayIcon_ == value) {
+        return;
+    }
+    autostartAsTrayIcon_ = value;
+    saveSettings();
+    emit autostartAsTrayIconChanged();
 }
 
 QSize BrightlessController::savedWindowSize() const
@@ -867,6 +894,9 @@ void BrightlessController::loadSettings()
     if (const auto value = object.value(QStringLiteral("close_to_tray")); value.isBool()) {
         closeToTray_ = value.toBool();
     }
+    if (const auto value = object.value(QStringLiteral("autostart_as_tray_icon")); value.isBool()) {
+        autostartAsTrayIcon_ = value.toBool();
+    }
     const auto windowWidth = object.value(QStringLiteral("window_width"));
     const auto windowHeight = object.value(QStringLiteral("window_height"));
     if (windowWidth.isDouble() && windowHeight.isDouble()) {
@@ -931,6 +961,7 @@ void BrightlessController::saveSettings() const
     object.insert(QStringLiteral("scroll_step"), scrollStep_);
     object.insert(QStringLiteral("ddc_delay"), ddcDelay_);
     object.insert(QStringLiteral("close_to_tray"), closeToTray_);
+    object.insert(QStringLiteral("autostart_as_tray_icon"), autostartAsTrayIcon_);
     object.insert(QStringLiteral("hide_brightness"), hideBrightness_);
     object.insert(QStringLiteral("hide_contrast"), hideContrast_);
     object.insert(QStringLiteral("hide_volume"), hideVolume_);

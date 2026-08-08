@@ -14,7 +14,7 @@
         <translation>bilinmeyen hata</translation>
     </message>
     <message>
-        <location line="+339"/>
+        <location line="+366"/>
         <source>Failed to detect displays</source>
         <translation>Ekranlar algılanamadı</translation>
     </message>
@@ -64,13 +64,13 @@
         <translation>Oturum açtığınızda Brightless&apos;ı otomatik olarak başlat.</translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+29"/>
         <location line="+2"/>
         <source>Close to tray icon</source>
         <translation>Sistem tepsisine kapat</translation>
     </message>
     <message>
-        <location line="-159"/>
+        <location line="-179"/>
         <source>Scroll Step:</source>
         <translation>Kaydırma adımı:</translation>
     </message>
@@ -272,7 +272,18 @@
         <translation>%1 oranı:</translation>
     </message>
     <message>
-        <location line="+50"/>
+        <location line="+51"/>
+        <location line="+5"/>
+        <source>Autostart as tray icon</source>
+        <translation>Tepsi simgesi olarak otomatik başlat</translation>
+    </message>
+    <message>
+        <location line="-8"/>
+        <source>Start Brightless on login without opening its window.</source>
+        <translation>Oturum açarken Brightless&apos;ı penceresini açmadan başlat.</translation>
+    </message>
+    <message>
+        <location line="+22"/>
         <source>Keep Brightless running after its window closes.</source>
         <translation>Penceresi kapandıktan sonra Brightless&apos;ı çalışır durumda tut.</translation>
     </message>
@@ -410,7 +421,7 @@
 <context>
     <name>Tray</name>
     <message>
-        <location filename="../src/main.cpp" line="+125"/>
+        <location filename="../src/main.cpp" line="+131"/>
         <source>Show Brightless</source>
         <translation>Brightless&apos;ı göster</translation>
     </message>

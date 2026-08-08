@@ -23,6 +23,7 @@ class BrightlessController : public QObject
     Q_PROPERTY(int revision READ revision NOTIFY revisionChanged)
     Q_PROPERTY(bool close_to_tray READ closeToTray WRITE setCloseToTray NOTIFY closeToTrayChanged)
     Q_PROPERTY(bool autostart READ autostart WRITE setAutostart NOTIFY autostartChanged)
+    Q_PROPERTY(bool autostart_as_tray_icon READ autostartAsTrayIcon WRITE setAutostartAsTrayIcon NOTIFY autostartAsTrayIconChanged)
     Q_PROPERTY(bool hide_brightness READ hideBrightness WRITE setHideBrightness NOTIFY visibilitySettingsChanged)
     Q_PROPERTY(bool hide_contrast READ hideContrast WRITE setHideContrast NOTIFY visibilitySettingsChanged)
     Q_PROPERTY(bool hide_volume READ hideVolume WRITE setHideVolume NOTIFY visibilitySettingsChanged)
@@ -41,6 +42,8 @@ public:
     void setCloseToTray(bool value);
     bool autostart() const;
     void setAutostart(bool value);
+    bool autostartAsTrayIcon() const;
+    void setAutostartAsTrayIcon(bool value);
     bool hideBrightness() const;
     void setHideBrightness(bool value);
     bool hideContrast() const;
@@ -96,6 +99,7 @@ signals:
     void revisionChanged();
     void closeToTrayChanged();
     void autostartChanged();
+    void autostartAsTrayIconChanged();
     void visibilitySettingsChanged();
 
 private:
@@ -122,6 +126,7 @@ private:
     int scrollStep_ = 2;
     int ddcDelay_ = 0;
     bool closeToTray_ = true;
+    bool autostartAsTrayIcon_ = false;
     bool hideBrightness_ = false;
     bool hideContrast_ = false;
     bool hideVolume_ = false;

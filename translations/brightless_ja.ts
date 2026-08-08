@@ -14,7 +14,7 @@
         <translation>不明なエラー</translation>
     </message>
     <message>
-        <location line="+339"/>
+        <location line="+366"/>
         <source>Failed to detect displays</source>
         <translation>ディスプレイを検出できませんでした</translation>
     </message>
@@ -64,13 +64,13 @@
         <translation>ログイン時に Brightless を自動的に起動します。</translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+29"/>
         <location line="+2"/>
         <source>Close to tray icon</source>
         <translation>閉じたときにシステムトレイへ格納</translation>
     </message>
     <message>
-        <location line="-159"/>
+        <location line="-179"/>
         <source>Scroll Step:</source>
         <translation>スクロール量:</translation>
     </message>
@@ -272,7 +272,18 @@
         <translation>%1 の比率:</translation>
     </message>
     <message>
-        <location line="+50"/>
+        <location line="+51"/>
+        <location line="+5"/>
+        <source>Autostart as tray icon</source>
+        <translation>トレイアイコンとして自動起動</translation>
+    </message>
+    <message>
+        <location line="-8"/>
+        <source>Start Brightless on login without opening its window.</source>
+        <translation>ウィンドウを開かずにログイン時に Brightless を起動します。</translation>
+    </message>
+    <message>
+        <location line="+22"/>
         <source>Keep Brightless running after its window closes.</source>
         <translation>ウィンドウを閉じた後も Brightless を実行し続けます。</translation>
     </message>
@@ -410,7 +421,7 @@
 <context>
     <name>Tray</name>
     <message>
-        <location filename="../src/main.cpp" line="+125"/>
+        <location filename="../src/main.cpp" line="+131"/>
         <source>Show Brightless</source>
         <translation>Brightless を表示</translation>
     </message>

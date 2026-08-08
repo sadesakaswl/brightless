@@ -14,7 +14,7 @@
         <translation>неизвестная ошибка</translation>
     </message>
     <message>
-        <location line="+339"/>
+        <location line="+366"/>
         <source>Failed to detect displays</source>
         <translation>Не удалось обнаружить мониторы</translation>
     </message>
@@ -64,13 +64,13 @@
         <translation>Автоматически запускать Brightless при входе в систему.</translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+29"/>
         <location line="+2"/>
         <source>Close to tray icon</source>
         <translation>Сворачивать в трей при закрытии</translation>
     </message>
     <message>
-        <location line="-159"/>
+        <location line="-179"/>
         <source>Scroll Step:</source>
         <translation>Шаг прокрутки:</translation>
     </message>
@@ -272,7 +272,18 @@
         <translation>Коэффициент для %1:</translation>
     </message>
     <message>
-        <location line="+50"/>
+        <location line="+51"/>
+        <location line="+5"/>
+        <source>Autostart as tray icon</source>
+        <translation>Автозапуск в системном трее</translation>
+    </message>
+    <message>
+        <location line="-8"/>
+        <source>Start Brightless on login without opening its window.</source>
+        <translation>Запускать Brightless при входе в систему, не открывая окно.</translation>
+    </message>
+    <message>
+        <location line="+22"/>
         <source>Keep Brightless running after its window closes.</source>
         <translation>Оставлять Brightless запущенным после закрытия окна.</translation>
     </message>
@@ -410,7 +421,7 @@
 <context>
     <name>Tray</name>
     <message>
-        <location filename="../src/main.cpp" line="+125"/>
+        <location filename="../src/main.cpp" line="+131"/>
         <source>Show Brightless</source>
         <translation>Показать Brightless</translation>
     </message>

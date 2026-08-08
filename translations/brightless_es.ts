@@ -14,7 +14,7 @@
         <translation>error desconocido</translation>
     </message>
     <message>
-        <location line="+366"/>
+        <location line="+419"/>
         <source>Failed to detect displays</source>
         <translation>No se pudieron detectar las pantallas</translation>
     </message>
@@ -22,6 +22,44 @@
         <location line="+53"/>
         <source>No DDC monitors found</source>
         <translation>No se encontraron monitores DDC</translation>
+    </message>
+</context>
+<context>
+    <name>GlobalShortcuts</name>
+    <message>
+        <location filename="../src/main.cpp" line="+151"/>
+        <source>Increase brightness/dynamic contrast</source>
+        <translation>Aumentar brillo/contraste dinámico</translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Decrease brightness/dynamic contrast</source>
+        <translation>Disminuir brillo/contraste dinámico</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Increase contrast</source>
+        <translation>Aumentar contraste</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Decrease contrast</source>
+        <translation>Disminuir contraste</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Increase volume</source>
+        <translation>Aumentar volumen</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Decrease volume</source>
+        <translation>Disminuir volumen</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Change input device</source>
+        <translation>Cambiar fuente de entrada</translation>
     </message>
 </context>
 <context>
@@ -64,13 +102,24 @@
         <translation>Inicia Brightless automáticamente al iniciar sesión.</translation>
     </message>
     <message>
-        <location line="+29"/>
+        <location line="+28"/>
+        <location line="+2"/>
+        <source>Enable Plasma global shortcut</source>
+        <translation>Activar atajo global de Plasma</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Add configurable monitor controls to Plasma&apos;s Global Shortcuts settings.</source>
+        <translation>Añade controles de monitor configurables a los ajustes de atajos globales de Plasma.</translation>
+    </message>
+    <message>
+        <location line="+9"/>
         <location line="+2"/>
         <source>Close to tray icon</source>
         <translation>Cerrar en la bandeja del sistema</translation>
     </message>
     <message>
-        <location line="-179"/>
+        <location line="-191"/>
         <source>Scroll Step:</source>
         <translation>Paso de desplazamiento:</translation>
     </message>
@@ -283,7 +332,7 @@
         <translation>Inicia Brightless al iniciar sesión sin abrir su ventana.</translation>
     </message>
     <message>
-        <location line="+22"/>
+        <location line="+34"/>
         <source>Keep Brightless running after its window closes.</source>
         <translation>Mantén Brightless en ejecución después de cerrar su ventana.</translation>
     </message>
@@ -421,7 +470,7 @@
 <context>
     <name>Tray</name>
     <message>
-        <location filename="../src/main.cpp" line="+131"/>
+        <location filename="../src/main.cpp" line="+19"/>
         <source>Show Brightless</source>
         <translation>Mostrar Brightless</translation>
     </message>

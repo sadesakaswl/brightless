@@ -14,7 +14,7 @@
         <translation>不明なエラー</translation>
     </message>
     <message>
-        <location line="+366"/>
+        <location line="+419"/>
         <source>Failed to detect displays</source>
         <translation>ディスプレイを検出できませんでした</translation>
     </message>
@@ -22,6 +22,44 @@
         <location line="+53"/>
         <source>No DDC monitors found</source>
         <translation>DDC モニターが見つかりません</translation>
+    </message>
+</context>
+<context>
+    <name>GlobalShortcuts</name>
+    <message>
+        <location filename="../src/main.cpp" line="+151"/>
+        <source>Increase brightness/dynamic contrast</source>
+        <translation>明るさ/ダイナミックコントラストを上げる</translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Decrease brightness/dynamic contrast</source>
+        <translation>明るさ/ダイナミックコントラストを下げる</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Increase contrast</source>
+        <translation>コントラストを上げる</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Decrease contrast</source>
+        <translation>コントラストを下げる</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Increase volume</source>
+        <translation>音量を上げる</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Decrease volume</source>
+        <translation>音量を下げる</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Change input device</source>
+        <translation>入力ソースを切り替える</translation>
     </message>
 </context>
 <context>
@@ -64,13 +102,24 @@
         <translation>ログイン時に Brightless を自動的に起動します。</translation>
     </message>
     <message>
-        <location line="+29"/>
+        <location line="+28"/>
+        <location line="+2"/>
+        <source>Enable Plasma global shortcut</source>
+        <translation>Plasma のグローバルショートカットを有効にする</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Add configurable monitor controls to Plasma&apos;s Global Shortcuts settings.</source>
+        <translation>Plasma のグローバルショートカット設定に、設定可能なモニター操作を追加します。</translation>
+    </message>
+    <message>
+        <location line="+9"/>
         <location line="+2"/>
         <source>Close to tray icon</source>
         <translation>閉じたときにシステムトレイへ格納</translation>
     </message>
     <message>
-        <location line="-179"/>
+        <location line="-191"/>
         <source>Scroll Step:</source>
         <translation>スクロール量:</translation>
     </message>
@@ -283,7 +332,7 @@
         <translation>ウィンドウを開かずにログイン時に Brightless を起動します。</translation>
     </message>
     <message>
-        <location line="+22"/>
+        <location line="+34"/>
         <source>Keep Brightless running after its window closes.</source>
         <translation>ウィンドウを閉じた後も Brightless を実行し続けます。</translation>
     </message>
@@ -421,7 +470,7 @@
 <context>
     <name>Tray</name>
     <message>
-        <location filename="../src/main.cpp" line="+131"/>
+        <location filename="../src/main.cpp" line="+19"/>
         <source>Show Brightless</source>
         <translation>Brightless を表示</translation>
     </message>

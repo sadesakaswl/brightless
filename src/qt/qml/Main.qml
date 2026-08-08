@@ -369,6 +369,18 @@ ApplicationWindow {
 
                         RowLayout {
                             Layout.fillWidth: true
+                            Label { text: qsTr("Enable Plasma global shortcut"); Layout.fillWidth: true }
+                            Switch {
+                                Accessible.name: qsTr("Enable Plasma global shortcut")
+                                ToolTip.visible: hovered
+                                ToolTip.text: qsTr("Add configurable monitor controls to Plasma's Global Shortcuts settings.")
+                                checked: controller.plasma_global_shortcuts
+                                onToggled: controller.plasma_global_shortcuts = checked
+                            }
+                        }
+
+                        RowLayout {
+                            Layout.fillWidth: true
                             enabled: !controller.hide_tray_icon
                             Label { text: qsTr("Close to tray icon"); Layout.fillWidth: true }
                             Switch {

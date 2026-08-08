@@ -24,6 +24,7 @@ class BrightlessController : public QObject
     Q_PROPERTY(bool close_to_tray READ closeToTray WRITE setCloseToTray NOTIFY closeToTrayChanged)
     Q_PROPERTY(bool autostart READ autostart WRITE setAutostart NOTIFY autostartChanged)
     Q_PROPERTY(bool autostart_as_tray_icon READ autostartAsTrayIcon WRITE setAutostartAsTrayIcon NOTIFY autostartAsTrayIconChanged)
+    Q_PROPERTY(bool plasma_global_shortcuts READ plasmaGlobalShortcuts WRITE setPlasmaGlobalShortcuts NOTIFY plasmaGlobalShortcutsChanged)
     Q_PROPERTY(bool hide_brightness READ hideBrightness WRITE setHideBrightness NOTIFY visibilitySettingsChanged)
     Q_PROPERTY(bool hide_contrast READ hideContrast WRITE setHideContrast NOTIFY visibilitySettingsChanged)
     Q_PROPERTY(bool hide_volume READ hideVolume WRITE setHideVolume NOTIFY visibilitySettingsChanged)
@@ -44,6 +45,8 @@ public:
     void setAutostart(bool value);
     bool autostartAsTrayIcon() const;
     void setAutostartAsTrayIcon(bool value);
+    bool plasmaGlobalShortcuts() const;
+    void setPlasmaGlobalShortcuts(bool value);
     bool hideBrightness() const;
     void setHideBrightness(bool value);
     bool hideContrast() const;
@@ -57,6 +60,9 @@ public:
     QSize savedWindowSize() const;
     void saveWindowSize(const QSize &size);
     int adjustAllBrightness(int direction);
+    void adjustAllContrast(int direction);
+    void adjustAllVolume(int direction);
+    void changeAllInputSources();
 
     Q_INVOKABLE void initialize();
     Q_INVOKABLE int brightness(int index) const;
@@ -100,6 +106,7 @@ signals:
     void closeToTrayChanged();
     void autostartChanged();
     void autostartAsTrayIconChanged();
+    void plasmaGlobalShortcutsChanged();
     void visibilitySettingsChanged();
 
 private:
@@ -127,6 +134,7 @@ private:
     int ddcDelay_ = 0;
     bool closeToTray_ = true;
     bool autostartAsTrayIcon_ = false;
+    bool plasmaGlobalShortcuts_ = false;
     bool hideBrightness_ = false;
     bool hideContrast_ = false;
     bool hideVolume_ = false;

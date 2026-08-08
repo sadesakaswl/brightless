@@ -14,7 +14,7 @@
         <translation>未知错误</translation>
     </message>
     <message>
-        <location line="+366"/>
+        <location line="+419"/>
         <source>Failed to detect displays</source>
         <translation>检测显示器失败</translation>
     </message>
@@ -22,6 +22,44 @@
         <location line="+53"/>
         <source>No DDC monitors found</source>
         <translation>未找到 DDC 显示器</translation>
+    </message>
+</context>
+<context>
+    <name>GlobalShortcuts</name>
+    <message>
+        <location filename="../src/main.cpp" line="+151"/>
+        <source>Increase brightness/dynamic contrast</source>
+        <translation>提高亮度/动态对比度</translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Decrease brightness/dynamic contrast</source>
+        <translation>降低亮度/动态对比度</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Increase contrast</source>
+        <translation>提高对比度</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Decrease contrast</source>
+        <translation>降低对比度</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Increase volume</source>
+        <translation>提高音量</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Decrease volume</source>
+        <translation>降低音量</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Change input device</source>
+        <translation>切换输入源</translation>
     </message>
 </context>
 <context>
@@ -64,13 +102,24 @@
         <translation>登录时自动启动 Brightless。</translation>
     </message>
     <message>
-        <location line="+29"/>
+        <location line="+28"/>
+        <location line="+2"/>
+        <source>Enable Plasma global shortcut</source>
+        <translation>启用 Plasma 全局快捷键</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Add configurable monitor controls to Plasma&apos;s Global Shortcuts settings.</source>
+        <translation>将可配置的显示器控制添加到 Plasma 的全局快捷键设置中。</translation>
+    </message>
+    <message>
+        <location line="+9"/>
         <location line="+2"/>
         <source>Close to tray icon</source>
         <translation>关闭到系统托盘</translation>
     </message>
     <message>
-        <location line="-179"/>
+        <location line="-191"/>
         <source>Scroll Step:</source>
         <translation>滚动步长：</translation>
     </message>
@@ -283,7 +332,7 @@
         <translation>登录时启动 Brightless，但不打开窗口。</translation>
     </message>
     <message>
-        <location line="+22"/>
+        <location line="+34"/>
         <source>Keep Brightless running after its window closes.</source>
         <translation>关闭窗口后让 Brightless 继续运行。</translation>
     </message>
@@ -421,7 +470,7 @@
 <context>
     <name>Tray</name>
     <message>
-        <location filename="../src/main.cpp" line="+131"/>
+        <location filename="../src/main.cpp" line="+19"/>
         <source>Show Brightless</source>
         <translation>显示 Brightless</translation>
     </message>

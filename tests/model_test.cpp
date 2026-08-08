@@ -11,6 +11,9 @@ int main()
     static_assert(brightless::stepPercent(50, 2, 120) == 52);
     static_assert(brightless::stepPercent(1, 2, -120) == 0);
     static_assert(brightless::stepPercent(99, 2, 0) == 99);
+    static_assert(brightless::nextInputSource(1) == 3);
+    static_assert(brightless::nextInputSource(27) == 1);
+    static_assert(brightless::nextInputSource(99) == 1);
     static_assert(!brightless::validIndex(-1, 2));
     static_assert(brightless::validIndex(1, 2));
     static_assert(!brightless::validIndex(2, 2));

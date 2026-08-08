@@ -14,7 +14,7 @@
         <translation>неизвестная ошибка</translation>
     </message>
     <message>
-        <location line="+366"/>
+        <location line="+419"/>
         <source>Failed to detect displays</source>
         <translation>Не удалось обнаружить мониторы</translation>
     </message>
@@ -22,6 +22,44 @@
         <location line="+53"/>
         <source>No DDC monitors found</source>
         <translation>Мониторы DDC не найдены</translation>
+    </message>
+</context>
+<context>
+    <name>GlobalShortcuts</name>
+    <message>
+        <location filename="../src/main.cpp" line="+151"/>
+        <source>Increase brightness/dynamic contrast</source>
+        <translation>Увеличить яркость/динамическую контрастность</translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Decrease brightness/dynamic contrast</source>
+        <translation>Уменьшить яркость/динамическую контрастность</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Increase contrast</source>
+        <translation>Увеличить контрастность</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Decrease contrast</source>
+        <translation>Уменьшить контрастность</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Increase volume</source>
+        <translation>Увеличить громкость</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Decrease volume</source>
+        <translation>Уменьшить громкость</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Change input device</source>
+        <translation>Сменить источник сигнала</translation>
     </message>
 </context>
 <context>
@@ -64,13 +102,24 @@
         <translation>Автоматически запускать Brightless при входе в систему.</translation>
     </message>
     <message>
-        <location line="+29"/>
+        <location line="+28"/>
+        <location line="+2"/>
+        <source>Enable Plasma global shortcut</source>
+        <translation>Включить глобальное сочетание клавиш Plasma</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Add configurable monitor controls to Plasma&apos;s Global Shortcuts settings.</source>
+        <translation>Добавить настраиваемые элементы управления монитором в параметры глобальных сочетаний клавиш Plasma.</translation>
+    </message>
+    <message>
+        <location line="+9"/>
         <location line="+2"/>
         <source>Close to tray icon</source>
         <translation>Сворачивать в трей при закрытии</translation>
     </message>
     <message>
-        <location line="-179"/>
+        <location line="-191"/>
         <source>Scroll Step:</source>
         <translation>Шаг прокрутки:</translation>
     </message>
@@ -283,7 +332,7 @@
         <translation>Запускать Brightless при входе в систему, не открывая окно.</translation>
     </message>
     <message>
-        <location line="+22"/>
+        <location line="+34"/>
         <source>Keep Brightless running after its window closes.</source>
         <translation>Оставлять Brightless запущенным после закрытия окна.</translation>
     </message>
@@ -421,7 +470,7 @@
 <context>
     <name>Tray</name>
     <message>
-        <location filename="../src/main.cpp" line="+131"/>
+        <location filename="../src/main.cpp" line="+19"/>
         <source>Show Brightless</source>
         <translation>Показать Brightless</translation>
     </message>

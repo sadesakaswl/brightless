@@ -14,7 +14,7 @@
         <translation>nieznany błąd</translation>
     </message>
     <message>
-        <location line="+366"/>
+        <location line="+419"/>
         <source>Failed to detect displays</source>
         <translation>Nie udało się wykryć monitorów</translation>
     </message>
@@ -22,6 +22,44 @@
         <location line="+53"/>
         <source>No DDC monitors found</source>
         <translation>Nie znaleziono monitorów DDC</translation>
+    </message>
+</context>
+<context>
+    <name>GlobalShortcuts</name>
+    <message>
+        <location filename="../src/main.cpp" line="+151"/>
+        <source>Increase brightness/dynamic contrast</source>
+        <translation>Zwiększ jasność/kontrast dynamiczny</translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Decrease brightness/dynamic contrast</source>
+        <translation>Zmniejsz jasność/kontrast dynamiczny</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Increase contrast</source>
+        <translation>Zwiększ kontrast</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Decrease contrast</source>
+        <translation>Zmniejsz kontrast</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Increase volume</source>
+        <translation>Zwiększ głośność</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Decrease volume</source>
+        <translation>Zmniejsz głośność</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Change input device</source>
+        <translation>Zmień źródło sygnału</translation>
     </message>
 </context>
 <context>
@@ -64,13 +102,24 @@
         <translation>Uruchamiaj Brightless automatycznie po zalogowaniu.</translation>
     </message>
     <message>
-        <location line="+29"/>
+        <location line="+28"/>
+        <location line="+2"/>
+        <source>Enable Plasma global shortcut</source>
+        <translation>Włącz globalny skrót Plazmy</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Add configurable monitor controls to Plasma&apos;s Global Shortcuts settings.</source>
+        <translation>Dodaj konfigurowalne elementy sterowania monitorem do ustawień globalnych skrótów Plazmy.</translation>
+    </message>
+    <message>
+        <location line="+9"/>
         <location line="+2"/>
         <source>Close to tray icon</source>
         <translation>Zamykaj do zasobnika systemowego</translation>
     </message>
     <message>
-        <location line="-179"/>
+        <location line="-191"/>
         <source>Scroll Step:</source>
         <translation>Krok przewijania:</translation>
     </message>
@@ -283,7 +332,7 @@
         <translation>Uruchamiaj Brightless przy logowaniu bez otwierania okna.</translation>
     </message>
     <message>
-        <location line="+22"/>
+        <location line="+34"/>
         <source>Keep Brightless running after its window closes.</source>
         <translation>Pozostaw Brightless uruchomiony po zamknięciu okna.</translation>
     </message>
@@ -421,7 +470,7 @@
 <context>
     <name>Tray</name>
     <message>
-        <location filename="../src/main.cpp" line="+131"/>
+        <location filename="../src/main.cpp" line="+19"/>
         <source>Show Brightless</source>
         <translation>Pokaż Brightless</translation>
     </message>

@@ -28,26 +28,26 @@ A modern DDC control application for Linux external monitors.
 - A C++23 compiler
 - CMake 3.21+
 - Qt 6.4+ (`DBus`, `LinguistTools`, `Quick`, `QuickControls2`, and `Widgets`)
-- KDE Frameworks 6 `StatusNotifierItem`
+- KDE Frameworks 6 `GlobalAccel` and `StatusNotifierItem`
 - libddcutil 1.2+
 - pkg-config
 
 For Debian/Ubuntu:
 
 ```bash
-sudo apt install cmake g++ pkg-config qt6-base-dev qt6-declarative-dev qt6-tools-dev libkf6statusnotifieritem-dev libddcutil-dev
+sudo apt install cmake g++ pkg-config qt6-base-dev qt6-declarative-dev qt6-tools-dev libkf6globalaccel-dev libkf6statusnotifieritem-dev libddcutil-dev
 ```
 
 For Fedora:
 
 ```bash
-sudo dnf install cmake gcc-c++ pkgconf-pkg-config qt6-qtbase-devel qt6-qtdeclarative-devel qt6-qttools-devel kf6-kstatusnotifieritem-devel libddcutil-devel
+sudo dnf install cmake gcc-c++ pkgconf-pkg-config qt6-qtbase-devel qt6-qtdeclarative-devel qt6-qttools-devel kf6-kglobalaccel-devel kf6-kstatusnotifieritem-devel libddcutil-devel
 ```
 
 For Arch Linux:
 
 ```bash
-sudo pacman -S cmake gcc pkgconf qt6-declarative qt6-tools kstatusnotifieritem ddcutil
+sudo pacman -S cmake gcc pkgconf qt6-declarative qt6-tools kglobalaccel kstatusnotifieritem ddcutil
 ```
 
 ## Build
@@ -75,7 +75,7 @@ cmake --install build --prefix ~/.local
 - **Sliders** — Drag to adjust brightness, contrast, or volume
 - **Dropdowns** — Select an input source or power mode
 - **Mouse wheel** — Scroll over a slider or the tray icon to change brightness (and contrast when Dynamic Contrast is enabled)
-- **Settings** — Use the gear button to configure autostart, tray, scroll, and dynamic contrast
+- **Settings** — Use the gear button to configure autostart, tray, global shortcuts, scroll, and dynamic contrast
 - **System tray** — Enable “Close to tray icon” in settings, then click the tray icon or choose “Show Brightless” to restore the window
 
 ## License

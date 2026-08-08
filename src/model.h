@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <cstddef>
 
@@ -24,6 +25,19 @@ constexpr int stepPercent(int value, int step, int direction)
 inline int contrastForDynamicBrightness(int brightness, double ratio)
 {
     return clampPercent(static_cast<int>(std::lround(brightness * ratio)));
+}
+
+// ponytail: fixed DDC input list matches the UI; parse monitor capabilities if needed.
+inline constexpr std::array inputSourceCodes{1, 3, 15, 16, 17, 18, 19, 20, 27};
+
+constexpr int nextInputSource(int current)
+{
+    for (std::size_t index = 0; index < inputSourceCodes.size(); ++index) {
+        if (inputSourceCodes[index] == current) {
+            return inputSourceCodes[(index + 1) % inputSourceCodes.size()];
+        }
+    }
+    return inputSourceCodes.front();
 }
 
 constexpr bool validIndex(int index, std::size_t size)

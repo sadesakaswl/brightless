@@ -395,6 +395,21 @@ void BrightlessController::setAutostartAsTrayIcon(bool value)
     emit autostartAsTrayIconChanged();
 }
 
+bool BrightlessController::plasmaGlobalShortcuts() const
+{
+    return plasmaGlobalShortcuts_;
+}
+
+void BrightlessController::setPlasmaGlobalShortcuts(bool value)
+{
+    if (plasmaGlobalShortcuts_ == value) {
+        return;
+    }
+    plasmaGlobalShortcuts_ = value;
+    saveSettings();
+    emit plasmaGlobalShortcutsChanged();
+}
+
 QSize BrightlessController::savedWindowSize() const
 {
     return savedWindowSize_;
@@ -429,6 +444,44 @@ int BrightlessController::adjustAllBrightness(int direction)
         total += monitor->brightness;
     }
     return total / monitorCount();
+}
+
+void BrightlessController::adjustAllContrast(int direction)
+{
+    for (int index = 0; index < monitorCount(); ++index) {
+        auto *monitor = monitorAt(index);
+        if (!monitor->supportsContrast) {
+            continue;
+        }
+        const auto value = brightless::stepPercent(monitor->contrast, scrollStep_, direction);
+        if (value != monitor->contrast) {
+            set_contrast(index, value);
+        }
+    }
+}
+
+void BrightlessController::adjustAllVolume(int direction)
+{
+    for (int index = 0; index < monitorCount(); ++index) {
+        auto *monitor = monitorAt(index);
+        if (!monitor->supportsVolume) {
+            continue;
+        }
+        const auto value = brightless::stepPercent(monitor->volume, scrollStep_, direction);
+        if (value != monitor->volume) {
+            set_volume(index, value);
+        }
+    }
+}
+
+void BrightlessController::changeAllInputSources()
+{
+    for (int index = 0; index < monitorCount(); ++index) {
+        auto *monitor = monitorAt(index);
+        if (monitor->supportsInputSource) {
+            set_input_source(index, brightless::nextInputSource(monitor->inputSourceCode));
+        }
+    }
 }
 
 void BrightlessController::initialize()
@@ -897,6 +950,9 @@ void BrightlessController::loadSettings()
     if (const auto value = object.value(QStringLiteral("autostart_as_tray_icon")); value.isBool()) {
         autostartAsTrayIcon_ = value.toBool();
     }
+    if (const auto value = object.value(QStringLiteral("plasma_global_shortcuts")); value.isBool()) {
+        plasmaGlobalShortcuts_ = value.toBool();
+    }
     const auto windowWidth = object.value(QStringLiteral("window_width"));
     const auto windowHeight = object.value(QStringLiteral("window_height"));
     if (windowWidth.isDouble() && windowHeight.isDouble()) {
@@ -962,6 +1018,7 @@ void BrightlessController::saveSettings() const
     object.insert(QStringLiteral("ddc_delay"), ddcDelay_);
     object.insert(QStringLiteral("close_to_tray"), closeToTray_);
     object.insert(QStringLiteral("autostart_as_tray_icon"), autostartAsTrayIcon_);
+    object.insert(QStringLiteral("plasma_global_shortcuts"), plasmaGlobalShortcuts_);
     object.insert(QStringLiteral("hide_brightness"), hideBrightness_);
     object.insert(QStringLiteral("hide_contrast"), hideContrast_);
     object.insert(QStringLiteral("hide_volume"), hideVolume_);

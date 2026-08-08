@@ -60,6 +60,17 @@ int main(int argc, char *argv[])
     if (controller.autostartAsTrayIcon()) {
         return 13;
     }
+    if (controller.plasmaGlobalShortcuts()) {
+        return 16;
+    }
+    controller.setPlasmaGlobalShortcuts(true);
+    if (BrightlessController restored; !restored.plasmaGlobalShortcuts()) {
+        return 17;
+    }
+    controller.setPlasmaGlobalShortcuts(false);
+    if (BrightlessController restored; restored.plasmaGlobalShortcuts()) {
+        return 18;
+    }
     controller.setAutostartAsTrayIcon(true);
     if (BrightlessController restored; !restored.autostartAsTrayIcon()) {
         return 14;

@@ -1,5 +1,6 @@
 #include "brightlesscontroller.h"
 
+#include <KGlobalAccel>
 #include <KStatusNotifierItem>
 
 #include <QAction>
@@ -8,6 +9,7 @@
 #include <QDBusInterface>
 #include <QDBusMessage>
 #include <QIcon>
+#include <QKeySequence>
 #include <QLocale>
 #include <QMenu>
 #include <QQmlApplicationEngine>
@@ -18,6 +20,7 @@
 #include <QWindow>
 
 #include <memory>
+#include <vector>
 
 namespace {
 class ApplicationActivation final : public QObject
@@ -116,8 +119,65 @@ int main(int argc, char *argv[])
                                  QStringLiteral("/org/kde/osdService"),
                                  QStringLiteral("org.kde.osdService"),
                                  QDBusConnection::sessionBus());
+    const auto adjustBrightness = [controller, &brightnessOsd](int direction) {
+        const auto percent = controller->adjustAllBrightness(direction);
+        if (percent >= 0 && brightnessOsd.isValid()) {
+            brightnessOsd.asyncCall(QStringLiteral("brightnessChanged"), percent);
+        }
+    };
+
+    std::vector<std::unique_ptr<QAction>> globalShortcutActions;
+    const auto addGlobalShortcut = [&](const QString &id, const QString &text, auto callback) {
+        auto action = std::make_unique<QAction>(text);
+        action->setObjectName(id);
+        QObject::connect(action.get(), &QAction::triggered, controller, callback);
+        KGlobalAccel::setGlobalShortcut(action.get(), QList<QKeySequence>{});
+        globalShortcutActions.push_back(std::move(action));
+    };
+    const auto updateGlobalShortcuts = [&] {
+        if (!controller->plasmaGlobalShortcuts()) {
+            for (const auto &action : globalShortcutActions) {
+                KGlobalAccel::self()->removeAllShortcuts(action.get());
+            }
+            globalShortcutActions.clear();
+            return;
+        }
+        if (!globalShortcutActions.empty()) {
+            return;
+        }
+
+        addGlobalShortcut(
+            QStringLiteral("increase_brightness_dynamic_contrast"),
+            QCoreApplication::translate("GlobalShortcuts",
+                                        "Increase brightness/dynamic contrast"),
+            [adjustBrightness] { adjustBrightness(1); });
+        addGlobalShortcut(
+            QStringLiteral("decrease_brightness_dynamic_contrast"),
+            QCoreApplication::translate("GlobalShortcuts",
+                                        "Decrease brightness/dynamic contrast"),
+            [adjustBrightness] { adjustBrightness(-1); });
+        addGlobalShortcut(QStringLiteral("increase_contrast"),
+                          QCoreApplication::translate("GlobalShortcuts", "Increase contrast"),
+                          [controller] { controller->adjustAllContrast(1); });
+        addGlobalShortcut(QStringLiteral("decrease_contrast"),
+                          QCoreApplication::translate("GlobalShortcuts", "Decrease contrast"),
+                          [controller] { controller->adjustAllContrast(-1); });
+        addGlobalShortcut(QStringLiteral("increase_volume"),
+                          QCoreApplication::translate("GlobalShortcuts", "Increase volume"),
+                          [controller] { controller->adjustAllVolume(1); });
+        addGlobalShortcut(QStringLiteral("decrease_volume"),
+                          QCoreApplication::translate("GlobalShortcuts", "Decrease volume"),
+                          [controller] { controller->adjustAllVolume(-1); });
+        addGlobalShortcut(QStringLiteral("change_input_device"),
+                          QCoreApplication::translate("GlobalShortcuts", "Change input device"),
+                          [controller] { controller->changeAllInputSources(); });
+    };
+    QObject::connect(controller, &BrightlessController::plasmaGlobalShortcutsChanged, &app,
+                     updateGlobalShortcuts);
+    updateGlobalShortcuts();
+
     std::unique_ptr<KStatusNotifierItem> trayIcon;
-    const auto updateTray = [&app, &brightnessOsd, &trayIcon, controller, window, showWindow] {
+    const auto updateTray = [&app, &trayIcon, controller, window, showWindow, adjustBrightness] {
         const auto visible = !controller->hideTrayIcon();
         if (visible && !trayIcon) {
             trayIcon = std::make_unique<KStatusNotifierItem>(QStringLiteral("brightless"));
@@ -138,14 +198,9 @@ int main(int argc, char *argv[])
             QObject::connect(trayIcon.get(), &KStatusNotifierItem::activateRequested, window,
                              showWindow);
             QObject::connect(trayIcon.get(), &KStatusNotifierItem::scrollRequested, controller,
-                             [controller, &brightnessOsd](int delta, Qt::Orientation orientation) {
-                                 if (orientation != Qt::Vertical) {
-                                     return;
-                                 }
-                                 const auto percent = controller->adjustAllBrightness(delta);
-                                 if (percent >= 0 && brightnessOsd.isValid()) {
-                                     brightnessOsd.asyncCall(QStringLiteral("brightnessChanged"),
-                                                             percent);
+                             [adjustBrightness](int delta, Qt::Orientation orientation) {
+                                 if (orientation == Qt::Vertical) {
+                                     adjustBrightness(delta);
                                  }
                              });
             trayIcon->setStatus(KStatusNotifierItem::Active);

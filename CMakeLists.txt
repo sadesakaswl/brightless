@@ -9,6 +9,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 find_package(Qt6 6.4 REQUIRED COMPONENTS DBus LinguistTools Quick QuickControls2 Widgets)
 find_package(KF6GlobalAccel REQUIRED)
 find_package(KF6StatusNotifierItem REQUIRED)
+find_package(KF6Screen 6.0 REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(DDCUTIL REQUIRED IMPORTED_TARGET ddcutil>=1.2)
 
@@ -18,6 +19,8 @@ qt_add_executable(brightless
     src/main.cpp
     src/brightlesscontroller.cpp
     src/brightlesscontroller.h
+    src/sdrbrightnesscontroller.cpp
+    src/sdrbrightnesscontroller.h
     src/model.h
 )
 
@@ -61,6 +64,7 @@ target_link_libraries(brightless PRIVATE
     Qt6::Widgets
     KF6::GlobalAccel
     KF6::StatusNotifierItem
+    KF6::Screen
     PkgConfig::DDCUTIL
 )
 
@@ -93,6 +97,16 @@ if(BUILD_TESTING)
     target_include_directories(brightless_controller_test PRIVATE src)
     target_link_libraries(brightless_controller_test PRIVATE Qt6::Qml PkgConfig::DDCUTIL)
     add_test(NAME controller COMMAND brightless_controller_test)
+
+    add_executable(brightless_sdr_brightness_test
+        tests/sdr_brightness_test.cpp
+        src/sdrbrightnesscontroller.cpp
+        src/sdrbrightnesscontroller.h
+    )
+    target_include_directories(brightless_sdr_brightness_test PRIVATE src)
+    target_link_libraries(brightless_sdr_brightness_test PRIVATE Qt6::Qml KF6::Screen)
+    add_test(NAME sdr-brightness COMMAND brightless_sdr_brightness_test)
+    set_tests_properties(sdr-brightness PROPERTIES TIMEOUT 30 SKIP_RETURN_CODE 77)
 
     find_program(DBUS_RUN_SESSION dbus-run-session)
     if(DBUS_RUN_SESSION)

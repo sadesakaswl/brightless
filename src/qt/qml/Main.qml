@@ -7,8 +7,8 @@ import com.brightless
 
 ApplicationWindow {
     id: window
-    width: Math.min(Screen.desktopAvailableWidth, Math.max(minimumWidth, monitorColumn.implicitWidth + 48))
-    height: Math.min(Screen.desktopAvailableHeight, Math.max(minimumHeight, monitorColumn.implicitHeight + header.height + 48))
+    width: Math.min(Screen.desktopAvailableWidth, Math.max(640, minimumWidth, monitorColumn.implicitWidth + 48))
+    height: Math.min(Screen.desktopAvailableHeight, Math.max(480, minimumHeight, monitorColumn.implicitHeight + header.height + 48))
     minimumWidth: 360
     minimumHeight: 320
     visible: false
@@ -16,6 +16,11 @@ ApplicationWindow {
 
     BrightlessController {
         id: controller
+        Component.onCompleted: initialize()
+    }
+
+    SdrBrightnessController {
+        id: sdrController
         Component.onCompleted: initialize()
     }
 
@@ -52,6 +57,7 @@ ApplicationWindow {
         modal: true
         standardButtons: Dialog.Ok
         visible: controller.startup_error.length > 0
+            && sdrController.ready && sdrController.outputs.length === 0
         Label {
             text: qsTr("Error: %1").arg(controller.startup_error)
             wrapMode: Text.WordWrap
@@ -65,8 +71,10 @@ ApplicationWindow {
         visible: false
         flags: Qt.Dialog
         transientParent: window
-        width: Math.min(420, window.width - 24)
-        height: Math.min(520, window.height - 24)
+        width: Math.min(560, Screen.desktopAvailableWidth)
+        height: Math.min(640, Screen.desktopAvailableHeight)
+        minimumWidth: Math.min(560, Screen.desktopAvailableWidth)
+        minimumHeight: Math.min(520, Screen.desktopAvailableHeight)
         color: palette.window
 
         function open() {
@@ -445,6 +453,69 @@ ApplicationWindow {
             id: monitorColumn
             width: parent.width
             spacing: 12
+
+            Repeater {
+                model: sdrController.outputs
+                Frame {
+                    id: hdrCard
+                    required property int modelData
+                    Layout.fillWidth: true
+                    visible: !controller.hide_brightness
+
+                    ColumnLayout {
+                        anchors.fill: parent
+                        Label {
+                            text: qsTr("%1 — HDR").arg(sdrController.name(hdrCard.modelData))
+                            font.bold: true
+                            Layout.fillWidth: true
+                        }
+                        Label {
+                            id: sdrLabel
+                            text: qsTr("SDR brightness (nits):")
+                        }
+                        RowLayout {
+                            Layout.fillWidth: true
+                            Slider {
+                                id: sdrSlider
+                                from: 50
+                                to: Math.max(1000, sdrValue.value)
+                                stepSize: 1
+                                value: sdrController.brightness[hdrCard.modelData] ?? 200
+                                Layout.fillWidth: true
+                                Accessible.name: sdrLabel.text
+                                ToolTip.visible: hovered
+                                ToolTip.text: qsTr("Adjust the brightness of SDR content on this HDR screen.")
+                                onMoved: sdrController.setBrightness(hdrCard.modelData, Math.round(value))
+                                WheelHandler {
+                                    onWheel: (event) => {
+                                        if (event.angleDelta.y !== 0) {
+                                            sdrController.setBrightness(hdrCard.modelData,
+                                                sdrValue.value + Math.sign(event.angleDelta.y) * controller.scroll_step())
+                                            event.accepted = true
+                                        }
+                                    }
+                                }
+                            }
+                            SpinBox {
+                                id: sdrValue
+                                from: 50
+                                to: 10000
+                                editable: true
+                                value: sdrController.brightness[hdrCard.modelData] ?? 200
+                                Accessible.name: sdrLabel.text
+                                onValueModified: sdrController.setBrightness(hdrCard.modelData, value)
+                            }
+                        }
+                    }
+                }
+            }
+            Label {
+                visible: sdrController.error.length > 0
+                text: qsTr("Error: %1").arg(sdrController.error)
+                wrapMode: Text.WordWrap
+                Layout.fillWidth: true
+            }
+
             Repeater {
                 model: controller.monitor_count
                 MonitorCard {

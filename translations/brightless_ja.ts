@@ -65,6 +65,18 @@
 <context>
     <name>Main</name>
     <message>
+        <source>%1 — HDR</source>
+        <translation>%1 — HDR</translation>
+    </message>
+    <message>
+        <source>SDR brightness (nits):</source>
+        <translation>SDR の明るさ（ニト）：</translation>
+    </message>
+    <message>
+        <source>Adjust the brightness of SDR content on this HDR screen.</source>
+        <translation>この HDR 画面上の SDR コンテンツの明るさを調整します。</translation>
+    </message>
+    <message>
         <location filename="../src/qt/qml/Main.qml" line="+41"/>
         <location line="+23"/>
         <source>Settings</source>

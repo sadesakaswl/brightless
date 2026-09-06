@@ -9,6 +9,7 @@ A modern DDC control application for Linux external monitors.
 ## Features
 
 - **Brightness, Contrast & Volume Control** — Adjust external monitor settings via DDC/CI
+- **SDR Brightness in HDR** — Adjust SDR content brightness per HDR-enabled screen on KDE Plasma Wayland, even without DDC/CI
 - **Input Source Selection** — Switch between HDMI, DisplayPort, VGA, DVI, and USB-C
 - **Power Mode Control** — Turn monitors on, off, or to standby/suspend
 - **Automatic Monitor Detection** — Discover DDC-capable displays through libddcutil
@@ -23,38 +24,44 @@ A modern DDC control application for Linux external monitors.
 
 ## Requirements
 
-- Linux and DDC/CI-capable external monitors
-- Permission to access the system I²C devices
+- Linux; DDC controls require DDC/CI-capable monitors and permission to access the system I²C devices
+- KDE Plasma 6 Wayland with HDR enabled for SDR brightness controls
 - A C++23 compiler
 - CMake 3.21+
 - Qt 6.4+ (`DBus`, `LinguistTools`, `Quick`, `QuickControls2`, and `Widgets`)
 - KDE Frameworks 6 `GlobalAccel` and `StatusNotifierItem`
+- libkscreen 6.0+
 - libddcutil 1.2+
 - pkg-config
 
 For Debian/Ubuntu:
 
 ```bash
-sudo apt install cmake g++ pkg-config qt6-base-dev qt6-declarative-dev qt6-tools-dev libkf6globalaccel-dev libkf6statusnotifieritem-dev libddcutil-dev
+sudo apt install cmake g++ pkg-config qt6-base-dev qt6-declarative-dev qt6-tools-dev libkf6globalaccel-dev libkf6statusnotifieritem-dev libkscreen-dev libddcutil-dev
 ```
 
 For Fedora:
 
 ```bash
-sudo dnf install cmake gcc-c++ pkgconf-pkg-config qt6-qtbase-devel qt6-qtdeclarative-devel qt6-qttools-devel kf6-kglobalaccel-devel kf6-kstatusnotifieritem-devel libddcutil-devel
+sudo dnf install cmake gcc-c++ pkgconf-pkg-config qt6-qtbase-devel qt6-qtdeclarative-devel qt6-qttools-devel kf6-kglobalaccel-devel kf6-kstatusnotifieritem-devel libkscreen-qt6-devel libddcutil-devel
 ```
 
 For Arch Linux:
 
 ```bash
-sudo pacman -S cmake gcc pkgconf qt6-declarative qt6-tools kglobalaccel kstatusnotifieritem ddcutil
+sudo pacman -S cmake gcc pkgconf qt6-declarative qt6-tools kglobalaccel kstatusnotifieritem libkscreen ddcutil
 ```
 
 ## Build
 
 ```bash
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build --parallel
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j
+```
+
+Optional: run tests.
+
+```bash
 ctest --test-dir build --output-on-failure
 ```
 
@@ -73,6 +80,7 @@ cmake --install build --prefix ~/.local
 ### Controls
 
 - **Sliders** — Drag to adjust brightness, contrast, or volume
+- **SDR brightness (nits)** — HDR screen cards control SDR white level separately from DDC brightness. Use the slider or enter 50–10,000 nits; mouse-wheel steps use the scroll-step setting in nits. Plasma manages this value; tray scrolling and global shortcuts still control DDC brightness.
 - **Dropdowns** — Select an input source or power mode
 - **Mouse wheel** — Scroll over a slider or the tray icon to change brightness (and contrast when Dynamic Contrast is enabled)
 - **Settings** — Use the gear button to configure autostart, tray, global shortcuts, scroll, and dynamic contrast

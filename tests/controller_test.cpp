@@ -79,7 +79,7 @@ QString write(const Device &device, const Writes &values)
 }
 }
 
-int main(int argc, char *argv[])
+int runTests(int argc, char *argv[])
 {
     QTemporaryDir config;
     if (!config.isValid()) {
@@ -425,4 +425,11 @@ int main(int argc, char *argv[])
             || !qFuzzyCompare(migrated.monitor_ratio(1), 0.8F) || !migrated.monitor_dynamic_contrast_enabled(1)) return 56;
     }
     return controller.autostart() || QFileInfo::exists(path);
+}
+
+int main(int argc, char *argv[])
+{
+    const auto result = runTests(argc, argv);
+    if (result) std::cerr << "Controller check failed: " << result << '\n';
+    return result;
 }

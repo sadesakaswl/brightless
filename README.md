@@ -53,7 +53,7 @@ sudo apt install cmake g++ pkg-config qt6-base-dev qt6-declarative-dev qt6-tools
 For Fedora:
 
 ```bash
-sudo dnf install cmake gcc-c++ pkgconf-pkg-config qt6-qtbase-devel qt6-qtdeclarative-devel qt6-qttools-devel kf6-kglobalaccel-devel kf6-kstatusnotifieritem-devel libkscreen-qt6-devel libddcutil-devel
+sudo dnf install cmake gcc-c++ pkgconf-pkg-config qt6-qtbase-devel qt6-qtdeclarative-devel qt6-qttools-devel kf6-kglobalaccel-devel kf6-kstatusnotifieritem-devel libkscreen-devel libddcutil-devel
 ```
 
 For Arch Linux:

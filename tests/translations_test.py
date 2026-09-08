@@ -16,7 +16,7 @@ placeholder_pattern = re.compile(r"%(?:L?\d+|n)")
 required = {
     path.stem: {
         json.loads(f'"{match.group(1)}"')
-        for match in string_pattern.finditer(path.read_text())
+        for match in string_pattern.finditer(path.read_text(encoding="utf-8"))
     }
     for path in qml_dir.glob("*.qml")
 }

@@ -10,13 +10,13 @@ permissions:
 jobs:
   linux:
     runs-on: ubuntu-latest
-    container: fedora:43
+    container: fedora:44
     steps:
       - name: Install build dependencies
         run: >-
           dnf install -y git cmake ninja-build gcc-c++ python3 pkgconf-pkg-config
           qt6-qtbase-devel qt6-qtdeclarative-devel qt6-qttools-devel
-          kf6-kglobalaccel-devel kf6-kstatusnotifieritem-devel libkscreen-qt6-devel
+          kf6-kglobalaccel-devel kf6-kstatusnotifieritem-devel libkscreen-devel
           libddcutil-devel dbus-daemon desktop-file-utils appstream
       - uses: actions/checkout@v4
       - name: Build

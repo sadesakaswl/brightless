@@ -64,7 +64,7 @@ public:
     void saveWindowSize(const QSize &size);
     int adjustAllBrightness(int direction);
     void adjustAllContrast(int direction);
-    void adjustAllVolume(int direction);
+    int adjustAllVolume(int direction);
     void changeAllInputSources();
 
     Q_INVOKABLE void initialize();

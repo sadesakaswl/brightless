@@ -15,6 +15,8 @@
 namespace {
 int monitorIds[]{0, 1};
 std::array<std::map<int, int>, 2> reads, writes;
+// Optional maximum/current responses; a negative current simulates an unsupported VCP.
+std::array<std::map<int, std::pair<int, int>>, 2> responses;
 bool reverseMonitors = false;
 bool failReads = false;
 }
@@ -54,11 +56,16 @@ DDCA_Status ddca_close_display(DDCA_Display_Handle)
 DDCA_Status ddca_get_non_table_vcp_value(DDCA_Display_Handle handle,
     DDCA_Vcp_Feature_Code code, DDCA_Non_Table_Vcp_Value *value)
 {
-    ++reads[*static_cast<int *>(handle)][code];
+    const auto index = *static_cast<int *>(handle);
+    ++reads[index][code];
+    const auto [maximum, current] = responses[index].contains(code)
+        ? responses[index].at(code) : std::pair{100, 50};
     *value = {};
-    value->ml = 100;
-    value->sl = 50;
-    return failReads ? -1 : 0;
+    value->mh = maximum >> 8;
+    value->ml = maximum & 0xff;
+    value->sh = current >> 8;
+    value->sl = current & 0xff;
+    return failReads || current < 0 ? -1 : 0;
 }
 
 DDCA_Status ddca_set_non_table_vcp_value(DDCA_Display_Handle handle,
@@ -283,6 +290,67 @@ int main(int argc, char *argv[])
         || restored.vcp_code(0x60, "test") != 0x60 || restored.vcp_code(0xd6, "test") != 0xe1
         || restored.vcp_code(0x99, "test") != 0x99) {
         return 26;
+    }
+    reverseMonitors = false;
+    restored.set_scroll_step(2);
+    responses[0] = {{0x62, {100, 40}}, {0x60, {0, 27}}};
+    responses[1] = {{0x62, {200, 120}}, {0x60, {0, 17}}};
+    restored.initialize();
+    writes = {};
+    if (restored.adjustAllVolume(1) != 52 || restored.volume(0) != 42
+        || restored.volume(1) != 62 || restored.adjustAllVolume(-1) != 50) {
+        return 37;
+    }
+    restored.adjustAllContrast(1);
+    restored.changeAllInputSources();
+    restored.initialize();
+    if (writes[0] != std::map<int, int>{{0x62, 40}, {0x12, 52}, {0x60, 1}}
+        || writes[1] != std::map<int, int>{{0x62, 120}, {0x12, 52}, {0x60, 18}}) {
+        return 38;
+    }
+    writes = {};
+    restored.adjustAllContrast(-1);
+    restored.initialize();
+    if (writes[0] != std::map<int, int>{{0x12, 48}}
+        || writes[1] != std::map<int, int>{{0x12, 48}}) {
+        return 39;
+    }
+
+    // Only supported monitors contribute to the volume OSD; clamp at both ends.
+    responses[0] = {{0x62, {100, 99}}};
+    responses[1] = {{0x62, {0, -1}}, {0x12, {0, -1}}, {0x60, {0, -1}}};
+    restored.initialize();
+    writes = {};
+    if (restored.adjustAllVolume(1) != 100 || restored.adjustAllVolume(1) != 100
+        || restored.adjustAllVolume(0) != 100) {
+        return 40;
+    }
+    restored.adjustAllContrast(1);
+    restored.changeAllInputSources();
+    restored.initialize();
+    if (writes[0] != std::map<int, int>{{0x62, 100}, {0x12, 52}} || !writes[1].empty()) {
+        return 41;
+    }
+    responses[0][0x62] = {100, 1};
+    restored.initialize();
+    if (restored.adjustAllVolume(-1) != 0 || restored.adjustAllVolume(-1) != 0) {
+        return 42;
+    }
+    restored.initialize();
+    responses[0][0x62] = {0, -1};
+    restored.initialize();
+    writes = {};
+    if (restored.adjustAllVolume(1) != -1) {
+        return 43;
+    }
+    restored.initialize();
+    if (!writes[0].empty() || !writes[1].empty()) {
+        return 44;
+    }
+    failReads = true;
+    restored.initialize();
+    if (restored.adjustAllVolume(1) != -1 || restored.adjustAllBrightness(1) != -1) {
+        return 45;
     }
     return controller.autostart() || QFileInfo::exists(path);
 }

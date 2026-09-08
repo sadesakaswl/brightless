@@ -490,8 +490,10 @@ void BrightlessController::adjustAllContrast(int direction)
     }
 }
 
-void BrightlessController::adjustAllVolume(int direction)
+int BrightlessController::adjustAllVolume(int direction)
 {
+    int total = 0;
+    int count = 0;
     for (int index = 0; index < monitorCount(); ++index) {
         auto *monitor = monitorAt(index);
         if (!monitor->supportsVolume) {
@@ -501,7 +503,10 @@ void BrightlessController::adjustAllVolume(int direction)
         if (value != monitor->volume) {
             set_volume(index, value);
         }
+        total += monitor->volume;
+        ++count;
     }
+    return count > 0 ? total / count : -1;
 }
 
 void BrightlessController::changeAllInputSources()

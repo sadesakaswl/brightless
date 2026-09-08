@@ -126,6 +126,13 @@ int main(int argc, char *argv[])
         }
     };
 
+    const auto adjustVolume = [controller, &brightnessOsd](int direction) {
+        const auto percent = controller->adjustAllVolume(direction);
+        if (percent >= 0 && brightnessOsd.isValid()) {
+            brightnessOsd.asyncCall(QStringLiteral("volumeChanged"), percent);
+        }
+    };
+
     std::vector<std::unique_ptr<QAction>> globalShortcutActions;
     const auto addGlobalShortcut = [&](const QString &id, const QString &text, auto callback) {
         auto action = std::make_unique<QAction>(text);
@@ -164,10 +171,10 @@ int main(int argc, char *argv[])
                           [controller] { controller->adjustAllContrast(-1); });
         addGlobalShortcut(QStringLiteral("increase_volume"),
                           QCoreApplication::translate("GlobalShortcuts", "Increase volume"),
-                          [controller] { controller->adjustAllVolume(1); });
+                          [adjustVolume] { adjustVolume(1); });
         addGlobalShortcut(QStringLiteral("decrease_volume"),
                           QCoreApplication::translate("GlobalShortcuts", "Decrease volume"),
-                          [controller] { controller->adjustAllVolume(-1); });
+                          [adjustVolume] { adjustVolume(-1); });
         addGlobalShortcut(QStringLiteral("change_input_device"),
                           QCoreApplication::translate("GlobalShortcuts", "Change input device"),
                           [controller] { controller->changeAllInputSources(); });

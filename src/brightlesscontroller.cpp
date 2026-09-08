@@ -15,6 +15,7 @@
 #include <QThreadPool>
 
 #include <algorithm>
+#include <array>
 #include <cstdint>
 #include <limits>
 #include <map>
@@ -22,6 +23,29 @@
 #include <optional>
 
 namespace {
+
+constexpr std::array defaultVcpCodes{0x10, 0x12, 0x62, 0x60, 0xd6};
+
+QHash<int, int> loadVcpCodes(const QJsonObject &object)
+{
+    QHash<int, int> codes;
+    for (const auto defaultCode : defaultVcpCodes) {
+        const auto code = object.value(QString::number(defaultCode, 16)).toInt(-1);
+        if (code >= 0 && code <= 0xff && code != defaultCode) {
+            codes.insert(defaultCode, code);
+        }
+    }
+    return codes;
+}
+
+QJsonObject saveVcpCodes(const QHash<int, int> &codes)
+{
+    QJsonObject object;
+    for (auto it = codes.constBegin(); it != codes.constEnd(); ++it) {
+        object.insert(QString::number(it.key(), 16), it.value());
+    }
+    return object;
+}
 
 struct VcpValue
 {
@@ -154,6 +178,7 @@ struct BrightlessController::Monitor
 {
     DDCA_Display_Ref reference = nullptr;
     QString name;
+    QString id;
     int brightness = 50;
     int contrast = 50;
     int volume = 50;
@@ -280,6 +305,11 @@ QStringList BrightlessController::monitorNames() const
         names.append(monitor->name);
     }
     return names;
+}
+
+QVariantList BrightlessController::ddcMonitors() const
+{
+    return ddcMonitors_;
 }
 
 int BrightlessController::monitorCount() const
@@ -489,6 +519,7 @@ void BrightlessController::initialize()
     flushDdcWrites();
     ddcWorker_->wait();
     monitors_.clear();
+    ddcMonitors_.clear();
     QString error;
 
     DDCA_Display_Info_List *rawList = nullptr;
@@ -501,6 +532,16 @@ void BrightlessController::initialize()
     } else if (displayList) {
         for (int index = 0; index < displayList->ct; ++index) {
             const auto &info = displayList->info[index];
+            const auto name = displayName(info, index + 1);
+            const auto path = info.path.io_mode == DDCA_IO_I2C
+                ? QStringLiteral("i2c-%1").arg(info.path.path.i2c_busno)
+                : QStringLiteral("usb-%1").arg(info.path.path.hiddev_devno);
+            // ponytail: EDID + bus distinguishes identical panels; use connector IDs if buses renumber.
+            const auto id = QString::fromLatin1(QByteArray(
+                reinterpret_cast<const char *>(info.edid_bytes), sizeof(info.edid_bytes)).toHex())
+                + QLatin1Char(':') + path;
+            ddcMonitors_.append(QVariantMap{{QStringLiteral("id"), id},
+                {QStringLiteral("name"), name + QStringLiteral(" (%1)").arg(path)}});
             DDCA_Display_Handle handle = nullptr;
             if (ddca_open_display2(info.dref, false, &handle) != 0) {
                 continue;
@@ -508,9 +549,11 @@ void BrightlessController::initialize()
 
             auto monitor = std::make_unique<Monitor>();
             monitor->reference = info.dref;
-            monitor->name = displayName(info, index + 1);
+            monitor->name = name;
+            monitor->id = id;
+            const auto scope = vcpPerMonitor_ ? id : QString();
 
-            const auto brightnessValue = readVcp(handle, 0x10);
+            const auto brightnessValue = readVcp(handle, vcp_code(0x10, scope));
             if (!brightnessValue) {
                 ddca_close_display(handle);
                 continue;
@@ -518,7 +561,7 @@ void BrightlessController::initialize()
             monitor->maximumBrightness = brightnessValue->maximum;
             monitor->brightness = percentFromVcp(*brightnessValue);
 
-            if (const auto value = readVcp(handle, 0x12)) {
+            if (const auto value = readVcp(handle, vcp_code(0x12, scope))) {
                 monitor->maximumContrast = value->maximum;
                 monitor->supportsContrast = value->maximum > 0;
                 if (monitor->supportsContrast) {
@@ -526,19 +569,19 @@ void BrightlessController::initialize()
                 }
             }
 
-            if (const auto value = readVcp(handle, 0x62)) {
+            if (const auto value = readVcp(handle, vcp_code(0x62, scope))) {
                 monitor->maximumVolume = value->maximum;
                 monitor->supportsVolume = value->maximum > 0;
                 monitor->volume = percentFromVcp(*value);
             }
 
-            if (const auto value = readVcp(handle, 0x60)) {
+            if (const auto value = readVcp(handle, vcp_code(0x60, scope))) {
                 monitor->inputSourceCode = value->current & 0xff;
                 monitor->supportsInputSource = monitor->inputSourceCode >= 1
                     && monitor->inputSourceCode <= 27;
             }
 
-            if (const auto value = readVcp(handle, 0xd6)) {
+            if (const auto value = readVcp(handle, vcp_code(0xd6, scope))) {
                 monitor->powerModeCode = value->current & 0xff;
                 monitor->supportsPowerMode = monitor->powerModeCode >= 1
                     && monitor->powerModeCode <= 5;
@@ -698,6 +741,46 @@ void BrightlessController::set_scroll_step(int value)
     bumpRevision();
 }
 
+bool BrightlessController::vcp_per_monitor() const
+{
+    return vcpPerMonitor_;
+}
+
+void BrightlessController::set_vcp_per_monitor(bool value)
+{
+    if (vcpPerMonitor_ == value) {
+        return;
+    }
+    vcpPerMonitor_ = value;
+    saveSettings();
+    bumpRevision();
+}
+
+int BrightlessController::vcp_code(int defaultCode, const QString &monitorId) const
+{
+    const auto codes = monitorId.isEmpty() ? vcpCodes_ : monitorVcpCodes_.value(monitorId);
+    return codes.value(defaultCode, defaultCode);
+}
+
+bool BrightlessController::set_vcp_code(int defaultCode, int code, const QString &monitorId)
+{
+    if (std::find(defaultVcpCodes.begin(), defaultVcpCodes.end(), defaultCode)
+            == defaultVcpCodes.end()
+        || code < 0 || code > 0xff || vcp_code(defaultCode, monitorId) == code) {
+        return false;
+    }
+
+    auto &codes = monitorId.isEmpty() ? vcpCodes_ : monitorVcpCodes_[monitorId];
+    if (code == defaultCode) {
+        codes.remove(defaultCode);
+    } else {
+        codes.insert(defaultCode, code);
+    }
+    saveSettings();
+    bumpRevision();
+    return true;
+}
+
 int BrightlessController::ddc_delay() const
 {
     return ddcDelay_;
@@ -845,7 +928,8 @@ void BrightlessController::sendVcp(
     std::initializer_list<std::pair<std::uint8_t, std::uint16_t>> writes)
 {
     for (const auto &[code, value] : writes) {
-        monitor.pendingWrites.insert_or_assign(code, value);
+        monitor.pendingWrites.insert_or_assign(
+            vcp_code(code, vcpPerMonitor_ ? monitor.id : QString()), value);
     }
 
     if (ddcDelay_ == 0) {
@@ -923,6 +1007,12 @@ void BrightlessController::loadSettings()
     }
 
     const auto object = document.object();
+    vcpCodes_ = loadVcpCodes(object.value(QStringLiteral("vcp_codes")).toObject());
+    vcpPerMonitor_ = object.value(QStringLiteral("vcp_per_monitor")).toBool(false);
+    const auto monitorCodes = object.value(QStringLiteral("monitor_vcp_codes")).toObject();
+    for (auto it = monitorCodes.constBegin(); it != monitorCodes.constEnd(); ++it) {
+        monitorVcpCodes_.insert(it.key(), loadVcpCodes(it.value().toObject()));
+    }
     if (const auto value = object.value(QStringLiteral("scroll_step")); value.isDouble()) {
         scrollStep_ = std::clamp(value.toInt(scrollStep_), 1, 10);
     }
@@ -1013,7 +1103,15 @@ void BrightlessController::saveSettings() const
         monitorRatios.insert(it.key(), it.value());
     }
 
+    QJsonObject monitorCodes;
+    for (auto it = monitorVcpCodes_.constBegin(); it != monitorVcpCodes_.constEnd(); ++it) {
+        monitorCodes.insert(it.key(), saveVcpCodes(it.value()));
+    }
+
     QJsonObject object;
+    object.insert(QStringLiteral("vcp_codes"), saveVcpCodes(vcpCodes_));
+    object.insert(QStringLiteral("vcp_per_monitor"), vcpPerMonitor_);
+    object.insert(QStringLiteral("monitor_vcp_codes"), monitorCodes);
     object.insert(QStringLiteral("scroll_step"), scrollStep_);
     object.insert(QStringLiteral("ddc_delay"), ddcDelay_);
     object.insert(QStringLiteral("close_to_tray"), closeToTray_);

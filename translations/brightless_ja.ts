@@ -65,6 +65,50 @@
 <context>
     <name>Main</name>
     <message>
+        <source>Per-monitor VCP codes</source>
+        <translation>モニターごとのVCPコード</translation>
+    </message>
+    <message>
+        <source>Monitor</source>
+        <translation>モニター</translation>
+    </message>
+    <message>
+        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to the selected monitor.</source>
+        <translation>VCPコード（16進数）。空欄にすると、グレーで表示された既定値を使用します。変更は選択したモニターに適用されます。</translation>
+    </message>
+    <message>
+        <source>DDC</source>
+        <translation>DDC</translation>
+    </message>
+    <message>
+        <source>Configure VCP codes for monitor controls.</source>
+        <translation>モニター操作のVCPコードを設定します。</translation>
+    </message>
+    <message>
+        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to all monitors.</source>
+        <translation>VCPコード（16進数）。空欄にすると、グレーで表示された既定値を使用します。変更はすべてのモニターに適用されます。</translation>
+    </message>
+    <message>
+        <source>Brightness</source>
+        <translation>明るさ</translation>
+    </message>
+    <message>
+        <source>Contrast</source>
+        <translation>コントラスト</translation>
+    </message>
+    <message>
+        <source>Volume</source>
+        <translation>音量</translation>
+    </message>
+    <message>
+        <source>Input source</source>
+        <translation>入力ソース</translation>
+    </message>
+    <message>
+        <source>Power mode</source>
+        <translation>電源モード</translation>
+    </message>
+    <message>
         <source>%1 — HDR</source>
         <translation>%1 — HDR</translation>
     </message>

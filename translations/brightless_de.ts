@@ -65,6 +65,50 @@
 <context>
     <name>Main</name>
     <message>
+        <source>Per-monitor VCP codes</source>
+        <translation>VCP-Codes pro Monitor</translation>
+    </message>
+    <message>
+        <source>Monitor</source>
+        <translation>Monitor</translation>
+    </message>
+    <message>
+        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to the selected monitor.</source>
+        <translation>VCP-Codes (hexadezimal). Leer lassen, um den grauen Standardwert zu verwenden. Änderungen gelten für den ausgewählten Monitor.</translation>
+    </message>
+    <message>
+        <source>DDC</source>
+        <translation>DDC</translation>
+    </message>
+    <message>
+        <source>Configure VCP codes for monitor controls.</source>
+        <translation>VCP-Codes für die Monitorsteuerung konfigurieren.</translation>
+    </message>
+    <message>
+        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to all monitors.</source>
+        <translation>VCP-Codes (hexadezimal). Leer lassen, um den grauen Standardwert zu verwenden. Änderungen gelten für alle Monitore.</translation>
+    </message>
+    <message>
+        <source>Brightness</source>
+        <translation>Helligkeit</translation>
+    </message>
+    <message>
+        <source>Contrast</source>
+        <translation>Kontrast</translation>
+    </message>
+    <message>
+        <source>Volume</source>
+        <translation>Lautstärke</translation>
+    </message>
+    <message>
+        <source>Input source</source>
+        <translation>Eingangsquelle</translation>
+    </message>
+    <message>
+        <source>Power mode</source>
+        <translation>Energiemodus</translation>
+    </message>
+    <message>
         <source>%1 — HDR</source>
         <translation>%1 — HDR</translation>
     </message>

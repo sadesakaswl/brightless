@@ -65,6 +65,50 @@
 <context>
     <name>Main</name>
     <message>
+        <source>Per-monitor VCP codes</source>
+        <translation>Коды VCP для каждого монитора</translation>
+    </message>
+    <message>
+        <source>Monitor</source>
+        <translation>Монитор</translation>
+    </message>
+    <message>
+        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to the selected monitor.</source>
+        <translation>Коды VCP (шестнадцатеричные). Оставьте поле пустым, чтобы использовать значение по умолчанию, показанное серым. Изменения применяются к выбранному монитору.</translation>
+    </message>
+    <message>
+        <source>DDC</source>
+        <translation>DDC</translation>
+    </message>
+    <message>
+        <source>Configure VCP codes for monitor controls.</source>
+        <translation>Настройка кодов VCP для управления мониторами.</translation>
+    </message>
+    <message>
+        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to all monitors.</source>
+        <translation>Коды VCP (шестнадцатеричные). Оставьте поле пустым, чтобы использовать значение по умолчанию, показанное серым. Изменения применяются ко всем мониторам.</translation>
+    </message>
+    <message>
+        <source>Brightness</source>
+        <translation>Яркость</translation>
+    </message>
+    <message>
+        <source>Contrast</source>
+        <translation>Контрастность</translation>
+    </message>
+    <message>
+        <source>Volume</source>
+        <translation>Громкость</translation>
+    </message>
+    <message>
+        <source>Input source</source>
+        <translation>Источник входного сигнала</translation>
+    </message>
+    <message>
+        <source>Power mode</source>
+        <translation>Режим питания</translation>
+    </message>
+    <message>
         <source>%1 — HDR</source>
         <translation>%1 — HDR</translation>
     </message>

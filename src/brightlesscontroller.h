@@ -5,6 +5,7 @@
 #include <QSize>
 #include <QStringList>
 #include <QTimer>
+#include <QVariantList>
 #include <QtQml/qqmlregistration.h>
 
 #include <cstdint>
@@ -19,6 +20,7 @@ class BrightlessController : public QObject
     QML_ELEMENT
     Q_PROPERTY(QString startup_error READ startupError NOTIFY startupErrorChanged)
     Q_PROPERTY(QStringList monitor_names READ monitorNames NOTIFY monitorNamesChanged)
+    Q_PROPERTY(QVariantList ddc_monitors READ ddcMonitors NOTIFY monitorNamesChanged)
     Q_PROPERTY(int monitor_count READ monitorCount NOTIFY monitorCountChanged)
     Q_PROPERTY(int revision READ revision NOTIFY revisionChanged)
     Q_PROPERTY(bool close_to_tray READ closeToTray WRITE setCloseToTray NOTIFY closeToTrayChanged)
@@ -37,6 +39,7 @@ public:
 
     QString startupError() const;
     QStringList monitorNames() const;
+    QVariantList ddcMonitors() const;
     int monitorCount() const;
     int revision() const;
     bool closeToTray() const;
@@ -82,6 +85,10 @@ public:
 
     Q_INVOKABLE int scroll_step() const;
     Q_INVOKABLE void set_scroll_step(int value);
+    Q_INVOKABLE bool vcp_per_monitor() const;
+    Q_INVOKABLE void set_vcp_per_monitor(bool value);
+    Q_INVOKABLE int vcp_code(int defaultCode, const QString &monitorId = {}) const;
+    Q_INVOKABLE bool set_vcp_code(int defaultCode, int code, const QString &monitorId = {});
     Q_INVOKABLE int ddc_delay() const;
     Q_INVOKABLE void set_ddc_delay(int value);
     Q_INVOKABLE bool dynamic_contrast_enabled() const;
@@ -126,12 +133,16 @@ private:
 
     QString startupError_;
     std::vector<std::unique_ptr<Monitor>> monitors_;
+    QVariantList ddcMonitors_;
     int revision_ = 0;
     QTimer ddcTimer_;
     std::unique_ptr<DdcWorker> ddcWorker_;
 
     int scrollStep_ = 2;
     int ddcDelay_ = 0;
+    QHash<int, int> vcpCodes_;
+    bool vcpPerMonitor_ = false;
+    QHash<QString, QHash<int, int>> monitorVcpCodes_;
     bool closeToTray_ = true;
     bool autostartAsTrayIcon_ = false;
     bool plasmaGlobalShortcuts_ = false;

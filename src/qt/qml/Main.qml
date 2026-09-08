@@ -104,6 +104,7 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 TabButton { text: qsTr("Appearance"); ToolTip.visible: hovered; ToolTip.text: qsTr("Choose which monitor controls and icons are shown.") }
                 TabButton { text: qsTr("Behaviour"); ToolTip.visible: hovered; ToolTip.text: qsTr("Adjust scrolling, DDC timing, and dynamic contrast.") }
+                TabButton { text: qsTr("DDC"); ToolTip.visible: hovered; ToolTip.text: qsTr("Configure VCP codes for monitor controls.") }
                 TabButton { text: qsTr("System"); ToolTip.visible: hovered; ToolTip.text: qsTr("Configure startup and window-closing behaviour.") }
                 TabButton { text: qsTr("About"); ToolTip.visible: hovered; ToolTip.text: qsTr("View version, source code, and license information.") }
             }
@@ -329,6 +330,90 @@ ApplicationWindow {
                                         ToolTip.text: qsTr("Set this monitor's contrast to %1 times its brightness.").arg(value.toFixed(1))
                                         Layout.fillWidth: true
                                         onMoved: window.backend.set_monitor_ratio(ratioDelegate.index, value)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                ScrollView {
+                    id: ddcScroll
+                    readonly property bool perMonitor: window.refreshed(controller.vcp_per_monitor())
+                    property string selectedMonitorId: ""
+                    readonly property string scope: perMonitor ? (monitorSelector.currentValue ?? "") : ""
+                    clip: true
+                    contentWidth: availableWidth
+                    ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+
+                    ColumnLayout {
+                        width: ddcScroll.availableWidth
+                        spacing: 12
+
+                        RowLayout {
+                            Layout.fillWidth: true
+                            Label { text: qsTr("Per-monitor VCP codes"); Layout.fillWidth: true }
+                            Switch {
+                                Accessible.name: qsTr("Per-monitor VCP codes")
+                                checked: ddcScroll.perMonitor
+                                onToggled: {
+                                    controller.set_vcp_per_monitor(checked)
+                                    controller.initialize()
+                                }
+                            }
+                        }
+
+                        ComboBox {
+                            id: monitorSelector
+                            visible: ddcScroll.perMonitor
+                            Layout.fillWidth: true
+                            Accessible.name: qsTr("Monitor")
+                            model: controller.ddc_monitors
+                            textRole: "name"
+                            valueRole: "id"
+                            currentIndex: model.length ? Math.max(0,
+                                model.findIndex(monitor => monitor.id === ddcScroll.selectedMonitorId)) : -1
+                            onActivated: ddcScroll.selectedMonitorId = currentValue
+                        }
+
+                        Label {
+                            text: ddcScroll.perMonitor
+                                ? qsTr("VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to the selected monitor.")
+                                : qsTr("VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to all monitors.")
+                            wrapMode: Text.WordWrap
+                            Layout.fillWidth: true
+                        }
+
+                        Repeater {
+                            model: [
+                                { label: qsTr("Brightness"), code: 0x10 },
+                                { label: qsTr("Contrast"), code: 0x12 },
+                                { label: qsTr("Volume"), code: 0x62 },
+                                { label: qsTr("Input source"), code: 0x60 },
+                                { label: qsTr("Power mode"), code: 0xd6 }
+                            ]
+                            RowLayout {
+                                id: vcpRow
+                                required property var modelData
+                                Layout.fillWidth: true
+                                enabled: !ddcScroll.perMonitor || ddcScroll.scope.length > 0
+                                Label { text: vcpRow.modelData.label; Layout.fillWidth: true }
+                                TextField {
+                                    Layout.preferredWidth: 100
+                                    Accessible.name: vcpRow.modelData.label
+                                    placeholderText: "0x" + vcpRow.modelData.code.toString(16).toUpperCase()
+                                    placeholderTextColor: palette.placeholderText
+                                    readonly property string configuredText: {
+                                        const code = window.refreshed(controller.vcp_code(vcpRow.modelData.code, ddcScroll.scope))
+                                        return code === vcpRow.modelData.code ? "" : "0x" + code.toString(16).toUpperCase()
+                                    }
+                                    text: configuredText
+                                    validator: RegularExpressionValidator { regularExpression: /^(?:0[xX])?[0-9a-fA-F]{1,2}$|^$/ }
+                                    onEditingFinished: {
+                                        const code = text.length ? parseInt(text, 16) : vcpRow.modelData.code
+                                        if (controller.set_vcp_code(vcpRow.modelData.code, code, ddcScroll.scope))
+                                            controller.initialize()
+                                        text = Qt.binding(() => configuredText)
                                     }
                                 }
                             }

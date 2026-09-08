@@ -65,6 +65,50 @@
 <context>
     <name>Main</name>
     <message>
+        <source>Per-monitor VCP codes</source>
+        <translation>Monitöre özel VCP kodları</translation>
+    </message>
+    <message>
+        <source>Monitor</source>
+        <translation>Monitör</translation>
+    </message>
+    <message>
+        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to the selected monitor.</source>
+        <translation>VCP kodları (onaltılık). Gri varsayılan değeri kullanmak için boş bırakın. Değişiklikler seçilen monitöre uygulanır.</translation>
+    </message>
+    <message>
+        <source>DDC</source>
+        <translation>DDC</translation>
+    </message>
+    <message>
+        <source>Configure VCP codes for monitor controls.</source>
+        <translation>Monitör kontrolleri için VCP kodlarını yapılandırın.</translation>
+    </message>
+    <message>
+        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to all monitors.</source>
+        <translation>VCP kodları (onaltılık). Gri varsayılan değeri kullanmak için boş bırakın. Değişiklikler tüm monitörlere uygulanır.</translation>
+    </message>
+    <message>
+        <source>Brightness</source>
+        <translation>Parlaklık</translation>
+    </message>
+    <message>
+        <source>Contrast</source>
+        <translation>Kontrast</translation>
+    </message>
+    <message>
+        <source>Volume</source>
+        <translation>Ses</translation>
+    </message>
+    <message>
+        <source>Input source</source>
+        <translation>Giriş kaynağı</translation>
+    </message>
+    <message>
+        <source>Power mode</source>
+        <translation>Güç modu</translation>
+    </message>
+    <message>
         <source>%1 — HDR</source>
         <translation>%1 — HDR</translation>
     </message>

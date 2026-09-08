@@ -65,6 +65,50 @@
 <context>
     <name>Main</name>
     <message>
+        <source>Per-monitor VCP codes</source>
+        <translation>모니터별 VCP 코드</translation>
+    </message>
+    <message>
+        <source>Monitor</source>
+        <translation>모니터</translation>
+    </message>
+    <message>
+        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to the selected monitor.</source>
+        <translation>VCP 코드(16진수). 비워 두면 회색으로 표시된 기본값을 사용합니다. 변경 사항은 선택한 모니터에 적용됩니다.</translation>
+    </message>
+    <message>
+        <source>DDC</source>
+        <translation>DDC</translation>
+    </message>
+    <message>
+        <source>Configure VCP codes for monitor controls.</source>
+        <translation>모니터 제어용 VCP 코드를 설정합니다.</translation>
+    </message>
+    <message>
+        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to all monitors.</source>
+        <translation>VCP 코드(16진수). 비워 두면 회색으로 표시된 기본값을 사용합니다. 변경 사항은 모든 모니터에 적용됩니다.</translation>
+    </message>
+    <message>
+        <source>Brightness</source>
+        <translation>밝기</translation>
+    </message>
+    <message>
+        <source>Contrast</source>
+        <translation>명암</translation>
+    </message>
+    <message>
+        <source>Volume</source>
+        <translation>음량</translation>
+    </message>
+    <message>
+        <source>Input source</source>
+        <translation>입력 소스</translation>
+    </message>
+    <message>
+        <source>Power mode</source>
+        <translation>전원 모드</translation>
+    </message>
+    <message>
         <source>%1 — HDR</source>
         <translation>%1 — HDR</translation>
     </message>

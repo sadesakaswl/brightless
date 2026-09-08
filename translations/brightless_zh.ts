@@ -65,6 +65,50 @@
 <context>
     <name>Main</name>
     <message>
+        <source>Per-monitor VCP codes</source>
+        <translation>按显示器设置 VCP 代码</translation>
+    </message>
+    <message>
+        <source>Monitor</source>
+        <translation>显示器</translation>
+    </message>
+    <message>
+        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to the selected monitor.</source>
+        <translation>VCP 代码（十六进制）。留空以使用灰色显示的默认值。更改将应用于所选显示器。</translation>
+    </message>
+    <message>
+        <source>DDC</source>
+        <translation>DDC</translation>
+    </message>
+    <message>
+        <source>Configure VCP codes for monitor controls.</source>
+        <translation>配置显示器控制功能的 VCP 代码。</translation>
+    </message>
+    <message>
+        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to all monitors.</source>
+        <translation>VCP 代码（十六进制）。留空以使用灰色显示的默认值。更改将应用于所有显示器。</translation>
+    </message>
+    <message>
+        <source>Brightness</source>
+        <translation>亮度</translation>
+    </message>
+    <message>
+        <source>Contrast</source>
+        <translation>对比度</translation>
+    </message>
+    <message>
+        <source>Volume</source>
+        <translation>音量</translation>
+    </message>
+    <message>
+        <source>Input source</source>
+        <translation>输入源</translation>
+    </message>
+    <message>
+        <source>Power mode</source>
+        <translation>电源模式</translation>
+    </message>
+    <message>
         <source>%1 — HDR</source>
         <translation>%1 — HDR</translation>
     </message>

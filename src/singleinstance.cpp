@@ -72,9 +72,7 @@ int SingleInstance::start(bool autostart)
         const auto token = qEnvironmentVariable("XDG_ACTIVATION_TOKEN").toUtf8().toBase64();
         if (token.size() > 8000) return fail(QStringLiteral("Activation token too long"));
         socket.write("activate:" + token + '\n');
-        // Named-pipe completion can race with the blocking wait on Windows.
-        if (socket.bytesToWrite() && !socket.waitForBytesWritten(1000) && socket.bytesToWrite())
-            return fail(QStringLiteral("Writing activation: %1").arg(socket.errorString()));
+        // Named-pipe writes complete asynchronously on Windows; the reply is the delivery proof.
         QElapsedTimer timer;
         timer.start();
         while (!socket.canReadLine()) {

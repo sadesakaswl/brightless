@@ -201,6 +201,8 @@ int runTests(int argc, char *argv[])
         return 15;
     }
 
+    file.close();
+    updatedFile.close(); // Windows cannot remove files while these readers are open.
     controller.setAutostart(false);
 
     if (controller.vcp_per_monitor()) {
@@ -424,7 +426,7 @@ int runTests(int argc, char *argv[])
         if (!qFuzzyCompare(migrated.monitor_ratio(0), 1.2F) || migrated.monitor_dynamic_contrast_enabled(0)
             || !qFuzzyCompare(migrated.monitor_ratio(1), 0.8F) || !migrated.monitor_dynamic_contrast_enabled(1)) return 56;
     }
-    return controller.autostart() || QFileInfo::exists(path);
+    return controller.autostart() || QFileInfo::exists(path) ? 57 : 0;
 }
 
 int main(int argc, char *argv[])

@@ -1,0 +1,59 @@
+{
+  "app-id": "io.github.sadesakaswl.brightless",
+  "runtime": "org.kde.Platform",
+  "runtime-version": "6.11",
+  "sdk": "org.kde.Sdk",
+  "command": "brightless",
+  "rename-desktop-file": "com.brightless.Brightless.desktop",
+  "rename-icon": "com.brightless.Brightless",
+  "rename-appdata-file": "com.brightless.Brightless.metainfo.xml",
+  "finish-args": [
+    "--share=ipc", "--socket=wayland", "--socket=fallback-x11", "--device=all",
+    "--filesystem=xdg-config/kdeglobals:ro", "--filesystem=/run/udev:ro",
+    "--talk-name=org.kde.StatusNotifierWatcher", "--own-name=org.kde.StatusNotifierItem-*",
+    "--talk-name=org.kde.plasmashell", "--talk-name=org.kde.kglobalaccel",
+    "--talk-name=com.canonical.AppMenu.Registrar", "--talk-name=org.kde.kconfig.notify",
+    "--env=KSCREEN_BACKEND_INPROCESS=1"
+  ],
+  "modules": [
+    {
+      "name": "jansson",
+      "buildsystem": "cmake-ninja",
+      "config-opts": ["-DJANSSON_BUILD_DOCS=OFF", "-DJANSSON_BUILD_SHARED_LIBS=ON"],
+      "sources": [{
+        "type": "archive",
+        "url": "https://github.com/akheron/jansson/releases/download/v2.14/jansson-2.14.tar.gz",
+        "sha256": "5798d010e41cf8d76b66236cfb2f2543c8d082181d16bc3085ab49538d4b9929"
+      }],
+      "cleanup": ["/include", "/lib/pkgconfig", "/share/man", "*.la"]
+    },
+    {
+      "name": "ddcutil",
+      "buildsystem": "autotools",
+      "config-opts": ["--disable-static"],
+      "sources": [{
+        "type": "archive",
+        "url": "https://github.com/rockowitz/ddcutil/archive/refs/tags/v2.2.7.tar.gz",
+        "sha256": "7b5cb9824c23974241146f4a696abc65f8e9d1e950198c8dc00e4a5c6a2f41ee"
+      }],
+      "cleanup": ["/bin/ddcutil", "/include", "/lib/pkgconfig", "/share/man", "*.la"]
+    },
+    {
+      "name": "libkscreen",
+      "buildsystem": "cmake-ninja",
+      "config-opts": ["-DCMAKE_BUILD_TYPE=Release", "-DBUILD_TESTING=OFF"],
+      "sources": [{
+        "type": "archive",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/libkscreen-6.7.5.tar.xz",
+        "sha256": "df317e03acfadfcbc68981b78131750103fadf4d5c5df6368c9e91e698677219"
+      }],
+      "cleanup": ["/include", "/lib/cmake", "/lib/pkgconfig", "/share/man"]
+    },
+    {
+      "name": "brightless",
+      "buildsystem": "cmake-ninja",
+      "config-opts": ["-DCMAKE_BUILD_TYPE=Release", "-DBUILD_TESTING=OFF"],
+      "sources": [{"type": "dir", "path": "..", "skip": [".git", "build", ".github"]}]
+    }
+  ]
+}

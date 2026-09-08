@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.brightless.Brightless</id>
+  <name>Brightless</name>
+  <summary>Control external monitor brightness, contrast and volume</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-only</project_license>
+  <description>
+    <p>Adjust external monitors using DDC/CI, link brightness and contrast, and control SDR brightness on HDR-enabled KDE Plasma displays.</p>
+  </description>
+  <launchable type="desktop-id">com.brightless.Brightless.desktop</launchable>
+  <url type="homepage">https://github.com/sadesakaswl/brightless</url>
+  <url type="bugtracker">https://github.com/sadesakaswl/brightless/issues</url>
+  <provides><binary>brightless</binary></provides>
+  <content_rating type="oars-1.1"/>
+</component>

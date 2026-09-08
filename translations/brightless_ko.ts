@@ -65,347 +65,313 @@
 <context>
     <name>Main</name>
     <message>
-        <source>Per-monitor VCP codes</source>
-        <translation>모니터별 VCP 코드</translation>
+        <source>Detecting displays</source>
+        <translation>디스플레이 감지 중</translation>
     </message>
     <message>
-        <source>Monitor</source>
-        <translation>모니터</translation>
+        <source>Error</source>
+        <translation>오류</translation>
     </message>
     <message>
-        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to the selected monitor.</source>
-        <translation>VCP 코드(16진수). 비워 두면 회색으로 표시된 기본값을 사용합니다. 변경 사항은 선택한 모니터에 적용됩니다.</translation>
+        <source>Error: %1</source>
+        <translation>오류: %1</translation>
     </message>
     <message>
-        <source>DDC</source>
-        <translation>DDC</translation>
+        <source>Open the settings window.</source>
+        <translation>설정 창을 엽니다.</translation>
     </message>
     <message>
-        <source>Configure VCP codes for monitor controls.</source>
-        <translation>모니터 제어용 VCP 코드를 설정합니다.</translation>
+        <source>Refresh monitors</source>
+        <translation>모니터 새로 고침</translation>
     </message>
     <message>
-        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to all monitors.</source>
-        <translation>VCP 코드(16진수). 비워 두면 회색으로 표시된 기본값을 사용합니다. 변경 사항은 모든 모니터에 적용됩니다.</translation>
+        <source>Settings</source>
+        <translation>설정</translation>
+    </message>
+</context>
+<context>
+    <name>SettingsWindow</name>
+    <message>
+        <source>%1 Ratio</source>
+        <translation>%1 비율</translation>
+    </message>
+    <message>
+        <source>%1 Ratio:</source>
+        <translation>%1 비율:</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>정보</translation>
+    </message>
+    <message>
+        <source>Add configurable monitor controls to Plasma&apos;s Global Shortcuts settings.</source>
+        <translation>Plasma 전역 단축키 설정에 구성 가능한 모니터 제어를 추가합니다.</translation>
+    </message>
+    <message>
+        <source>Adjust brightness and contrast together using a configurable ratio.</source>
+        <translation>설정 가능한 비율로 밝기와 명암을 함께 조정합니다.</translation>
+    </message>
+    <message>
+        <source>Adjust scrolling, DDC timing, and dynamic contrast.</source>
+        <translation>스크롤, DDC 타이밍 및 동적 명암비를 조정합니다.</translation>
+    </message>
+    <message>
+        <source>Allow each monitor to use its own contrast ratio.</source>
+        <translation>각 모니터가 자체 명암비를 사용하도록 허용합니다.</translation>
+    </message>
+    <message>
+        <source>Appearance</source>
+        <translation>모양</translation>
+    </message>
+    <message>
+        <source>Apply to all monitors</source>
+        <translation>모든 모니터에 적용</translation>
+    </message>
+    <message>
+        <source>Autostart as tray icon</source>
+        <translation>트레이 아이콘으로 자동 시작</translation>
+    </message>
+    <message>
+        <source>Autostart on login</source>
+        <translation>로그인할 때 자동 시작</translation>
+    </message>
+    <message>
+        <source>Behaviour</source>
+        <translation>동작</translation>
+    </message>
+    <message>
+        <source>Brightless repository</source>
+        <translation>Brightless 저장소</translation>
     </message>
     <message>
         <source>Brightness</source>
         <translation>밝기</translation>
     </message>
     <message>
+        <source>Change monitor values by %1% for each mouse-wheel step.</source>
+        <translation>마우스 휠을 한 단계 움직일 때마다 모니터 값을 %1% 변경합니다.</translation>
+    </message>
+    <message>
+        <source>Choose which monitor controls and icons are shown.</source>
+        <translation>표시할 모니터 제어 항목과 아이콘을 선택합니다.</translation>
+    </message>
+    <message>
+        <source>Close to tray icon</source>
+        <translation>닫을 때 시스템 트레이로 최소화</translation>
+    </message>
+    <message>
+        <source>Configure VCP codes for monitor controls.</source>
+        <translation>모니터 제어용 VCP 코드를 설정합니다.</translation>
+    </message>
+    <message>
+        <source>Configure global shortcuts</source>
+        <translation>전역 단축키 설정</translation>
+    </message>
+    <message>
+        <source>Configure startup and window-closing behaviour.</source>
+        <translation>시작 및 창 닫기 동작을 설정합니다.</translation>
+    </message>
+    <message>
         <source>Contrast</source>
         <translation>명암</translation>
     </message>
     <message>
-        <source>Volume</source>
-        <translation>음량</translation>
+        <source>Contrast Ratio</source>
+        <translation>명암비</translation>
+    </message>
+    <message>
+        <source>Contrast Ratio:</source>
+        <translation>명암비:</translation>
+    </message>
+    <message>
+        <source>DDC</source>
+        <translation>DDC</translation>
+    </message>
+    <message>
+        <source>Delay to send DDC signal</source>
+        <translation>DDC 신호 전송 지연</translation>
+    </message>
+    <message>
+        <source>Dynamic Contrast</source>
+        <translation>동적 명암비</translation>
+    </message>
+    <message>
+        <source>Enable Dynamic Contrast</source>
+        <translation>동적 명암비 사용</translation>
+    </message>
+    <message>
+        <source>Enable Plasma global shortcut</source>
+        <translation>Plasma 전역 단축키 활성화</translation>
+    </message>
+    <message>
+        <source>GNU General Public License v3.0</source>
+        <translation>GNU 일반 공중 사용 허가서 v3.0</translation>
+    </message>
+    <message>
+        <source>Hide Brightness Option</source>
+        <translation>밝기 옵션 숨기기</translation>
+    </message>
+    <message>
+        <source>Hide Contrast Option</source>
+        <translation>명암 옵션 숨기기</translation>
+    </message>
+    <message>
+        <source>Hide Dynamic Contrast Option</source>
+        <translation>동적 명암비 옵션 숨기기</translation>
+    </message>
+    <message>
+        <source>Hide Input Option</source>
+        <translation>입력 옵션 숨기기</translation>
+    </message>
+    <message>
+        <source>Hide Tray Icon</source>
+        <translation>트레이 아이콘 숨기기</translation>
+    </message>
+    <message>
+        <source>Hide Volume Option</source>
+        <translation>음량 옵션 숨기기</translation>
     </message>
     <message>
         <source>Input source</source>
         <translation>입력 소스</translation>
     </message>
     <message>
+        <source>Instant</source>
+        <translation>즉시</translation>
+    </message>
+    <message>
+        <source>Keep Brightless running after its window closes.</source>
+        <translation>창을 닫은 후에도 Brightless를 계속 실행합니다.</translation>
+    </message>
+    <message>
+        <source>Launch Brightless automatically when you log in.</source>
+        <translation>로그인할 때 Brightless를 자동으로 실행합니다.</translation>
+    </message>
+    <message>
+        <source>Monitor</source>
+        <translation>모니터</translation>
+    </message>
+    <message>
+        <source>Per-monitor VCP codes</source>
+        <translation>모니터별 VCP 코드</translation>
+    </message>
+    <message>
+        <source>Per-monitor ratio</source>
+        <translation>모니터별 비율</translation>
+    </message>
+    <message>
         <source>Power mode</source>
         <translation>전원 모드</translation>
     </message>
     <message>
-        <source>%1 — HDR</source>
-        <translation>%1 — HDR</translation>
+        <source>Remove Brightless from the system tray.</source>
+        <translation>시스템 트레이에서 Brightless를 제거합니다.</translation>
     </message>
     <message>
-        <source>SDR brightness (nits):</source>
-        <translation>SDR 밝기(니트):</translation>
+        <source>Remove the brightness control from monitor cards.</source>
+        <translation>모니터 카드에서 밝기 제어 항목을 제거합니다.</translation>
+    </message>
+    <message>
+        <source>Remove the contrast control from monitor cards.</source>
+        <translation>모니터 카드에서 명암 제어 항목을 제거합니다.</translation>
+    </message>
+    <message>
+        <source>Remove the dynamic contrast control from monitor cards.</source>
+        <translation>모니터 카드에서 동적 명암비 제어 항목을 제거합니다.</translation>
+    </message>
+    <message>
+        <source>Remove the input-source control from monitor cards.</source>
+        <translation>모니터 카드에서 입력 소스 제어 항목을 제거합니다.</translation>
+    </message>
+    <message>
+        <source>Remove the volume control from monitor cards.</source>
+        <translation>모니터 카드에서 음량 제어 항목을 제거합니다.</translation>
+    </message>
+    <message>
+        <source>Scroll Step</source>
+        <translation>스크롤 단계</translation>
+    </message>
+    <message>
+        <source>Scroll Step:</source>
+        <translation>스크롤 단계:</translation>
+    </message>
+    <message>
+        <source>Send monitor control updates immediately.</source>
+        <translation>모니터 제어 업데이트를 즉시 전송합니다.</translation>
+    </message>
+    <message>
+        <source>Set contrast to %1 times brightness.</source>
+        <translation>명암을 밝기의 %1배로 설정합니다.</translation>
+    </message>
+    <message>
+        <source>Set this monitor&apos;s contrast to %1 times its brightness.</source>
+        <translation>이 모니터의 명암을 밝기의 %1배로 설정합니다.</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>설정</translation>
+    </message>
+    <message>
+        <source>Start Brightless on login without opening its window.</source>
+        <translation>창을 열지 않고 로그인할 때 Brightless를 시작합니다.</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>시스템</translation>
+    </message>
+    <message>
+        <source>Use dynamic contrast on every compatible monitor.</source>
+        <translation>호환되는 모든 모니터에서 동적 명암비를 사용합니다.</translation>
+    </message>
+    <message>
+        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to all monitors.</source>
+        <translation>VCP 코드(16진수). 비워 두면 회색으로 표시된 기본값을 사용합니다. 변경 사항은 모든 모니터에 적용됩니다.</translation>
+    </message>
+    <message>
+        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to the selected monitor.</source>
+        <translation>VCP 코드(16진수). 비워 두면 회색으로 표시된 기본값을 사용합니다. 변경 사항은 선택한 모니터에 적용됩니다.</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>버전 %1</translation>
+    </message>
+    <message>
+        <source>View version, source code, and license information.</source>
+        <translation>버전, 소스 코드 및 라이선스 정보를 봅니다.</translation>
+    </message>
+    <message>
+        <source>Volume</source>
+        <translation>음량</translation>
+    </message>
+    <message>
+        <source>Wait %1 ms before sending monitor control updates.</source>
+        <translation>모니터 제어 업데이트를 보내기 전에 %1ms 기다립니다.</translation>
+    </message>
+</context>
+<context>
+    <name>SdrBrightnessCard</name>
+    <message>
+        <source>%1 — HDR</source>
+        <translation>%1 — HDR</translation>
     </message>
     <message>
         <source>Adjust the brightness of SDR content on this HDR screen.</source>
         <translation>이 HDR 화면에서 SDR 콘텐츠의 밝기를 조절합니다.</translation>
     </message>
     <message>
-        <location filename="../src/qt/qml/Main.qml" line="+41"/>
-        <location line="+23"/>
-        <source>Settings</source>
-        <translation>설정</translation>
+        <source>SDR brightness (nits):</source>
+        <translation>SDR 밝기(니트):</translation>
+    </message>
+</context>
+<context>
+    <name>Osd</name>
+    <message>
+        <source>Brightness</source>
+        <translation>밝기</translation>
     </message>
     <message>
-        <location line="-13"/>
-        <source>Error</source>
-        <translation>오류</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Error: %1</source>
-        <translation>오류: %1</translation>
-    </message>
-    <message>
-        <location line="+263"/>
-        <source>%1 Ratio</source>
-        <translation>%1 비율</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Set this monitor&apos;s contrast to %1 times its brightness.</source>
-        <translation>이 모니터의 명암을 밝기의 %1배로 설정합니다.</translation>
-    </message>
-    <message>
-        <location line="+19"/>
-        <location line="+2"/>
-        <source>Autostart on login</source>
-        <translation>로그인할 때 자동 시작</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Launch Brightless automatically when you log in.</source>
-        <translation>로그인할 때 Brightless를 자동으로 실행합니다.</translation>
-    </message>
-    <message>
-        <location line="+28"/>
-        <location line="+2"/>
-        <source>Enable Plasma global shortcut</source>
-        <translation>Plasma 전역 단축키 활성화</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Add configurable monitor controls to Plasma&apos;s Global Shortcuts settings.</source>
-        <translation>Plasma 전역 단축키 설정에 구성 가능한 모니터 제어를 추가합니다.</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <location line="+2"/>
-        <source>Close to tray icon</source>
-        <translation>닫을 때 시스템 트레이로 최소화</translation>
-    </message>
-    <message>
-        <location line="-191"/>
-        <source>Scroll Step:</source>
-        <translation>스크롤 단계:</translation>
-    </message>
-    <message>
-        <location line="-153"/>
-        <source>Open the settings window.</source>
-        <translation>설정 창을 엽니다.</translation>
-    </message>
-    <message>
-        <location line="+54"/>
-        <source>Appearance</source>
-        <translation>모양</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Choose which monitor controls and icons are shown.</source>
-        <translation>표시할 모니터 제어 항목과 아이콘을 선택합니다.</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Behaviour</source>
-        <translation>동작</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Adjust scrolling, DDC timing, and dynamic contrast.</source>
-        <translation>스크롤, DDC 타이밍 및 동적 명암비를 조정합니다.</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>System</source>
-        <translation>시스템</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Configure startup and window-closing behaviour.</source>
-        <translation>시작 및 창 닫기 동작을 설정합니다.</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>About</source>
-        <translation>정보</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>View version, source code, and license information.</source>
-        <translation>버전, 소스 코드 및 라이선스 정보를 봅니다.</translation>
-    </message>
-    <message>
-        <location line="+20"/>
-        <source>Hide Dynamic Contrast Option</source>
-        <translation>동적 명암비 옵션 숨기기</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Hide Brightness Option</source>
-        <translation>밝기 옵션 숨기기</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Remove the dynamic contrast control from monitor cards.</source>
-        <translation>모니터 카드에서 동적 명암비 제어 항목을 제거합니다.</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Remove the brightness control from monitor cards.</source>
-        <translation>모니터 카드에서 밝기 제어 항목을 제거합니다.</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <location line="+2"/>
-        <source>Hide Contrast Option</source>
-        <translation>명암 옵션 숨기기</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Remove the contrast control from monitor cards.</source>
-        <translation>모니터 카드에서 명암 제어 항목을 제거합니다.</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <location line="+2"/>
-        <source>Hide Volume Option</source>
-        <translation>음량 옵션 숨기기</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Remove the volume control from monitor cards.</source>
-        <translation>모니터 카드에서 음량 제어 항목을 제거합니다.</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <location line="+2"/>
-        <source>Hide Input Option</source>
-        <translation>입력 옵션 숨기기</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Remove the input-source control from monitor cards.</source>
-        <translation>모니터 카드에서 입력 소스 제어 항목을 제거합니다.</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <location line="+2"/>
-        <source>Hide Tray Icon</source>
-        <translation>트레이 아이콘 숨기기</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Remove Brightless from the system tray.</source>
-        <translation>시스템 트레이에서 Brightless를 제거합니다.</translation>
-    </message>
-    <message>
-        <location line="+26"/>
-        <source>Scroll Step</source>
-        <translation>스크롤 단계</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Change monitor values by %1% for each mouse-wheel step.</source>
-        <translation>마우스 휠을 한 단계 움직일 때마다 모니터 값을 %1% 변경합니다.</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Delay to send DDC signal</source>
-        <translation>DDC 신호 전송 지연</translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Instant</source>
-        <translation>즉시</translation>
-    </message>
-    <message>
-        <location line="+13"/>
-        <source>Send monitor control updates immediately.</source>
-        <translation>모니터 제어 업데이트를 즉시 전송합니다.</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Wait %1 ms before sending monitor control updates.</source>
-        <translation>모니터 제어 업데이트를 보내기 전에 %1ms 기다립니다.</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Dynamic Contrast</source>
-        <translation>동적 명암비</translation>
-    </message>
-    <message>
-        <location line="+4"/>
-        <location line="+2"/>
-        <source>Enable Dynamic Contrast</source>
-        <translation>동적 명암비 사용</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Adjust brightness and contrast together using a configurable ratio.</source>
-        <translation>설정 가능한 비율로 밝기와 명암을 함께 조정합니다.</translation>
-    </message>
-    <message>
-        <location line="+13"/>
-        <location line="+2"/>
-        <source>Apply to all monitors</source>
-        <translation>모든 모니터에 적용</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Use dynamic contrast on every compatible monitor.</source>
-        <translation>호환되는 모든 모니터에서 동적 명암비를 사용합니다.</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <source>Contrast Ratio:</source>
-        <translation>명암비:</translation>
-    </message>
-    <message>
-        <location line="+10"/>
-        <source>Contrast Ratio</source>
-        <translation>명암비</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Set contrast to %1 times brightness.</source>
-        <translation>명암을 밝기의 %1배로 설정합니다.</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <location line="+2"/>
-        <source>Per-monitor ratio</source>
-        <translation>모니터별 비율</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Allow each monitor to use its own contrast ratio.</source>
-        <translation>각 모니터가 자체 명암비를 사용하도록 허용합니다.</translation>
-    </message>
-    <message>
-        <location line="+17"/>
-        <source>%1 Ratio:</source>
-        <translation>%1 비율:</translation>
-    </message>
-    <message>
-        <location line="+51"/>
-        <location line="+5"/>
-        <source>Autostart as tray icon</source>
-        <translation>트레이 아이콘으로 자동 시작</translation>
-    </message>
-    <message>
-        <location line="-8"/>
-        <source>Start Brightless on login without opening its window.</source>
-        <translation>창을 열지 않고 로그인할 때 Brightless를 시작합니다.</translation>
-    </message>
-    <message>
-        <location line="+34"/>
-        <source>Keep Brightless running after its window closes.</source>
-        <translation>창을 닫은 후에도 Brightless를 계속 실행합니다.</translation>
-    </message>
-    <message>
-        <location line="+28"/>
-        <source>Version %1</source>
-        <translation>버전 %1</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Brightless repository</source>
-        <translation>Brightless 저장소</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>GNU General Public License v3.0</source>
-        <translation>GNU 일반 공중 사용 허가서 v3.0</translation>
+        <source>Volume</source>
+        <translation>음량</translation>
     </message>
 </context>
 <context>

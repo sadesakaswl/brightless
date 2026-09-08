@@ -65,347 +65,313 @@
 <context>
     <name>Main</name>
     <message>
-        <source>Per-monitor VCP codes</source>
-        <translation>按显示器设置 VCP 代码</translation>
+        <source>Detecting displays</source>
+        <translation>正在检测显示器</translation>
     </message>
     <message>
-        <source>Monitor</source>
-        <translation>显示器</translation>
+        <source>Error</source>
+        <translation>错误</translation>
     </message>
     <message>
-        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to the selected monitor.</source>
-        <translation>VCP 代码（十六进制）。留空以使用灰色显示的默认值。更改将应用于所选显示器。</translation>
+        <source>Error: %1</source>
+        <translation>错误：%1</translation>
     </message>
     <message>
-        <source>DDC</source>
-        <translation>DDC</translation>
+        <source>Open the settings window.</source>
+        <translation>打开设置窗口。</translation>
     </message>
     <message>
-        <source>Configure VCP codes for monitor controls.</source>
-        <translation>配置显示器控制功能的 VCP 代码。</translation>
+        <source>Refresh monitors</source>
+        <translation>刷新显示器</translation>
     </message>
     <message>
-        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to all monitors.</source>
-        <translation>VCP 代码（十六进制）。留空以使用灰色显示的默认值。更改将应用于所有显示器。</translation>
+        <source>Settings</source>
+        <translation>设置</translation>
+    </message>
+</context>
+<context>
+    <name>SettingsWindow</name>
+    <message>
+        <source>%1 Ratio</source>
+        <translation>%1 比率</translation>
+    </message>
+    <message>
+        <source>%1 Ratio:</source>
+        <translation>%1 比率：</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>关于</translation>
+    </message>
+    <message>
+        <source>Add configurable monitor controls to Plasma&apos;s Global Shortcuts settings.</source>
+        <translation>将可配置的显示器控制添加到 Plasma 的全局快捷键设置中。</translation>
+    </message>
+    <message>
+        <source>Adjust brightness and contrast together using a configurable ratio.</source>
+        <translation>使用可配置的比率同时调整亮度和对比度。</translation>
+    </message>
+    <message>
+        <source>Adjust scrolling, DDC timing, and dynamic contrast.</source>
+        <translation>调整滚动、DDC 时序和动态对比度。</translation>
+    </message>
+    <message>
+        <source>Allow each monitor to use its own contrast ratio.</source>
+        <translation>允许每台显示器使用各自的对比度比率。</translation>
+    </message>
+    <message>
+        <source>Appearance</source>
+        <translation>外观</translation>
+    </message>
+    <message>
+        <source>Apply to all monitors</source>
+        <translation>应用于所有显示器</translation>
+    </message>
+    <message>
+        <source>Autostart as tray icon</source>
+        <translation>自动启动到系统托盘</translation>
+    </message>
+    <message>
+        <source>Autostart on login</source>
+        <translation>登录时自动启动</translation>
+    </message>
+    <message>
+        <source>Behaviour</source>
+        <translation>行为</translation>
+    </message>
+    <message>
+        <source>Brightless repository</source>
+        <translation>Brightless 代码仓库</translation>
     </message>
     <message>
         <source>Brightness</source>
         <translation>亮度</translation>
     </message>
     <message>
+        <source>Change monitor values by %1% for each mouse-wheel step.</source>
+        <translation>每滚动一格鼠标滚轮，将显示器数值更改 %1%。</translation>
+    </message>
+    <message>
+        <source>Choose which monitor controls and icons are shown.</source>
+        <translation>选择要显示的显示器控件和图标。</translation>
+    </message>
+    <message>
+        <source>Close to tray icon</source>
+        <translation>关闭到系统托盘</translation>
+    </message>
+    <message>
+        <source>Configure VCP codes for monitor controls.</source>
+        <translation>配置显示器控制功能的 VCP 代码。</translation>
+    </message>
+    <message>
+        <source>Configure global shortcuts</source>
+        <translation>配置全局快捷键</translation>
+    </message>
+    <message>
+        <source>Configure startup and window-closing behaviour.</source>
+        <translation>配置启动和窗口关闭行为。</translation>
+    </message>
+    <message>
         <source>Contrast</source>
         <translation>对比度</translation>
     </message>
     <message>
-        <source>Volume</source>
-        <translation>音量</translation>
+        <source>Contrast Ratio</source>
+        <translation>对比度比率</translation>
+    </message>
+    <message>
+        <source>Contrast Ratio:</source>
+        <translation>对比度比率：</translation>
+    </message>
+    <message>
+        <source>DDC</source>
+        <translation>DDC</translation>
+    </message>
+    <message>
+        <source>Delay to send DDC signal</source>
+        <translation>DDC 信号发送延迟</translation>
+    </message>
+    <message>
+        <source>Dynamic Contrast</source>
+        <translation>动态对比度</translation>
+    </message>
+    <message>
+        <source>Enable Dynamic Contrast</source>
+        <translation>启用动态对比度</translation>
+    </message>
+    <message>
+        <source>Enable Plasma global shortcut</source>
+        <translation>启用 Plasma 全局快捷键</translation>
+    </message>
+    <message>
+        <source>GNU General Public License v3.0</source>
+        <translation>GNU 通用公共许可证 v3.0</translation>
+    </message>
+    <message>
+        <source>Hide Brightness Option</source>
+        <translation>隐藏亮度选项</translation>
+    </message>
+    <message>
+        <source>Hide Contrast Option</source>
+        <translation>隐藏对比度选项</translation>
+    </message>
+    <message>
+        <source>Hide Dynamic Contrast Option</source>
+        <translation>隐藏动态对比度选项</translation>
+    </message>
+    <message>
+        <source>Hide Input Option</source>
+        <translation>隐藏输入选项</translation>
+    </message>
+    <message>
+        <source>Hide Tray Icon</source>
+        <translation>隐藏托盘图标</translation>
+    </message>
+    <message>
+        <source>Hide Volume Option</source>
+        <translation>隐藏音量选项</translation>
     </message>
     <message>
         <source>Input source</source>
         <translation>输入源</translation>
     </message>
     <message>
+        <source>Instant</source>
+        <translation>立即</translation>
+    </message>
+    <message>
+        <source>Keep Brightless running after its window closes.</source>
+        <translation>关闭窗口后让 Brightless 继续运行。</translation>
+    </message>
+    <message>
+        <source>Launch Brightless automatically when you log in.</source>
+        <translation>登录时自动启动 Brightless。</translation>
+    </message>
+    <message>
+        <source>Monitor</source>
+        <translation>显示器</translation>
+    </message>
+    <message>
+        <source>Per-monitor VCP codes</source>
+        <translation>按显示器设置 VCP 代码</translation>
+    </message>
+    <message>
+        <source>Per-monitor ratio</source>
+        <translation>每台显示器的比率</translation>
+    </message>
+    <message>
         <source>Power mode</source>
         <translation>电源模式</translation>
     </message>
     <message>
-        <source>%1 — HDR</source>
-        <translation>%1 — HDR</translation>
+        <source>Remove Brightless from the system tray.</source>
+        <translation>从系统托盘中移除 Brightless。</translation>
     </message>
     <message>
-        <source>SDR brightness (nits):</source>
-        <translation>SDR 亮度（尼特）：</translation>
+        <source>Remove the brightness control from monitor cards.</source>
+        <translation>从显示器卡片中移除亮度控件。</translation>
+    </message>
+    <message>
+        <source>Remove the contrast control from monitor cards.</source>
+        <translation>从显示器卡片中移除对比度控件。</translation>
+    </message>
+    <message>
+        <source>Remove the dynamic contrast control from monitor cards.</source>
+        <translation>从显示器卡片中移除动态对比度控件。</translation>
+    </message>
+    <message>
+        <source>Remove the input-source control from monitor cards.</source>
+        <translation>从显示器卡片中移除输入源控件。</translation>
+    </message>
+    <message>
+        <source>Remove the volume control from monitor cards.</source>
+        <translation>从显示器卡片中移除音量控件。</translation>
+    </message>
+    <message>
+        <source>Scroll Step</source>
+        <translation>滚动步长</translation>
+    </message>
+    <message>
+        <source>Scroll Step:</source>
+        <translation>滚动步长：</translation>
+    </message>
+    <message>
+        <source>Send monitor control updates immediately.</source>
+        <translation>立即发送显示器控制更新。</translation>
+    </message>
+    <message>
+        <source>Set contrast to %1 times brightness.</source>
+        <translation>将对比度设为亮度的 %1 倍。</translation>
+    </message>
+    <message>
+        <source>Set this monitor&apos;s contrast to %1 times its brightness.</source>
+        <translation>将此显示器的对比度设为其亮度的 %1 倍。</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>设置</translation>
+    </message>
+    <message>
+        <source>Start Brightless on login without opening its window.</source>
+        <translation>登录时启动 Brightless，但不打开窗口。</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>系统</translation>
+    </message>
+    <message>
+        <source>Use dynamic contrast on every compatible monitor.</source>
+        <translation>在所有兼容的显示器上使用动态对比度。</translation>
+    </message>
+    <message>
+        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to all monitors.</source>
+        <translation>VCP 代码（十六进制）。留空以使用灰色显示的默认值。更改将应用于所有显示器。</translation>
+    </message>
+    <message>
+        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to the selected monitor.</source>
+        <translation>VCP 代码（十六进制）。留空以使用灰色显示的默认值。更改将应用于所选显示器。</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>版本 %1</translation>
+    </message>
+    <message>
+        <source>View version, source code, and license information.</source>
+        <translation>查看版本、源代码和许可证信息。</translation>
+    </message>
+    <message>
+        <source>Volume</source>
+        <translation>音量</translation>
+    </message>
+    <message>
+        <source>Wait %1 ms before sending monitor control updates.</source>
+        <translation>等待 %1 毫秒后再发送显示器控制更新。</translation>
+    </message>
+</context>
+<context>
+    <name>SdrBrightnessCard</name>
+    <message>
+        <source>%1 — HDR</source>
+        <translation>%1 — HDR</translation>
     </message>
     <message>
         <source>Adjust the brightness of SDR content on this HDR screen.</source>
         <translation>调整此 HDR 屏幕上 SDR 内容的亮度。</translation>
     </message>
     <message>
-        <location filename="../src/qt/qml/Main.qml" line="+41"/>
-        <location line="+23"/>
-        <source>Settings</source>
-        <translation>设置</translation>
+        <source>SDR brightness (nits):</source>
+        <translation>SDR 亮度（尼特）：</translation>
+    </message>
+</context>
+<context>
+    <name>Osd</name>
+    <message>
+        <source>Brightness</source>
+        <translation>亮度</translation>
     </message>
     <message>
-        <location line="-13"/>
-        <source>Error</source>
-        <translation>错误</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Error: %1</source>
-        <translation>错误：%1</translation>
-    </message>
-    <message>
-        <location line="+263"/>
-        <source>%1 Ratio</source>
-        <translation>%1 比率</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Set this monitor&apos;s contrast to %1 times its brightness.</source>
-        <translation>将此显示器的对比度设为其亮度的 %1 倍。</translation>
-    </message>
-    <message>
-        <location line="+19"/>
-        <location line="+2"/>
-        <source>Autostart on login</source>
-        <translation>登录时自动启动</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Launch Brightless automatically when you log in.</source>
-        <translation>登录时自动启动 Brightless。</translation>
-    </message>
-    <message>
-        <location line="+28"/>
-        <location line="+2"/>
-        <source>Enable Plasma global shortcut</source>
-        <translation>启用 Plasma 全局快捷键</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Add configurable monitor controls to Plasma&apos;s Global Shortcuts settings.</source>
-        <translation>将可配置的显示器控制添加到 Plasma 的全局快捷键设置中。</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <location line="+2"/>
-        <source>Close to tray icon</source>
-        <translation>关闭到系统托盘</translation>
-    </message>
-    <message>
-        <location line="-191"/>
-        <source>Scroll Step:</source>
-        <translation>滚动步长：</translation>
-    </message>
-    <message>
-        <location line="-153"/>
-        <source>Open the settings window.</source>
-        <translation>打开设置窗口。</translation>
-    </message>
-    <message>
-        <location line="+54"/>
-        <source>Appearance</source>
-        <translation>外观</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Choose which monitor controls and icons are shown.</source>
-        <translation>选择要显示的显示器控件和图标。</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Behaviour</source>
-        <translation>行为</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Adjust scrolling, DDC timing, and dynamic contrast.</source>
-        <translation>调整滚动、DDC 时序和动态对比度。</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>System</source>
-        <translation>系统</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Configure startup and window-closing behaviour.</source>
-        <translation>配置启动和窗口关闭行为。</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>About</source>
-        <translation>关于</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>View version, source code, and license information.</source>
-        <translation>查看版本、源代码和许可证信息。</translation>
-    </message>
-    <message>
-        <location line="+20"/>
-        <source>Hide Dynamic Contrast Option</source>
-        <translation>隐藏动态对比度选项</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Hide Brightness Option</source>
-        <translation>隐藏亮度选项</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Remove the dynamic contrast control from monitor cards.</source>
-        <translation>从显示器卡片中移除动态对比度控件。</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Remove the brightness control from monitor cards.</source>
-        <translation>从显示器卡片中移除亮度控件。</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <location line="+2"/>
-        <source>Hide Contrast Option</source>
-        <translation>隐藏对比度选项</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Remove the contrast control from monitor cards.</source>
-        <translation>从显示器卡片中移除对比度控件。</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <location line="+2"/>
-        <source>Hide Volume Option</source>
-        <translation>隐藏音量选项</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Remove the volume control from monitor cards.</source>
-        <translation>从显示器卡片中移除音量控件。</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <location line="+2"/>
-        <source>Hide Input Option</source>
-        <translation>隐藏输入选项</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Remove the input-source control from monitor cards.</source>
-        <translation>从显示器卡片中移除输入源控件。</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <location line="+2"/>
-        <source>Hide Tray Icon</source>
-        <translation>隐藏托盘图标</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Remove Brightless from the system tray.</source>
-        <translation>从系统托盘中移除 Brightless。</translation>
-    </message>
-    <message>
-        <location line="+26"/>
-        <source>Scroll Step</source>
-        <translation>滚动步长</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Change monitor values by %1% for each mouse-wheel step.</source>
-        <translation>每滚动一格鼠标滚轮，将显示器数值更改 %1%。</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Delay to send DDC signal</source>
-        <translation>DDC 信号发送延迟</translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Instant</source>
-        <translation>立即</translation>
-    </message>
-    <message>
-        <location line="+13"/>
-        <source>Send monitor control updates immediately.</source>
-        <translation>立即发送显示器控制更新。</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Wait %1 ms before sending monitor control updates.</source>
-        <translation>等待 %1 毫秒后再发送显示器控制更新。</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Dynamic Contrast</source>
-        <translation>动态对比度</translation>
-    </message>
-    <message>
-        <location line="+4"/>
-        <location line="+2"/>
-        <source>Enable Dynamic Contrast</source>
-        <translation>启用动态对比度</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Adjust brightness and contrast together using a configurable ratio.</source>
-        <translation>使用可配置的比率同时调整亮度和对比度。</translation>
-    </message>
-    <message>
-        <location line="+13"/>
-        <location line="+2"/>
-        <source>Apply to all monitors</source>
-        <translation>应用于所有显示器</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Use dynamic contrast on every compatible monitor.</source>
-        <translation>在所有兼容的显示器上使用动态对比度。</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <source>Contrast Ratio:</source>
-        <translation>对比度比率：</translation>
-    </message>
-    <message>
-        <location line="+10"/>
-        <source>Contrast Ratio</source>
-        <translation>对比度比率</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Set contrast to %1 times brightness.</source>
-        <translation>将对比度设为亮度的 %1 倍。</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <location line="+2"/>
-        <source>Per-monitor ratio</source>
-        <translation>每台显示器的比率</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Allow each monitor to use its own contrast ratio.</source>
-        <translation>允许每台显示器使用各自的对比度比率。</translation>
-    </message>
-    <message>
-        <location line="+17"/>
-        <source>%1 Ratio:</source>
-        <translation>%1 比率：</translation>
-    </message>
-    <message>
-        <location line="+51"/>
-        <location line="+5"/>
-        <source>Autostart as tray icon</source>
-        <translation>自动启动到系统托盘</translation>
-    </message>
-    <message>
-        <location line="-8"/>
-        <source>Start Brightless on login without opening its window.</source>
-        <translation>登录时启动 Brightless，但不打开窗口。</translation>
-    </message>
-    <message>
-        <location line="+34"/>
-        <source>Keep Brightless running after its window closes.</source>
-        <translation>关闭窗口后让 Brightless 继续运行。</translation>
-    </message>
-    <message>
-        <location line="+28"/>
-        <source>Version %1</source>
-        <translation>版本 %1</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Brightless repository</source>
-        <translation>Brightless 代码仓库</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>GNU General Public License v3.0</source>
-        <translation>GNU 通用公共许可证 v3.0</translation>
+        <source>Volume</source>
+        <translation>音量</translation>
     </message>
 </context>
 <context>

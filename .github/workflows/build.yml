@@ -1,0 +1,71 @@
+name: Build and package
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    container: fedora:43
+    steps:
+      - name: Install build dependencies
+        run: >-
+          dnf install -y git cmake ninja-build gcc-c++ python3 pkgconf-pkg-config
+          qt6-qtbase-devel qt6-qtdeclarative-devel qt6-qttools-devel
+          kf6-kglobalaccel-devel kf6-kstatusnotifieritem-devel libkscreen-qt6-devel
+          libddcutil-devel dbus-daemon desktop-file-utils appstream
+      - uses: actions/checkout@v4
+      - name: Build
+        run: |
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --parallel 2
+      - name: Test and validate metadata
+        run: |
+          dbus-run-session -- ctest --test-dir build --output-on-failure
+          desktop-file-validate resources/com.brightless.Brightless.desktop
+          appstreamcli validate --no-net resources/com.brightless.Brightless.metainfo.xml
+      - name: Install and smoke test
+        run: |
+          cmake --install build --prefix "$PWD/stage"
+          dbus-run-session -- python3 tests/app_smoke_test.py stage/bin/brightless
+          cd build && cpack -G ZIP
+      - uses: actions/upload-artifact@v4
+        with:
+          name: brightless-linux-x86_64
+          path: build/brightless-*.zip
+
+  windows:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.3'
+          arch: win64_msvc2022_64
+          modules: qtshadertools
+          cache: true
+      - name: Build (MSVC release optimization and LTO)
+        run: |
+          cmake -S . -B build -A x64
+          cmake --build build --config Release --parallel 2
+      - name: Test
+        run: ctest --test-dir build -C Release --output-on-failure
+      - name: Deploy Qt
+        run: cmake --install build --config Release --prefix "$pwd/stage"
+      - name: Smoke test installed application
+        run: |
+          # Remove Qt's development bin directory: the installed app must use deployed DLLs/plugins.
+          $env:PATH = (($env:PATH -split ';') | Where-Object { $_ -notlike "*$env:QT_ROOT_DIR*" }) -join ';'
+          Remove-Item Env:QT_PLUGIN_PATH, Env:QML_IMPORT_PATH, Env:QML2_IMPORT_PATH -ErrorAction SilentlyContinue
+          python tests/app_smoke_test.py stage/bin/brightless.exe
+      - name: Package
+        working-directory: build
+        run: cpack -C Release -G ZIP
+      - uses: actions/upload-artifact@v4
+        with:
+          name: brightless-windows-x86_64
+          path: build/brightless-*.zip

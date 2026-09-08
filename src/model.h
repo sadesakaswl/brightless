@@ -7,6 +7,8 @@
 
 namespace brightless {
 
+inline constexpr std::array defaultVcpCodes{0x10, 0x12, 0x62, 0x60, 0xd6};
+
 constexpr int clampPercent(int value)
 {
     return std::clamp(value, 0, 100);

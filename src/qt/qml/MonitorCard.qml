@@ -73,13 +73,12 @@ Frame {
     }
 
     function sliderWheel(slider, wheel, applyValue) {
-        var step = root.controller.scroll_step()
-        if (wheel.angleDelta.y > 0) {
-            slider.value = Math.min(slider.to, slider.value + step)
-        } else if (wheel.angleDelta.y < 0) {
-            slider.value = Math.max(slider.from, slider.value - step)
-        }
-        applyValue(Math.round(slider.value))
+        if (wheel.angleDelta.y === 0)
+            return
+        const value = Math.max(slider.from, Math.min(slider.to,
+            slider.value + Math.sign(wheel.angleDelta.y) * root.controller.scroll_step()))
+        if (value !== slider.value)
+            applyValue(Math.round(value))
         wheel.accepted = true
     }
 
@@ -245,6 +244,7 @@ Frame {
                 Layout.preferredWidth: root.labelWidth
             }
             ComboBox {
+                Accessible.name: qsTr("Input:")
                 visible: root.showInput
                 textRole: "text"
                 valueRole: "code"
@@ -260,6 +260,7 @@ Frame {
 
             Label { text: qsTr("Power:"); visible: root.controller.supports_power_mode(root.monitorIndex) }
             ComboBox {
+                Accessible.name: qsTr("Power:")
                 visible: root.controller.supports_power_mode(root.monitorIndex)
                 textRole: "text"
                 valueRole: "code"

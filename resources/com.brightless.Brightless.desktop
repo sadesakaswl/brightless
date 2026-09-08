@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Brightless
+Comment=Control external monitor brightness, contrast and volume
+Exec=brightless
+Icon=com.brightless.Brightless
+Terminal=false
+Categories=Settings;HardwareSettings;Qt;
+StartupNotify=true

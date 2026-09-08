@@ -65,347 +65,313 @@
 <context>
     <name>Main</name>
     <message>
-        <source>Per-monitor VCP codes</source>
-        <translation>Monitöre özel VCP kodları</translation>
+        <source>Detecting displays</source>
+        <translation>Ekranlar algılanıyor</translation>
     </message>
     <message>
-        <source>Monitor</source>
-        <translation>Monitör</translation>
+        <source>Error</source>
+        <translation>Hata</translation>
     </message>
     <message>
-        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to the selected monitor.</source>
-        <translation>VCP kodları (onaltılık). Gri varsayılan değeri kullanmak için boş bırakın. Değişiklikler seçilen monitöre uygulanır.</translation>
+        <source>Error: %1</source>
+        <translation>Hata: %1</translation>
     </message>
     <message>
-        <source>DDC</source>
-        <translation>DDC</translation>
+        <source>Open the settings window.</source>
+        <translation>Ayarlar penceresini aç.</translation>
     </message>
     <message>
-        <source>Configure VCP codes for monitor controls.</source>
-        <translation>Monitör kontrolleri için VCP kodlarını yapılandırın.</translation>
+        <source>Refresh monitors</source>
+        <translation>Monitörleri yenile</translation>
     </message>
     <message>
-        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to all monitors.</source>
-        <translation>VCP kodları (onaltılık). Gri varsayılan değeri kullanmak için boş bırakın. Değişiklikler tüm monitörlere uygulanır.</translation>
+        <source>Settings</source>
+        <translation>Ayarlar</translation>
+    </message>
+</context>
+<context>
+    <name>SettingsWindow</name>
+    <message>
+        <source>%1 Ratio</source>
+        <translation>%1 oranı</translation>
+    </message>
+    <message>
+        <source>%1 Ratio:</source>
+        <translation>%1 oranı:</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>Hakkında</translation>
+    </message>
+    <message>
+        <source>Add configurable monitor controls to Plasma&apos;s Global Shortcuts settings.</source>
+        <translation>Plasma'nın Genel Kısayollar ayarlarına yapılandırılabilir monitör denetimleri ekle.</translation>
+    </message>
+    <message>
+        <source>Adjust brightness and contrast together using a configurable ratio.</source>
+        <translation>Parlaklık ve kontrastı yapılandırılabilir bir oranla birlikte ayarla.</translation>
+    </message>
+    <message>
+        <source>Adjust scrolling, DDC timing, and dynamic contrast.</source>
+        <translation>Kaydırmayı, DDC zamanlamasını ve dinamik kontrastı ayarla.</translation>
+    </message>
+    <message>
+        <source>Allow each monitor to use its own contrast ratio.</source>
+        <translation>Her monitörün kendi kontrast oranını kullanmasına izin ver.</translation>
+    </message>
+    <message>
+        <source>Appearance</source>
+        <translation>Görünüm</translation>
+    </message>
+    <message>
+        <source>Apply to all monitors</source>
+        <translation>Tüm monitörlere uygula</translation>
+    </message>
+    <message>
+        <source>Autostart as tray icon</source>
+        <translation>Tepsi simgesi olarak otomatik başlat</translation>
+    </message>
+    <message>
+        <source>Autostart on login</source>
+        <translation>Oturum açınca otomatik başlat</translation>
+    </message>
+    <message>
+        <source>Behaviour</source>
+        <translation>Davranış</translation>
+    </message>
+    <message>
+        <source>Brightless repository</source>
+        <translation>Brightless deposu</translation>
     </message>
     <message>
         <source>Brightness</source>
         <translation>Parlaklık</translation>
     </message>
     <message>
+        <source>Change monitor values by %1% for each mouse-wheel step.</source>
+        <translation>Monitör değerlerini her fare tekerleği adımında %1% değiştir.</translation>
+    </message>
+    <message>
+        <source>Choose which monitor controls and icons are shown.</source>
+        <translation>Gösterilecek monitör denetimlerini ve simgeleri seç.</translation>
+    </message>
+    <message>
+        <source>Close to tray icon</source>
+        <translation>Sistem tepsisine kapat</translation>
+    </message>
+    <message>
+        <source>Configure VCP codes for monitor controls.</source>
+        <translation>Monitör kontrolleri için VCP kodlarını yapılandırın.</translation>
+    </message>
+    <message>
+        <source>Configure global shortcuts</source>
+        <translation>Genel kısayolları yapılandır</translation>
+    </message>
+    <message>
+        <source>Configure startup and window-closing behaviour.</source>
+        <translation>Başlangıç ve pencere kapatma davranışını yapılandır.</translation>
+    </message>
+    <message>
         <source>Contrast</source>
         <translation>Kontrast</translation>
     </message>
     <message>
-        <source>Volume</source>
-        <translation>Ses</translation>
+        <source>Contrast Ratio</source>
+        <translation>Kontrast oranı</translation>
+    </message>
+    <message>
+        <source>Contrast Ratio:</source>
+        <translation>Kontrast oranı:</translation>
+    </message>
+    <message>
+        <source>DDC</source>
+        <translation>DDC</translation>
+    </message>
+    <message>
+        <source>Delay to send DDC signal</source>
+        <translation>DDC sinyali gönderme gecikmesi</translation>
+    </message>
+    <message>
+        <source>Dynamic Contrast</source>
+        <translation>Dinamik kontrast</translation>
+    </message>
+    <message>
+        <source>Enable Dynamic Contrast</source>
+        <translation>Dinamik kontrastı etkinleştir</translation>
+    </message>
+    <message>
+        <source>Enable Plasma global shortcut</source>
+        <translation>Plasma genel kısayolunu etkinleştir</translation>
+    </message>
+    <message>
+        <source>GNU General Public License v3.0</source>
+        <translation>GNU Genel Kamu Lisansı v3.0</translation>
+    </message>
+    <message>
+        <source>Hide Brightness Option</source>
+        <translation>Parlaklık seçeneğini gizle</translation>
+    </message>
+    <message>
+        <source>Hide Contrast Option</source>
+        <translation>Kontrast seçeneğini gizle</translation>
+    </message>
+    <message>
+        <source>Hide Dynamic Contrast Option</source>
+        <translation>Dinamik kontrast seçeneğini gizle</translation>
+    </message>
+    <message>
+        <source>Hide Input Option</source>
+        <translation>Giriş seçeneğini gizle</translation>
+    </message>
+    <message>
+        <source>Hide Tray Icon</source>
+        <translation>Tepsi simgesini gizle</translation>
+    </message>
+    <message>
+        <source>Hide Volume Option</source>
+        <translation>Ses seçeneğini gizle</translation>
     </message>
     <message>
         <source>Input source</source>
         <translation>Giriş kaynağı</translation>
     </message>
     <message>
+        <source>Instant</source>
+        <translation>Anında</translation>
+    </message>
+    <message>
+        <source>Keep Brightless running after its window closes.</source>
+        <translation>Penceresi kapandıktan sonra Brightless&apos;ı çalışır durumda tut.</translation>
+    </message>
+    <message>
+        <source>Launch Brightless automatically when you log in.</source>
+        <translation>Oturum açtığınızda Brightless&apos;ı otomatik olarak başlat.</translation>
+    </message>
+    <message>
+        <source>Monitor</source>
+        <translation>Monitör</translation>
+    </message>
+    <message>
+        <source>Per-monitor VCP codes</source>
+        <translation>Monitöre özel VCP kodları</translation>
+    </message>
+    <message>
+        <source>Per-monitor ratio</source>
+        <translation>Monitör başına oran</translation>
+    </message>
+    <message>
         <source>Power mode</source>
         <translation>Güç modu</translation>
     </message>
     <message>
-        <source>%1 — HDR</source>
-        <translation>%1 — HDR</translation>
+        <source>Remove Brightless from the system tray.</source>
+        <translation>Brightless&apos;ı sistem tepsisinden kaldır.</translation>
     </message>
     <message>
-        <source>SDR brightness (nits):</source>
-        <translation>SDR parlaklığı (nit):</translation>
+        <source>Remove the brightness control from monitor cards.</source>
+        <translation>Parlaklık denetimini monitör kartlarından kaldır.</translation>
+    </message>
+    <message>
+        <source>Remove the contrast control from monitor cards.</source>
+        <translation>Kontrast denetimini monitör kartlarından kaldır.</translation>
+    </message>
+    <message>
+        <source>Remove the dynamic contrast control from monitor cards.</source>
+        <translation>Dinamik kontrast denetimini monitör kartlarından kaldır.</translation>
+    </message>
+    <message>
+        <source>Remove the input-source control from monitor cards.</source>
+        <translation>Giriş kaynağı denetimini monitör kartlarından kaldır.</translation>
+    </message>
+    <message>
+        <source>Remove the volume control from monitor cards.</source>
+        <translation>Ses denetimini monitör kartlarından kaldır.</translation>
+    </message>
+    <message>
+        <source>Scroll Step</source>
+        <translation>Kaydırma adımı</translation>
+    </message>
+    <message>
+        <source>Scroll Step:</source>
+        <translation>Kaydırma adımı:</translation>
+    </message>
+    <message>
+        <source>Send monitor control updates immediately.</source>
+        <translation>Monitör denetimi güncellemelerini hemen gönder.</translation>
+    </message>
+    <message>
+        <source>Set contrast to %1 times brightness.</source>
+        <translation>Kontrastı parlaklığın %1 katına ayarla.</translation>
+    </message>
+    <message>
+        <source>Set this monitor&apos;s contrast to %1 times its brightness.</source>
+        <translation>Bu monitörün kontrastını parlaklığının %1 katına ayarla.</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Ayarlar</translation>
+    </message>
+    <message>
+        <source>Start Brightless on login without opening its window.</source>
+        <translation>Oturum açarken Brightless&apos;ı penceresini açmadan başlat.</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>Sistem</translation>
+    </message>
+    <message>
+        <source>Use dynamic contrast on every compatible monitor.</source>
+        <translation>Dinamik kontrastı tüm uyumlu monitörlerde kullan.</translation>
+    </message>
+    <message>
+        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to all monitors.</source>
+        <translation>VCP kodları (onaltılık). Gri varsayılan değeri kullanmak için boş bırakın. Değişiklikler tüm monitörlere uygulanır.</translation>
+    </message>
+    <message>
+        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to the selected monitor.</source>
+        <translation>VCP kodları (onaltılık). Gri varsayılan değeri kullanmak için boş bırakın. Değişiklikler seçilen monitöre uygulanır.</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Sürüm %1</translation>
+    </message>
+    <message>
+        <source>View version, source code, and license information.</source>
+        <translation>Sürüm, kaynak kodu ve lisans bilgilerini görüntüle.</translation>
+    </message>
+    <message>
+        <source>Volume</source>
+        <translation>Ses</translation>
+    </message>
+    <message>
+        <source>Wait %1 ms before sending monitor control updates.</source>
+        <translation>Monitör denetimi güncellemelerini göndermeden önce %1 ms bekle.</translation>
+    </message>
+</context>
+<context>
+    <name>SdrBrightnessCard</name>
+    <message>
+        <source>%1 — HDR</source>
+        <translation>%1 — HDR</translation>
     </message>
     <message>
         <source>Adjust the brightness of SDR content on this HDR screen.</source>
         <translation>Bu HDR ekrandaki SDR içeriğin parlaklığını ayarlayın.</translation>
     </message>
     <message>
-        <location filename="../src/qt/qml/Main.qml" line="+41"/>
-        <location line="+23"/>
-        <source>Settings</source>
-        <translation>Ayarlar</translation>
+        <source>SDR brightness (nits):</source>
+        <translation>SDR parlaklığı (nit):</translation>
+    </message>
+</context>
+<context>
+    <name>Osd</name>
+    <message>
+        <source>Brightness</source>
+        <translation>Parlaklık</translation>
     </message>
     <message>
-        <location line="-13"/>
-        <source>Error</source>
-        <translation>Hata</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Error: %1</source>
-        <translation>Hata: %1</translation>
-    </message>
-    <message>
-        <location line="+263"/>
-        <source>%1 Ratio</source>
-        <translation>%1 oranı</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Set this monitor&apos;s contrast to %1 times its brightness.</source>
-        <translation>Bu monitörün kontrastını parlaklığının %1 katına ayarla.</translation>
-    </message>
-    <message>
-        <location line="+19"/>
-        <location line="+2"/>
-        <source>Autostart on login</source>
-        <translation>Oturum açınca otomatik başlat</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Launch Brightless automatically when you log in.</source>
-        <translation>Oturum açtığınızda Brightless&apos;ı otomatik olarak başlat.</translation>
-    </message>
-    <message>
-        <location line="+28"/>
-        <location line="+2"/>
-        <source>Enable Plasma global shortcut</source>
-        <translation>Plasma genel kısayolunu etkinleştir</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Add configurable monitor controls to Plasma&apos;s Global Shortcuts settings.</source>
-        <translation>Plasma'nın Genel Kısayollar ayarlarına yapılandırılabilir monitör denetimleri ekle.</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <location line="+2"/>
-        <source>Close to tray icon</source>
-        <translation>Sistem tepsisine kapat</translation>
-    </message>
-    <message>
-        <location line="-191"/>
-        <source>Scroll Step:</source>
-        <translation>Kaydırma adımı:</translation>
-    </message>
-    <message>
-        <location line="-153"/>
-        <source>Open the settings window.</source>
-        <translation>Ayarlar penceresini aç.</translation>
-    </message>
-    <message>
-        <location line="+54"/>
-        <source>Appearance</source>
-        <translation>Görünüm</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Choose which monitor controls and icons are shown.</source>
-        <translation>Gösterilecek monitör denetimlerini ve simgeleri seç.</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Behaviour</source>
-        <translation>Davranış</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Adjust scrolling, DDC timing, and dynamic contrast.</source>
-        <translation>Kaydırmayı, DDC zamanlamasını ve dinamik kontrastı ayarla.</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>System</source>
-        <translation>Sistem</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Configure startup and window-closing behaviour.</source>
-        <translation>Başlangıç ve pencere kapatma davranışını yapılandır.</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>About</source>
-        <translation>Hakkında</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>View version, source code, and license information.</source>
-        <translation>Sürüm, kaynak kodu ve lisans bilgilerini görüntüle.</translation>
-    </message>
-    <message>
-        <location line="+20"/>
-        <source>Hide Dynamic Contrast Option</source>
-        <translation>Dinamik kontrast seçeneğini gizle</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Hide Brightness Option</source>
-        <translation>Parlaklık seçeneğini gizle</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Remove the dynamic contrast control from monitor cards.</source>
-        <translation>Dinamik kontrast denetimini monitör kartlarından kaldır.</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Remove the brightness control from monitor cards.</source>
-        <translation>Parlaklık denetimini monitör kartlarından kaldır.</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <location line="+2"/>
-        <source>Hide Contrast Option</source>
-        <translation>Kontrast seçeneğini gizle</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Remove the contrast control from monitor cards.</source>
-        <translation>Kontrast denetimini monitör kartlarından kaldır.</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <location line="+2"/>
-        <source>Hide Volume Option</source>
-        <translation>Ses seçeneğini gizle</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Remove the volume control from monitor cards.</source>
-        <translation>Ses denetimini monitör kartlarından kaldır.</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <location line="+2"/>
-        <source>Hide Input Option</source>
-        <translation>Giriş seçeneğini gizle</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Remove the input-source control from monitor cards.</source>
-        <translation>Giriş kaynağı denetimini monitör kartlarından kaldır.</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <location line="+2"/>
-        <source>Hide Tray Icon</source>
-        <translation>Tepsi simgesini gizle</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Remove Brightless from the system tray.</source>
-        <translation>Brightless&apos;ı sistem tepsisinden kaldır.</translation>
-    </message>
-    <message>
-        <location line="+26"/>
-        <source>Scroll Step</source>
-        <translation>Kaydırma adımı</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Change monitor values by %1% for each mouse-wheel step.</source>
-        <translation>Monitör değerlerini her fare tekerleği adımında %1% değiştir.</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Delay to send DDC signal</source>
-        <translation>DDC sinyali gönderme gecikmesi</translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Instant</source>
-        <translation>Anında</translation>
-    </message>
-    <message>
-        <location line="+13"/>
-        <source>Send monitor control updates immediately.</source>
-        <translation>Monitör denetimi güncellemelerini hemen gönder.</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Wait %1 ms before sending monitor control updates.</source>
-        <translation>Monitör denetimi güncellemelerini göndermeden önce %1 ms bekle.</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Dynamic Contrast</source>
-        <translation>Dinamik kontrast</translation>
-    </message>
-    <message>
-        <location line="+4"/>
-        <location line="+2"/>
-        <source>Enable Dynamic Contrast</source>
-        <translation>Dinamik kontrastı etkinleştir</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Adjust brightness and contrast together using a configurable ratio.</source>
-        <translation>Parlaklık ve kontrastı yapılandırılabilir bir oranla birlikte ayarla.</translation>
-    </message>
-    <message>
-        <location line="+13"/>
-        <location line="+2"/>
-        <source>Apply to all monitors</source>
-        <translation>Tüm monitörlere uygula</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Use dynamic contrast on every compatible monitor.</source>
-        <translation>Dinamik kontrastı tüm uyumlu monitörlerde kullan.</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <source>Contrast Ratio:</source>
-        <translation>Kontrast oranı:</translation>
-    </message>
-    <message>
-        <location line="+10"/>
-        <source>Contrast Ratio</source>
-        <translation>Kontrast oranı</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Set contrast to %1 times brightness.</source>
-        <translation>Kontrastı parlaklığın %1 katına ayarla.</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <location line="+2"/>
-        <source>Per-monitor ratio</source>
-        <translation>Monitör başına oran</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Allow each monitor to use its own contrast ratio.</source>
-        <translation>Her monitörün kendi kontrast oranını kullanmasına izin ver.</translation>
-    </message>
-    <message>
-        <location line="+17"/>
-        <source>%1 Ratio:</source>
-        <translation>%1 oranı:</translation>
-    </message>
-    <message>
-        <location line="+51"/>
-        <location line="+5"/>
-        <source>Autostart as tray icon</source>
-        <translation>Tepsi simgesi olarak otomatik başlat</translation>
-    </message>
-    <message>
-        <location line="-8"/>
-        <source>Start Brightless on login without opening its window.</source>
-        <translation>Oturum açarken Brightless&apos;ı penceresini açmadan başlat.</translation>
-    </message>
-    <message>
-        <location line="+34"/>
-        <source>Keep Brightless running after its window closes.</source>
-        <translation>Penceresi kapandıktan sonra Brightless&apos;ı çalışır durumda tut.</translation>
-    </message>
-    <message>
-        <location line="+28"/>
-        <source>Version %1</source>
-        <translation>Sürüm %1</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Brightless repository</source>
-        <translation>Brightless deposu</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>GNU General Public License v3.0</source>
-        <translation>GNU Genel Kamu Lisansı v3.0</translation>
+        <source>Volume</source>
+        <translation>Ses</translation>
     </message>
 </context>
 <context>

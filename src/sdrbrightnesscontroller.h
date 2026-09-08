@@ -1,6 +1,9 @@
 #pragma once
 
+#include <QtGlobal>
+#ifndef Q_OS_WIN
 #include <KScreen/Config>
+#endif
 #include <QHash>
 #include <QObject>
 #include <QVariantMap>
@@ -35,7 +38,9 @@ private:
     void updateOutputs();
     void applyBrightness();
 
+#ifndef Q_OS_WIN
     KScreen::ConfigPtr config_;
+#endif
     QList<int> outputs_;
     QHash<int, int> pending_;
     QString error_;

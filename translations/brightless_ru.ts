@@ -65,347 +65,313 @@
 <context>
     <name>Main</name>
     <message>
-        <source>Per-monitor VCP codes</source>
-        <translation>Коды VCP для каждого монитора</translation>
+        <source>Detecting displays</source>
+        <translation>Обнаружение дисплеев</translation>
     </message>
     <message>
-        <source>Monitor</source>
-        <translation>Монитор</translation>
+        <source>Error</source>
+        <translation>Ошибка</translation>
     </message>
     <message>
-        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to the selected monitor.</source>
-        <translation>Коды VCP (шестнадцатеричные). Оставьте поле пустым, чтобы использовать значение по умолчанию, показанное серым. Изменения применяются к выбранному монитору.</translation>
+        <source>Error: %1</source>
+        <translation>Ошибка: %1</translation>
     </message>
     <message>
-        <source>DDC</source>
-        <translation>DDC</translation>
+        <source>Open the settings window.</source>
+        <translation>Открыть окно настроек.</translation>
     </message>
     <message>
-        <source>Configure VCP codes for monitor controls.</source>
-        <translation>Настройка кодов VCP для управления мониторами.</translation>
+        <source>Refresh monitors</source>
+        <translation>Обновить мониторы</translation>
     </message>
     <message>
-        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to all monitors.</source>
-        <translation>Коды VCP (шестнадцатеричные). Оставьте поле пустым, чтобы использовать значение по умолчанию, показанное серым. Изменения применяются ко всем мониторам.</translation>
+        <source>Settings</source>
+        <translation>Настройки</translation>
+    </message>
+</context>
+<context>
+    <name>SettingsWindow</name>
+    <message>
+        <source>%1 Ratio</source>
+        <translation>Коэффициент для %1</translation>
+    </message>
+    <message>
+        <source>%1 Ratio:</source>
+        <translation>Коэффициент для %1:</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>О программе</translation>
+    </message>
+    <message>
+        <source>Add configurable monitor controls to Plasma&apos;s Global Shortcuts settings.</source>
+        <translation>Добавить настраиваемые элементы управления монитором в параметры глобальных сочетаний клавиш Plasma.</translation>
+    </message>
+    <message>
+        <source>Adjust brightness and contrast together using a configurable ratio.</source>
+        <translation>Совместно изменять яркость и контрастность с настраиваемым коэффициентом.</translation>
+    </message>
+    <message>
+        <source>Adjust scrolling, DDC timing, and dynamic contrast.</source>
+        <translation>Настроить прокрутку, задержку DDC и динамическую контрастность.</translation>
+    </message>
+    <message>
+        <source>Allow each monitor to use its own contrast ratio.</source>
+        <translation>Разрешить каждому монитору использовать свой коэффициент контрастности.</translation>
+    </message>
+    <message>
+        <source>Appearance</source>
+        <translation>Внешний вид</translation>
+    </message>
+    <message>
+        <source>Apply to all monitors</source>
+        <translation>Применить ко всем мониторам</translation>
+    </message>
+    <message>
+        <source>Autostart as tray icon</source>
+        <translation>Автозапуск в системном трее</translation>
+    </message>
+    <message>
+        <source>Autostart on login</source>
+        <translation>Запускать при входе в систему</translation>
+    </message>
+    <message>
+        <source>Behaviour</source>
+        <translation>Поведение</translation>
+    </message>
+    <message>
+        <source>Brightless repository</source>
+        <translation>Репозиторий Brightless</translation>
     </message>
     <message>
         <source>Brightness</source>
         <translation>Яркость</translation>
     </message>
     <message>
+        <source>Change monitor values by %1% for each mouse-wheel step.</source>
+        <translation>Изменять значения монитора на %1% за один шаг колеса мыши.</translation>
+    </message>
+    <message>
+        <source>Choose which monitor controls and icons are shown.</source>
+        <translation>Выбрать отображаемые элементы управления мониторами и значки.</translation>
+    </message>
+    <message>
+        <source>Close to tray icon</source>
+        <translation>Сворачивать в трей при закрытии</translation>
+    </message>
+    <message>
+        <source>Configure VCP codes for monitor controls.</source>
+        <translation>Настройка кодов VCP для управления мониторами.</translation>
+    </message>
+    <message>
+        <source>Configure global shortcuts</source>
+        <translation>Настроить глобальные сочетания клавиш</translation>
+    </message>
+    <message>
+        <source>Configure startup and window-closing behaviour.</source>
+        <translation>Настроить запуск и поведение при закрытии окна.</translation>
+    </message>
+    <message>
         <source>Contrast</source>
         <translation>Контрастность</translation>
     </message>
     <message>
-        <source>Volume</source>
-        <translation>Громкость</translation>
+        <source>Contrast Ratio</source>
+        <translation>Коэффициент контрастности</translation>
+    </message>
+    <message>
+        <source>Contrast Ratio:</source>
+        <translation>Коэффициент контрастности:</translation>
+    </message>
+    <message>
+        <source>DDC</source>
+        <translation>DDC</translation>
+    </message>
+    <message>
+        <source>Delay to send DDC signal</source>
+        <translation>Задержка отправки сигнала DDC</translation>
+    </message>
+    <message>
+        <source>Dynamic Contrast</source>
+        <translation>Динамическая контрастность</translation>
+    </message>
+    <message>
+        <source>Enable Dynamic Contrast</source>
+        <translation>Включить динамическую контрастность</translation>
+    </message>
+    <message>
+        <source>Enable Plasma global shortcut</source>
+        <translation>Включить глобальное сочетание клавиш Plasma</translation>
+    </message>
+    <message>
+        <source>GNU General Public License v3.0</source>
+        <translation>Стандартная общественная лицензия GNU версии 3.0</translation>
+    </message>
+    <message>
+        <source>Hide Brightness Option</source>
+        <translation>Скрыть настройку яркости</translation>
+    </message>
+    <message>
+        <source>Hide Contrast Option</source>
+        <translation>Скрыть настройку контрастности</translation>
+    </message>
+    <message>
+        <source>Hide Dynamic Contrast Option</source>
+        <translation>Скрыть настройку динамической контрастности</translation>
+    </message>
+    <message>
+        <source>Hide Input Option</source>
+        <translation>Скрыть настройку входа</translation>
+    </message>
+    <message>
+        <source>Hide Tray Icon</source>
+        <translation>Скрыть значок в трее</translation>
+    </message>
+    <message>
+        <source>Hide Volume Option</source>
+        <translation>Скрыть настройку громкости</translation>
     </message>
     <message>
         <source>Input source</source>
         <translation>Источник входного сигнала</translation>
     </message>
     <message>
+        <source>Instant</source>
+        <translation>Мгновенно</translation>
+    </message>
+    <message>
+        <source>Keep Brightless running after its window closes.</source>
+        <translation>Оставлять Brightless запущенным после закрытия окна.</translation>
+    </message>
+    <message>
+        <source>Launch Brightless automatically when you log in.</source>
+        <translation>Автоматически запускать Brightless при входе в систему.</translation>
+    </message>
+    <message>
+        <source>Monitor</source>
+        <translation>Монитор</translation>
+    </message>
+    <message>
+        <source>Per-monitor VCP codes</source>
+        <translation>Коды VCP для каждого монитора</translation>
+    </message>
+    <message>
+        <source>Per-monitor ratio</source>
+        <translation>Коэффициент для каждого монитора</translation>
+    </message>
+    <message>
         <source>Power mode</source>
         <translation>Режим питания</translation>
     </message>
     <message>
-        <source>%1 — HDR</source>
-        <translation>%1 — HDR</translation>
+        <source>Remove Brightless from the system tray.</source>
+        <translation>Убрать Brightless из системного трея.</translation>
     </message>
     <message>
-        <source>SDR brightness (nits):</source>
-        <translation>Яркость SDR (нит):</translation>
+        <source>Remove the brightness control from monitor cards.</source>
+        <translation>Убрать регулятор яркости из карточек мониторов.</translation>
+    </message>
+    <message>
+        <source>Remove the contrast control from monitor cards.</source>
+        <translation>Убрать регулятор контрастности из карточек мониторов.</translation>
+    </message>
+    <message>
+        <source>Remove the dynamic contrast control from monitor cards.</source>
+        <translation>Убрать регулятор динамической контрастности из карточек мониторов.</translation>
+    </message>
+    <message>
+        <source>Remove the input-source control from monitor cards.</source>
+        <translation>Убрать выбор источника входного сигнала из карточек мониторов.</translation>
+    </message>
+    <message>
+        <source>Remove the volume control from monitor cards.</source>
+        <translation>Убрать регулятор громкости из карточек мониторов.</translation>
+    </message>
+    <message>
+        <source>Scroll Step</source>
+        <translation>Шаг прокрутки</translation>
+    </message>
+    <message>
+        <source>Scroll Step:</source>
+        <translation>Шаг прокрутки:</translation>
+    </message>
+    <message>
+        <source>Send monitor control updates immediately.</source>
+        <translation>Отправлять изменения параметров монитора немедленно.</translation>
+    </message>
+    <message>
+        <source>Set contrast to %1 times brightness.</source>
+        <translation>Установить контрастность равной яркости, умноженной на %1.</translation>
+    </message>
+    <message>
+        <source>Set this monitor&apos;s contrast to %1 times its brightness.</source>
+        <translation>Установить контрастность этого монитора равной яркости, умноженной на %1.</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Настройки</translation>
+    </message>
+    <message>
+        <source>Start Brightless on login without opening its window.</source>
+        <translation>Запускать Brightless при входе в систему, не открывая окно.</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>Система</translation>
+    </message>
+    <message>
+        <source>Use dynamic contrast on every compatible monitor.</source>
+        <translation>Использовать динамическую контрастность на всех совместимых мониторах.</translation>
+    </message>
+    <message>
+        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to all monitors.</source>
+        <translation>Коды VCP (шестнадцатеричные). Оставьте поле пустым, чтобы использовать значение по умолчанию, показанное серым. Изменения применяются ко всем мониторам.</translation>
+    </message>
+    <message>
+        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to the selected monitor.</source>
+        <translation>Коды VCP (шестнадцатеричные). Оставьте поле пустым, чтобы использовать значение по умолчанию, показанное серым. Изменения применяются к выбранному монитору.</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Версия %1</translation>
+    </message>
+    <message>
+        <source>View version, source code, and license information.</source>
+        <translation>Просмотреть версию, исходный код и сведения о лицензии.</translation>
+    </message>
+    <message>
+        <source>Volume</source>
+        <translation>Громкость</translation>
+    </message>
+    <message>
+        <source>Wait %1 ms before sending monitor control updates.</source>
+        <translation>Ждать %1 мс перед отправкой изменений параметров монитора.</translation>
+    </message>
+</context>
+<context>
+    <name>SdrBrightnessCard</name>
+    <message>
+        <source>%1 — HDR</source>
+        <translation>%1 — HDR</translation>
     </message>
     <message>
         <source>Adjust the brightness of SDR content on this HDR screen.</source>
         <translation>Настроить яркость SDR-содержимого на этом HDR-экране.</translation>
     </message>
     <message>
-        <location filename="../src/qt/qml/Main.qml" line="+41"/>
-        <location line="+23"/>
-        <source>Settings</source>
-        <translation>Настройки</translation>
+        <source>SDR brightness (nits):</source>
+        <translation>Яркость SDR (нит):</translation>
+    </message>
+</context>
+<context>
+    <name>Osd</name>
+    <message>
+        <source>Brightness</source>
+        <translation>Яркость</translation>
     </message>
     <message>
-        <location line="-13"/>
-        <source>Error</source>
-        <translation>Ошибка</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Error: %1</source>
-        <translation>Ошибка: %1</translation>
-    </message>
-    <message>
-        <location line="+263"/>
-        <source>%1 Ratio</source>
-        <translation>Коэффициент для %1</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Set this monitor&apos;s contrast to %1 times its brightness.</source>
-        <translation>Установить контрастность этого монитора равной яркости, умноженной на %1.</translation>
-    </message>
-    <message>
-        <location line="+19"/>
-        <location line="+2"/>
-        <source>Autostart on login</source>
-        <translation>Запускать при входе в систему</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Launch Brightless automatically when you log in.</source>
-        <translation>Автоматически запускать Brightless при входе в систему.</translation>
-    </message>
-    <message>
-        <location line="+28"/>
-        <location line="+2"/>
-        <source>Enable Plasma global shortcut</source>
-        <translation>Включить глобальное сочетание клавиш Plasma</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Add configurable monitor controls to Plasma&apos;s Global Shortcuts settings.</source>
-        <translation>Добавить настраиваемые элементы управления монитором в параметры глобальных сочетаний клавиш Plasma.</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <location line="+2"/>
-        <source>Close to tray icon</source>
-        <translation>Сворачивать в трей при закрытии</translation>
-    </message>
-    <message>
-        <location line="-191"/>
-        <source>Scroll Step:</source>
-        <translation>Шаг прокрутки:</translation>
-    </message>
-    <message>
-        <location line="-153"/>
-        <source>Open the settings window.</source>
-        <translation>Открыть окно настроек.</translation>
-    </message>
-    <message>
-        <location line="+54"/>
-        <source>Appearance</source>
-        <translation>Внешний вид</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Choose which monitor controls and icons are shown.</source>
-        <translation>Выбрать отображаемые элементы управления мониторами и значки.</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Behaviour</source>
-        <translation>Поведение</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Adjust scrolling, DDC timing, and dynamic contrast.</source>
-        <translation>Настроить прокрутку, задержку DDC и динамическую контрастность.</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>System</source>
-        <translation>Система</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Configure startup and window-closing behaviour.</source>
-        <translation>Настроить запуск и поведение при закрытии окна.</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>About</source>
-        <translation>О программе</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>View version, source code, and license information.</source>
-        <translation>Просмотреть версию, исходный код и сведения о лицензии.</translation>
-    </message>
-    <message>
-        <location line="+20"/>
-        <source>Hide Dynamic Contrast Option</source>
-        <translation>Скрыть настройку динамической контрастности</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Hide Brightness Option</source>
-        <translation>Скрыть настройку яркости</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Remove the dynamic contrast control from monitor cards.</source>
-        <translation>Убрать регулятор динамической контрастности из карточек мониторов.</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Remove the brightness control from monitor cards.</source>
-        <translation>Убрать регулятор яркости из карточек мониторов.</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <location line="+2"/>
-        <source>Hide Contrast Option</source>
-        <translation>Скрыть настройку контрастности</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Remove the contrast control from monitor cards.</source>
-        <translation>Убрать регулятор контрастности из карточек мониторов.</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <location line="+2"/>
-        <source>Hide Volume Option</source>
-        <translation>Скрыть настройку громкости</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Remove the volume control from monitor cards.</source>
-        <translation>Убрать регулятор громкости из карточек мониторов.</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <location line="+2"/>
-        <source>Hide Input Option</source>
-        <translation>Скрыть настройку входа</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Remove the input-source control from monitor cards.</source>
-        <translation>Убрать выбор источника входного сигнала из карточек мониторов.</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <location line="+2"/>
-        <source>Hide Tray Icon</source>
-        <translation>Скрыть значок в трее</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Remove Brightless from the system tray.</source>
-        <translation>Убрать Brightless из системного трея.</translation>
-    </message>
-    <message>
-        <location line="+26"/>
-        <source>Scroll Step</source>
-        <translation>Шаг прокрутки</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Change monitor values by %1% for each mouse-wheel step.</source>
-        <translation>Изменять значения монитора на %1% за один шаг колеса мыши.</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Delay to send DDC signal</source>
-        <translation>Задержка отправки сигнала DDC</translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Instant</source>
-        <translation>Мгновенно</translation>
-    </message>
-    <message>
-        <location line="+13"/>
-        <source>Send monitor control updates immediately.</source>
-        <translation>Отправлять изменения параметров монитора немедленно.</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Wait %1 ms before sending monitor control updates.</source>
-        <translation>Ждать %1 мс перед отправкой изменений параметров монитора.</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Dynamic Contrast</source>
-        <translation>Динамическая контрастность</translation>
-    </message>
-    <message>
-        <location line="+4"/>
-        <location line="+2"/>
-        <source>Enable Dynamic Contrast</source>
-        <translation>Включить динамическую контрастность</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Adjust brightness and contrast together using a configurable ratio.</source>
-        <translation>Совместно изменять яркость и контрастность с настраиваемым коэффициентом.</translation>
-    </message>
-    <message>
-        <location line="+13"/>
-        <location line="+2"/>
-        <source>Apply to all monitors</source>
-        <translation>Применить ко всем мониторам</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Use dynamic contrast on every compatible monitor.</source>
-        <translation>Использовать динамическую контрастность на всех совместимых мониторах.</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <source>Contrast Ratio:</source>
-        <translation>Коэффициент контрастности:</translation>
-    </message>
-    <message>
-        <location line="+10"/>
-        <source>Contrast Ratio</source>
-        <translation>Коэффициент контрастности</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Set contrast to %1 times brightness.</source>
-        <translation>Установить контрастность равной яркости, умноженной на %1.</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <location line="+2"/>
-        <source>Per-monitor ratio</source>
-        <translation>Коэффициент для каждого монитора</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Allow each monitor to use its own contrast ratio.</source>
-        <translation>Разрешить каждому монитору использовать свой коэффициент контрастности.</translation>
-    </message>
-    <message>
-        <location line="+17"/>
-        <source>%1 Ratio:</source>
-        <translation>Коэффициент для %1:</translation>
-    </message>
-    <message>
-        <location line="+51"/>
-        <location line="+5"/>
-        <source>Autostart as tray icon</source>
-        <translation>Автозапуск в системном трее</translation>
-    </message>
-    <message>
-        <location line="-8"/>
-        <source>Start Brightless on login without opening its window.</source>
-        <translation>Запускать Brightless при входе в систему, не открывая окно.</translation>
-    </message>
-    <message>
-        <location line="+34"/>
-        <source>Keep Brightless running after its window closes.</source>
-        <translation>Оставлять Brightless запущенным после закрытия окна.</translation>
-    </message>
-    <message>
-        <location line="+28"/>
-        <source>Version %1</source>
-        <translation>Версия %1</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Brightless repository</source>
-        <translation>Репозиторий Brightless</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>GNU General Public License v3.0</source>
-        <translation>Стандартная общественная лицензия GNU версии 3.0</translation>
+        <source>Volume</source>
+        <translation>Громкость</translation>
     </message>
 </context>
 <context>

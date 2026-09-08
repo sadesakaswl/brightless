@@ -2,16 +2,10 @@
 
 #include "model.h"
 
-#include <ddcutil_c_api.h>
+#include "platform/ddcbackend.h"
+#include "platform/autostart.h"
 
 #include <QCoreApplication>
-#include <QDir>
-#include <QFile>
-#include <QFileInfo>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QSaveFile>
-#include <QStandardPaths>
 #include <QThreadPool>
 
 #include <algorithm>
@@ -24,49 +18,9 @@
 
 namespace {
 
-constexpr std::array defaultVcpCodes{0x10, 0x12, 0x62, 0x60, 0xd6};
+using brightless::defaultVcpCodes;
 
-QHash<int, int> loadVcpCodes(const QJsonObject &object)
-{
-    QHash<int, int> codes;
-    for (const auto defaultCode : defaultVcpCodes) {
-        const auto code = object.value(QString::number(defaultCode, 16)).toInt(-1);
-        if (code >= 0 && code <= 0xff && code != defaultCode) {
-            codes.insert(defaultCode, code);
-        }
-    }
-    return codes;
-}
-
-QJsonObject saveVcpCodes(const QHash<int, int> &codes)
-{
-    QJsonObject object;
-    for (auto it = codes.constBegin(); it != codes.constEnd(); ++it) {
-        object.insert(QString::number(it.key(), 16), it.value());
-    }
-    return object;
-}
-
-struct VcpValue
-{
-    std::uint16_t current;
-    std::uint16_t maximum;
-};
-
-std::optional<VcpValue> readVcp(DDCA_Display_Handle handle, std::uint8_t code)
-{
-    DDCA_Non_Table_Vcp_Value value{};
-    if (ddca_get_non_table_vcp_value(handle, code, &value) != 0) {
-        return std::nullopt;
-    }
-
-    return VcpValue{
-        static_cast<std::uint16_t>((static_cast<std::uint16_t>(value.sh) << 8) | value.sl),
-        static_cast<std::uint16_t>((static_cast<std::uint16_t>(value.mh) << 8) | value.ml),
-    };
-}
-
-int percentFromVcp(const VcpValue &value)
+int percentFromVcp(const brightless::ddc::Value &value)
 {
     if (value.maximum == 0) {
         return 0;
@@ -80,103 +34,11 @@ std::uint16_t vcpFromPercent(int percent, std::uint16_t maximum)
     return static_cast<std::uint16_t>((static_cast<std::uint32_t>(percent) * maximum) / 100);
 }
 
-QString displayName(const DDCA_Display_Info &info, int number)
-{
-    const auto model = QString::fromLatin1(info.model_name).trimmed();
-    if (!model.isEmpty()) {
-        return model;
-    }
-
-    const auto manufacturer = QString::fromLatin1(info.mfg_id).trimmed();
-    if (!manufacturer.isEmpty()) {
-        return QStringLiteral("%1 %2")
-            .arg(manufacturer)
-            .arg(info.product_code, 4, 16, QLatin1Char('0'));
-    }
-
-    return QCoreApplication::translate("BrightlessController", "Monitor %1").arg(number);
-}
-
-QString ddcError(const QString &operation, DDCA_Status status)
-{
-    const char *description = ddca_rc_desc(status);
-    const auto detail = description
-        ? QString::fromLocal8Bit(description)
-        : QCoreApplication::translate("BrightlessController", "unknown error");
-    return QStringLiteral("%1: %2").arg(operation, detail);
-}
-
-QString settingsPath()
-{
-    auto root = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
-    if (root.isEmpty()) {
-        root = QDir::currentPath();
-    }
-    return QDir(root).filePath(QStringLiteral("brightless/settings.json"));
-}
-
-QString autostartPath()
-{
-    const auto root = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
-    return root.isEmpty() ? QString()
-                          : QDir(root).filePath(QStringLiteral("autostart/brightless.desktop"));
-}
-
-QByteArray autostartEntry()
-{
-    const auto path = QCoreApplication::applicationFilePath();
-    if (path.contains(QLatin1Char('\n')) || path.contains(QLatin1Char('\r'))
-        || path.contains(QLatin1Char('\t'))) {
-        return {};
-    }
-
-    QString executable;
-    executable.reserve(path.size());
-    for (const auto character : path) {
-        if (character == QLatin1Char('%')) {
-            executable += QStringLiteral("%%");
-        } else if (character == QLatin1Char('\\')) {
-            executable += QStringLiteral("\\\\\\\\");
-        } else if (character == QLatin1Char('"') || character == QLatin1Char('`')
-                   || character == QLatin1Char('$')) {
-            executable += QStringLiteral("\\\\");
-            executable += character;
-        } else {
-            executable += character;
-        }
-    }
-
-    return QStringLiteral("[Desktop Entry]\nType=Application\nName=Brightless\n"
-                          "Exec=\"%1\" --autostart\nTerminal=false\n")
-        .arg(executable)
-        .toUtf8();
-}
-
-bool writeAutostartEntry()
-{
-    const auto path = autostartPath();
-    const auto data = autostartEntry();
-    if (path.isEmpty() || data.isEmpty()
-        || !QDir().mkpath(QFileInfo(path).absolutePath())) {
-        return false;
-    }
-
-    QSaveFile file(path);
-    if (!file.open(QIODevice::WriteOnly)) {
-        return false;
-    }
-    if (file.write(data) != data.size()) {
-        file.cancelWriting();
-        return false;
-    }
-    return file.commit();
-}
-
 } // namespace
 
 struct BrightlessController::Monitor
 {
-    DDCA_Display_Ref reference = nullptr;
+    std::shared_ptr<brightless::ddc::Device> device;
     QString name;
     QString id;
     int brightness = 50;
@@ -199,9 +61,9 @@ struct BrightlessController::Monitor
 struct BrightlessController::DdcWorker
 {
     using Values = std::map<std::uint8_t, std::uint16_t>;
-    using Writes = std::map<DDCA_Display_Ref, Values>;
+    using Writes = std::map<std::shared_ptr<brightless::ddc::Device>, Values>;
 
-    DdcWorker()
+    explicit DdcWorker(BrightlessController *owner) : owner_(owner)
     {
         pool_.setMaxThreadCount(1);
     }
@@ -242,6 +104,8 @@ struct BrightlessController::DdcWorker
         pool_.waitForDone();
     }
 
+    template<typename Function> void scan(Function function) { pool_.start(std::move(function)); }
+
 private:
     void run()
     {
@@ -256,21 +120,18 @@ private:
                 writes.swap(pending_);
             }
 
-            for (const auto &[reference, values] : writes) {
-                DDCA_Display_Handle handle = nullptr;
-                if (ddca_open_display2(reference, false, &handle) != 0) {
-                    continue;
+            for (const auto &[device, values] : writes) {
+                const auto error = brightless::ddc::write(*device, values);
+                if (!error.isEmpty()) {
+                    QMetaObject::invokeMethod(owner_, [owner = owner_, name = device->name, error] {
+                        owner->setOperationError(tr("%1: %2").arg(name, error));
+                    });
                 }
-                for (const auto &[code, value] : values) {
-                    ddca_set_non_table_vcp_value(handle, code,
-                                                 static_cast<std::uint8_t>(value >> 8),
-                                                 static_cast<std::uint8_t>(value & 0xff));
-                }
-                ddca_close_display(handle);
             }
         }
     }
 
+    BrightlessController *owner_;
     QThreadPool pool_;
     std::mutex mutex_;
     Writes pending_;
@@ -279,17 +140,36 @@ private:
 
 BrightlessController::BrightlessController(QObject *parent)
     : QObject(parent)
-    , ddcWorker_(std::make_unique<DdcWorker>())
+    , ddcWorker_(std::make_unique<DdcWorker>(this))
 {
     ddcTimer_.setSingleShot(true);
     connect(&ddcTimer_, &QTimer::timeout, this, &BrightlessController::flushDdcWrites);
+    settingsTimer_.setSingleShot(true);
+    settingsTimer_.setInterval(250);
+    connect(&settingsTimer_, &QTimer::timeout, this, &BrightlessController::saveSettings);
     loadSettings();
 }
 
 BrightlessController::~BrightlessController()
 {
+    flushSettings();
     flushDdcWrites();
     ddcWorker_->wait();
+}
+
+void BrightlessController::setOperationError(const QString &error)
+{
+    if (operationError_ != error) {
+        operationError_ = error;
+        emit operationErrorChanged();
+    }
+}
+
+void BrightlessController::flushSettings()
+{
+    if (settingsTimer_.isActive()) {
+        saveSettings();
+    }
 }
 
 QString BrightlessController::startupError() const
@@ -389,8 +269,7 @@ void BrightlessController::setHideTrayIcon(bool value)
 
 bool BrightlessController::autostart() const
 {
-    const auto path = autostartPath();
-    return !path.isEmpty() && QFileInfo(path).isFile();
+    return brightless::autostartEnabled();
 }
 
 void BrightlessController::setAutostart(bool value)
@@ -399,14 +278,7 @@ void BrightlessController::setAutostart(bool value)
         return;
     }
 
-    if (value) {
-        writeAutostartEntry();
-    } else {
-        const auto path = autostartPath();
-        if (!path.isEmpty()) {
-            QFile::remove(path);
-        }
-    }
+    setOperationError(brightless::setAutostartEnabled(value));
     emit autostartChanged();
 }
 
@@ -521,94 +393,89 @@ void BrightlessController::changeAllInputSources()
 
 void BrightlessController::initialize()
 {
+    if (loading_) {
+        rescanRequested_ = true;
+        return;
+    }
     flushDdcWrites();
-    ddcWorker_->wait();
+    loading_ = true;
+    emit loadingChanged();
+    // No controls may enqueue writes against a previous discovery while scanning.
     monitors_.clear();
     ddcMonitors_.clear();
-    QString error;
-
-    DDCA_Display_Info_List *rawList = nullptr;
-    const auto status = ddca_get_display_info_list2(false, &rawList);
-    const std::unique_ptr<DDCA_Display_Info_List, decltype(&ddca_free_display_info_list)> displayList(
-        rawList, &ddca_free_display_info_list);
-
-    if (status != 0) {
-        error = ddcError(tr("Failed to detect displays"), status);
-    } else if (displayList) {
-        for (int index = 0; index < displayList->ct; ++index) {
-            const auto &info = displayList->info[index];
-            const auto name = displayName(info, index + 1);
-            const auto path = info.path.io_mode == DDCA_IO_I2C
-                ? QStringLiteral("i2c-%1").arg(info.path.path.i2c_busno)
-                : QStringLiteral("usb-%1").arg(info.path.path.hiddev_devno);
-            // ponytail: EDID + bus distinguishes identical panels; use connector IDs if buses renumber.
-            const auto id = QString::fromLatin1(QByteArray(
-                reinterpret_cast<const char *>(info.edid_bytes), sizeof(info.edid_bytes)).toHex())
-                + QLatin1Char(':') + path;
-            ddcMonitors_.append(QVariantMap{{QStringLiteral("id"), id},
-                {QStringLiteral("name"), name + QStringLiteral(" (%1)").arg(path)}});
-            DDCA_Display_Handle handle = nullptr;
-            if (ddca_open_display2(info.dref, false, &handle) != 0) {
+    emit monitorNamesChanged();
+    emit monitorCountChanged();
+    ddcWorker_->scan([this, perMonitor = vcpPerMonitor_, globalCodes = vcpCodes_,
+                      monitorCodes = monitorVcpCodes_] {
+        struct Result {
+            std::vector<std::unique_ptr<Monitor>> monitors;
+            QVariantList devices;
+            QString error;
+        };
+        auto result = std::make_shared<Result>();
+        auto devices = brightless::ddc::enumerate(result->error);
+        for (auto &device : devices) {
+            if (device.name.isEmpty()) {
+                device.name = tr("Monitor %1").arg(result->devices.size() + 1);
+            }
+            const auto label = device.connection.isEmpty() ? device.name
+                : QStringLiteral("%1 (%2)").arg(device.name, device.connection);
+            result->devices.append(QVariantMap{{QStringLiteral("id"), device.id},
+                {QStringLiteral("name"), label}});
+            const auto overrides = perMonitor ? monitorCodes.value(device.id) : globalCodes;
+            brightless::ddc::Codes codes;
+            for (std::size_t i = 0; i < codes.size(); ++i) {
+                codes[i] = static_cast<std::uint8_t>(overrides.value(defaultVcpCodes[i], defaultVcpCodes[i]));
+            }
+            const auto values = brightless::ddc::read(device, codes);
+            if (!values[0] || values[0]->maximum == 0) {
                 continue;
             }
-
             auto monitor = std::make_unique<Monitor>();
-            monitor->reference = info.dref;
-            monitor->name = name;
-            monitor->id = id;
-            const auto scope = vcpPerMonitor_ ? id : QString();
-
-            const auto brightnessValue = readVcp(handle, vcp_code(0x10, scope));
-            if (!brightnessValue) {
-                ddca_close_display(handle);
-                continue;
-            }
-            monitor->maximumBrightness = brightnessValue->maximum;
-            monitor->brightness = percentFromVcp(*brightnessValue);
-
-            if (const auto value = readVcp(handle, vcp_code(0x12, scope))) {
+            monitor->name = device.name;
+            monitor->id = device.id;
+            monitor->device = std::make_shared<brightless::ddc::Device>(std::move(device));
+            monitor->maximumBrightness = values[0]->maximum;
+            monitor->brightness = percentFromVcp(*values[0]);
+            if (const auto value = values[1]) {
                 monitor->maximumContrast = value->maximum;
                 monitor->supportsContrast = value->maximum > 0;
-                if (monitor->supportsContrast) {
-                    monitor->contrast = percentFromVcp(*value);
-                }
+                monitor->contrast = percentFromVcp(*value);
             }
-
-            if (const auto value = readVcp(handle, vcp_code(0x62, scope))) {
+            if (const auto value = values[2]) {
                 monitor->maximumVolume = value->maximum;
                 monitor->supportsVolume = value->maximum > 0;
                 monitor->volume = percentFromVcp(*value);
             }
-
-            if (const auto value = readVcp(handle, vcp_code(0x60, scope))) {
+            if (const auto value = values[3]) {
                 monitor->inputSourceCode = value->current & 0xff;
-                monitor->supportsInputSource = monitor->inputSourceCode >= 1
-                    && monitor->inputSourceCode <= 27;
+                monitor->supportsInputSource = monitor->inputSourceCode >= 1 && monitor->inputSourceCode <= 27;
             }
-
-            if (const auto value = readVcp(handle, vcp_code(0xd6, scope))) {
+            if (const auto value = values[4]) {
                 monitor->powerModeCode = value->current & 0xff;
-                monitor->supportsPowerMode = monitor->powerModeCode >= 1
-                    && monitor->powerModeCode <= 5;
+                monitor->supportsPowerMode = monitor->powerModeCode >= 1 && monitor->powerModeCode <= 5;
             }
-
-            ddca_close_display(handle);
-            monitors_.push_back(std::move(monitor));
+            result->monitors.push_back(std::move(monitor));
         }
-    }
-
-    if (error.isEmpty() && monitors_.empty()) {
-        error = tr("No DDC monitors found");
-    }
-
-    refreshDynamicContrastState();
-    if (startupError_ != error) {
-        startupError_ = error;
-        emit startupErrorChanged();
-    }
-    emit monitorNamesChanged();
-    emit monitorCountChanged();
-    bumpRevision();
+        if (result->error.isEmpty() && result->monitors.empty()) {
+            result->error = tr("No DDC monitors found");
+        }
+        QMetaObject::invokeMethod(this, [this, result] {
+            monitors_ = std::move(result->monitors);
+            ddcMonitors_ = std::move(result->devices);
+            startupError_ = result->error;
+            refreshDynamicContrastState();
+            emit startupErrorChanged();
+            emit monitorNamesChanged();
+            emit monitorCountChanged();
+            bumpRevision();
+            loading_ = false;
+            emit loadingChanged();
+            if (std::exchange(rescanRequested_, false)) {
+                initialize();
+            }
+        });
+    });
 }
 
 int BrightlessController::brightness(int index) const
@@ -741,8 +608,12 @@ int BrightlessController::scroll_step() const
 
 void BrightlessController::set_scroll_step(int value)
 {
-    scrollStep_ = std::clamp(value, 1, 10);
-    saveSettings();
+    value = std::clamp(value, 1, 10);
+    if (scrollStep_ == value) {
+        return;
+    }
+    scrollStep_ = value;
+    settingsTimer_.start();
     bumpRevision();
 }
 
@@ -799,7 +670,7 @@ void BrightlessController::set_ddc_delay(int value)
     }
 
     ddcDelay_ = delay;
-    saveSettings();
+    settingsTimer_.start();
     if (ddcDelay_ == 0) {
         flushDdcWrites();
     } else if (ddcTimer_.isActive()) {
@@ -815,6 +686,9 @@ bool BrightlessController::dynamic_contrast_enabled() const
 
 void BrightlessController::set_dynamic_contrast_enabled(bool value)
 {
+    if (dynamicContrastEnabled_ == value) {
+        return;
+    }
     dynamicContrastEnabled_ = value;
     saveSettings();
     refreshDynamicContrastState();
@@ -828,6 +702,9 @@ bool BrightlessController::dynamic_contrast_global() const
 
 void BrightlessController::set_dynamic_contrast_global(bool value)
 {
+    if (dynamicContrastGlobal_ == value) {
+        return;
+    }
     dynamicContrastGlobal_ = value;
     saveSettings();
     refreshDynamicContrastState();
@@ -844,8 +721,12 @@ void BrightlessController::set_dynamic_contrast_ratio(float value)
     if (!std::isfinite(value)) {
         return;
     }
-    dynamicContrastRatio_ = brightless::clampRatio(value);
-    saveSettings();
+    const auto ratio = brightless::clampRatio(value);
+    if (dynamicContrastRatio_ == ratio) {
+        return;
+    }
+    dynamicContrastRatio_ = ratio;
+    settingsTimer_.start();
     refreshDynamicContrastState();
     bumpRevision();
 }
@@ -857,6 +738,9 @@ bool BrightlessController::dynamic_contrast_per_monitor_ratio() const
 
 void BrightlessController::set_dynamic_contrast_per_monitor_ratio(bool value)
 {
+    if (dynamicContrastPerMonitorRatio_ == value) {
+        return;
+    }
     dynamicContrastPerMonitorRatio_ = value;
     saveSettings();
     refreshDynamicContrastState();
@@ -876,7 +760,7 @@ void BrightlessController::set_monitor_dynamic_contrast_enabled(int index, bool 
         return;
     }
 
-    monitorDynamicContrast_.insert(monitor->name, value);
+    monitorDynamicContrast_.insert(monitor->id, value);
     saveSettings();
     refreshDynamicContrastState();
     bumpRevision();
@@ -895,8 +779,12 @@ void BrightlessController::set_monitor_ratio(int index, float value)
         return;
     }
 
-    monitorRatios_.insert(monitor->name, brightless::clampRatio(value));
-    saveSettings();
+    const auto ratio = brightless::clampRatio(value);
+    if (monitorRatios_.contains(monitor->id) && monitorRatios_.value(monitor->id) == ratio) {
+        return;
+    }
+    monitorRatios_.insert(monitor->id, ratio);
+    settingsTimer_.start();
     refreshDynamicContrastState();
     bumpRevision();
 }
@@ -951,7 +839,7 @@ void BrightlessController::flushDdcWrites()
     DdcWorker::Writes writes;
     for (const auto &monitor : monitors_) {
         if (!monitor->pendingWrites.empty()) {
-            writes.emplace(monitor->reference, std::exchange(monitor->pendingWrites, {}));
+            writes.emplace(monitor->device, std::exchange(monitor->pendingWrites, {}));
         }
     }
     ddcWorker_->submit(std::move(writes));
@@ -989,169 +877,24 @@ void BrightlessController::bumpRevision()
 
 void BrightlessController::refreshDynamicContrastState()
 {
+    bool migrated = false;
     for (auto &monitor : monitors_) {
-        monitor->dynamicContrastEnabled = dynamicContrastEnabled_
-            && (dynamicContrastGlobal_ || monitorDynamicContrast_.value(monitor->name, true));
+        // Migrate name-based preferences once each attached monitor has an ID.
+        if (!monitorDynamicContrast_.contains(monitor->id) && monitorDynamicContrast_.contains(monitor->name)) {
+            monitorDynamicContrast_.insert(monitor->id, monitorDynamicContrast_.value(monitor->name));
+            migrated = true;
+        }
+        if (!monitorRatios_.contains(monitor->id) && monitorRatios_.contains(monitor->name)) {
+            monitorRatios_.insert(monitor->id, monitorRatios_.value(monitor->name));
+            migrated = true;
+        }
+        monitor->dynamicContrastEnabled = dynamicContrastEnabled_ && monitor->supportsContrast
+            && (dynamicContrastGlobal_ || monitorDynamicContrast_.value(monitor->id, true));
         monitor->dynamicContrastRatio = dynamicContrastPerMonitorRatio_
-            ? monitorRatios_.value(monitor->name, dynamicContrastRatio_)
+            ? monitorRatios_.value(monitor->id, dynamicContrastRatio_)
             : dynamicContrastRatio_;
     }
-}
-
-void BrightlessController::loadSettings()
-{
-    QFile file(settingsPath());
-    if (!file.open(QIODevice::ReadOnly)) {
-        return;
-    }
-
-    QJsonParseError parseError;
-    const auto document = QJsonDocument::fromJson(file.readAll(), &parseError);
-    if (parseError.error != QJsonParseError::NoError || !document.isObject()) {
-        return;
-    }
-
-    const auto object = document.object();
-    vcpCodes_ = loadVcpCodes(object.value(QStringLiteral("vcp_codes")).toObject());
-    vcpPerMonitor_ = object.value(QStringLiteral("vcp_per_monitor")).toBool(false);
-    const auto monitorCodes = object.value(QStringLiteral("monitor_vcp_codes")).toObject();
-    for (auto it = monitorCodes.constBegin(); it != monitorCodes.constEnd(); ++it) {
-        monitorVcpCodes_.insert(it.key(), loadVcpCodes(it.value().toObject()));
-    }
-    if (const auto value = object.value(QStringLiteral("scroll_step")); value.isDouble()) {
-        scrollStep_ = std::clamp(value.toInt(scrollStep_), 1, 10);
-    }
-    if (const auto value = object.value(QStringLiteral("ddc_delay")); value.isDouble()) {
-        ddcDelay_ = std::clamp(value.toInt(ddcDelay_), 0, 1500);
-    }
-    if (const auto value = object.value(QStringLiteral("hide_brightness")); value.isBool()) {
-        hideBrightness_ = value.toBool();
-    }
-    if (const auto value = object.value(QStringLiteral("hide_contrast")); value.isBool()) {
-        hideContrast_ = value.toBool();
-    }
-    if (const auto value = object.value(QStringLiteral("hide_volume")); value.isBool()) {
-        hideVolume_ = value.toBool();
-    }
-    if (const auto value = object.value(QStringLiteral("hide_input")); value.isBool()) {
-        hideInput_ = value.toBool();
-    }
-    if (const auto value = object.value(QStringLiteral("hide_tray_icon")); value.isBool()) {
-        hideTrayIcon_ = value.toBool();
-    }
-    if (const auto value = object.value(QStringLiteral("close_to_tray")); value.isBool()) {
-        closeToTray_ = value.toBool();
-    }
-    if (const auto value = object.value(QStringLiteral("autostart_as_tray_icon")); value.isBool()) {
-        autostartAsTrayIcon_ = value.toBool();
-    }
-    if (const auto value = object.value(QStringLiteral("plasma_global_shortcuts")); value.isBool()) {
-        plasmaGlobalShortcuts_ = value.toBool();
-    }
-    const auto windowWidth = object.value(QStringLiteral("window_width"));
-    const auto windowHeight = object.value(QStringLiteral("window_height"));
-    if (windowWidth.isDouble() && windowHeight.isDouble()) {
-        const QSize size(windowWidth.toInt(), windowHeight.toInt());
-        if (!size.isEmpty()) {
-            savedWindowSize_ = size;
-        }
-    }
-    if (const auto value = object.value(QStringLiteral("dynamic_contrast_enabled")); value.isBool()) {
-        dynamicContrastEnabled_ = value.toBool();
-    }
-    if (const auto value = object.value(QStringLiteral("dynamic_contrast_global")); value.isBool()) {
-        dynamicContrastGlobal_ = value.toBool();
-    }
-    if (const auto value = object.value(QStringLiteral("dynamic_contrast_ratio")); value.isDouble()) {
-        const auto ratio = value.toDouble();
-        if (std::isfinite(ratio)) {
-            dynamicContrastRatio_ = brightless::clampRatio(ratio);
-        }
-    }
-    if (const auto value = object.value(QStringLiteral("dynamic_contrast_per_monitor_ratio"));
-        value.isBool()) {
-        dynamicContrastPerMonitorRatio_ = value.toBool();
-    }
-
-    const auto monitorContrast = object.value(QStringLiteral("monitor_dynamic_contrast"));
-    if (monitorContrast.isObject()) {
-        const auto contrast = monitorContrast.toObject();
-        for (auto it = contrast.constBegin(); it != contrast.constEnd(); ++it) {
-            if (it.value().isBool()) {
-                monitorDynamicContrast_.insert(it.key(), it.value().toBool());
-            }
-        }
-    }
-
-    const auto monitorRatios = object.value(QStringLiteral("monitor_ratios"));
-    if (monitorRatios.isObject()) {
-        const auto ratios = monitorRatios.toObject();
-        for (auto it = ratios.constBegin(); it != ratios.constEnd(); ++it) {
-            const auto ratio = it.value().toDouble(std::numeric_limits<double>::quiet_NaN());
-            if (it.value().isDouble() && std::isfinite(ratio)) {
-                monitorRatios_.insert(it.key(), brightless::clampRatio(ratio));
-            }
-        }
-    }
-}
-
-void BrightlessController::saveSettings() const
-{
-    QJsonObject monitorContrast;
-    for (auto it = monitorDynamicContrast_.constBegin(); it != monitorDynamicContrast_.constEnd();
-         ++it) {
-        monitorContrast.insert(it.key(), it.value());
-    }
-
-    QJsonObject monitorRatios;
-    for (auto it = monitorRatios_.constBegin(); it != monitorRatios_.constEnd(); ++it) {
-        monitorRatios.insert(it.key(), it.value());
-    }
-
-    QJsonObject monitorCodes;
-    for (auto it = monitorVcpCodes_.constBegin(); it != monitorVcpCodes_.constEnd(); ++it) {
-        monitorCodes.insert(it.key(), saveVcpCodes(it.value()));
-    }
-
-    QJsonObject object;
-    object.insert(QStringLiteral("vcp_codes"), saveVcpCodes(vcpCodes_));
-    object.insert(QStringLiteral("vcp_per_monitor"), vcpPerMonitor_);
-    object.insert(QStringLiteral("monitor_vcp_codes"), monitorCodes);
-    object.insert(QStringLiteral("scroll_step"), scrollStep_);
-    object.insert(QStringLiteral("ddc_delay"), ddcDelay_);
-    object.insert(QStringLiteral("close_to_tray"), closeToTray_);
-    object.insert(QStringLiteral("autostart_as_tray_icon"), autostartAsTrayIcon_);
-    object.insert(QStringLiteral("plasma_global_shortcuts"), plasmaGlobalShortcuts_);
-    object.insert(QStringLiteral("hide_brightness"), hideBrightness_);
-    object.insert(QStringLiteral("hide_contrast"), hideContrast_);
-    object.insert(QStringLiteral("hide_volume"), hideVolume_);
-    object.insert(QStringLiteral("hide_input"), hideInput_);
-    object.insert(QStringLiteral("hide_tray_icon"), hideTrayIcon_);
-    if (!savedWindowSize_.isEmpty()) {
-        object.insert(QStringLiteral("window_width"), savedWindowSize_.width());
-        object.insert(QStringLiteral("window_height"), savedWindowSize_.height());
-    }
-    object.insert(QStringLiteral("dynamic_contrast_enabled"), dynamicContrastEnabled_);
-    object.insert(QStringLiteral("dynamic_contrast_global"), dynamicContrastGlobal_);
-    object.insert(QStringLiteral("dynamic_contrast_ratio"), dynamicContrastRatio_);
-    object.insert(QStringLiteral("dynamic_contrast_per_monitor_ratio"),
-                  dynamicContrastPerMonitorRatio_);
-    object.insert(QStringLiteral("monitor_dynamic_contrast"), monitorContrast);
-    object.insert(QStringLiteral("monitor_ratios"), monitorRatios);
-
-    const auto path = settingsPath();
-    if (!QDir().mkpath(QFileInfo(path).absolutePath())) {
-        return;
-    }
-
-    QSaveFile file(path);
-    if (!file.open(QIODevice::WriteOnly)) {
-        return;
-    }
-    const auto data = QJsonDocument(object).toJson(QJsonDocument::Indented);
-    if (file.write(data) == data.size()) {
-        file.commit();
-    } else {
-        file.cancelWriting();
+    if (migrated) {
+        settingsTimer_.start();
     }
 }

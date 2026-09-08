@@ -65,347 +65,313 @@
 <context>
     <name>Main</name>
     <message>
-        <source>Per-monitor VCP codes</source>
-        <translation>Codici VCP per monitor</translation>
+        <source>Detecting displays</source>
+        <translation>Rilevamento degli schermi</translation>
     </message>
     <message>
-        <source>Monitor</source>
-        <translation>Monitor</translation>
+        <source>Error</source>
+        <translation>Errore</translation>
     </message>
     <message>
-        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to the selected monitor.</source>
-        <translation>Codici VCP (esadecimali). Lascia vuoto per usare il valore predefinito in grigio. Le modifiche si applicano al monitor selezionato.</translation>
+        <source>Error: %1</source>
+        <translation>Errore: %1</translation>
     </message>
     <message>
-        <source>DDC</source>
-        <translation>DDC</translation>
+        <source>Open the settings window.</source>
+        <translation>Apri la finestra delle impostazioni.</translation>
     </message>
     <message>
-        <source>Configure VCP codes for monitor controls.</source>
-        <translation>Configura i codici VCP per i controlli dei monitor.</translation>
+        <source>Refresh monitors</source>
+        <translation>Aggiorna monitor</translation>
     </message>
     <message>
-        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to all monitors.</source>
-        <translation>Codici VCP (esadecimali). Lascia vuoto per usare il valore predefinito in grigio. Le modifiche si applicano a tutti i monitor.</translation>
+        <source>Settings</source>
+        <translation>Impostazioni</translation>
+    </message>
+</context>
+<context>
+    <name>SettingsWindow</name>
+    <message>
+        <source>%1 Ratio</source>
+        <translation>Rapporto di %1</translation>
+    </message>
+    <message>
+        <source>%1 Ratio:</source>
+        <translation>Rapporto di %1:</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>Informazioni</translation>
+    </message>
+    <message>
+        <source>Add configurable monitor controls to Plasma&apos;s Global Shortcuts settings.</source>
+        <translation>Aggiungi controlli del monitor configurabili alle impostazioni delle scorciatoie globali di Plasma.</translation>
+    </message>
+    <message>
+        <source>Adjust brightness and contrast together using a configurable ratio.</source>
+        <translation>Regola insieme luminosità e contrasto usando un rapporto configurabile.</translation>
+    </message>
+    <message>
+        <source>Adjust scrolling, DDC timing, and dynamic contrast.</source>
+        <translation>Regola lo scorrimento, la temporizzazione DDC e il contrasto dinamico.</translation>
+    </message>
+    <message>
+        <source>Allow each monitor to use its own contrast ratio.</source>
+        <translation>Consenti a ogni monitor di usare il proprio rapporto di contrasto.</translation>
+    </message>
+    <message>
+        <source>Appearance</source>
+        <translation>Aspetto</translation>
+    </message>
+    <message>
+        <source>Apply to all monitors</source>
+        <translation>Applica a tutti i monitor</translation>
+    </message>
+    <message>
+        <source>Autostart as tray icon</source>
+        <translation>Avvia automaticamente nell&apos;area di notifica</translation>
+    </message>
+    <message>
+        <source>Autostart on login</source>
+        <translation>Avvia all&apos;accesso</translation>
+    </message>
+    <message>
+        <source>Behaviour</source>
+        <translation>Comportamento</translation>
+    </message>
+    <message>
+        <source>Brightless repository</source>
+        <translation>Repository di Brightless</translation>
     </message>
     <message>
         <source>Brightness</source>
         <translation>Luminosità</translation>
     </message>
     <message>
+        <source>Change monitor values by %1% for each mouse-wheel step.</source>
+        <translation>Modifica i valori dei monitor del %1% a ogni scatto della rotellina.</translation>
+    </message>
+    <message>
+        <source>Choose which monitor controls and icons are shown.</source>
+        <translation>Scegli quali controlli del monitor e icone mostrare.</translation>
+    </message>
+    <message>
+        <source>Close to tray icon</source>
+        <translation>Chiudi nell&apos;area di notifica</translation>
+    </message>
+    <message>
+        <source>Configure VCP codes for monitor controls.</source>
+        <translation>Configura i codici VCP per i controlli dei monitor.</translation>
+    </message>
+    <message>
+        <source>Configure global shortcuts</source>
+        <translation>Configura scorciatoie globali</translation>
+    </message>
+    <message>
+        <source>Configure startup and window-closing behaviour.</source>
+        <translation>Configura l&apos;avvio e il comportamento alla chiusura della finestra.</translation>
+    </message>
+    <message>
         <source>Contrast</source>
         <translation>Contrasto</translation>
     </message>
     <message>
-        <source>Volume</source>
-        <translation>Volume</translation>
+        <source>Contrast Ratio</source>
+        <translation>Rapporto di contrasto</translation>
+    </message>
+    <message>
+        <source>Contrast Ratio:</source>
+        <translation>Rapporto di contrasto:</translation>
+    </message>
+    <message>
+        <source>DDC</source>
+        <translation>DDC</translation>
+    </message>
+    <message>
+        <source>Delay to send DDC signal</source>
+        <translation>Ritardo prima dell&apos;invio del segnale DDC</translation>
+    </message>
+    <message>
+        <source>Dynamic Contrast</source>
+        <translation>Contrasto dinamico</translation>
+    </message>
+    <message>
+        <source>Enable Dynamic Contrast</source>
+        <translation>Abilita contrasto dinamico</translation>
+    </message>
+    <message>
+        <source>Enable Plasma global shortcut</source>
+        <translation>Abilita scorciatoia globale di Plasma</translation>
+    </message>
+    <message>
+        <source>GNU General Public License v3.0</source>
+        <translation>GNU General Public License v3.0</translation>
+    </message>
+    <message>
+        <source>Hide Brightness Option</source>
+        <translation>Nascondi opzione luminosità</translation>
+    </message>
+    <message>
+        <source>Hide Contrast Option</source>
+        <translation>Nascondi opzione contrasto</translation>
+    </message>
+    <message>
+        <source>Hide Dynamic Contrast Option</source>
+        <translation>Nascondi opzione contrasto dinamico</translation>
+    </message>
+    <message>
+        <source>Hide Input Option</source>
+        <translation>Nascondi opzione ingresso</translation>
+    </message>
+    <message>
+        <source>Hide Tray Icon</source>
+        <translation>Nascondi icona area di notifica</translation>
+    </message>
+    <message>
+        <source>Hide Volume Option</source>
+        <translation>Nascondi opzione volume</translation>
     </message>
     <message>
         <source>Input source</source>
         <translation>Sorgente di ingresso</translation>
     </message>
     <message>
+        <source>Instant</source>
+        <translation>Istantaneo</translation>
+    </message>
+    <message>
+        <source>Keep Brightless running after its window closes.</source>
+        <translation>Mantieni Brightless in esecuzione dopo la chiusura della finestra.</translation>
+    </message>
+    <message>
+        <source>Launch Brightless automatically when you log in.</source>
+        <translation>Avvia automaticamente Brightless all&apos;accesso.</translation>
+    </message>
+    <message>
+        <source>Monitor</source>
+        <translation>Monitor</translation>
+    </message>
+    <message>
+        <source>Per-monitor VCP codes</source>
+        <translation>Codici VCP per monitor</translation>
+    </message>
+    <message>
+        <source>Per-monitor ratio</source>
+        <translation>Rapporto per monitor</translation>
+    </message>
+    <message>
         <source>Power mode</source>
         <translation>Modalità di alimentazione</translation>
     </message>
     <message>
-        <source>%1 — HDR</source>
-        <translation>%1 — HDR</translation>
+        <source>Remove Brightless from the system tray.</source>
+        <translation>Rimuovi Brightless dall&apos;area di notifica.</translation>
     </message>
     <message>
-        <source>SDR brightness (nits):</source>
-        <translation>Luminosità SDR (nit):</translation>
+        <source>Remove the brightness control from monitor cards.</source>
+        <translation>Rimuovi il controllo della luminosità dalle schede dei monitor.</translation>
+    </message>
+    <message>
+        <source>Remove the contrast control from monitor cards.</source>
+        <translation>Rimuovi il controllo del contrasto dalle schede dei monitor.</translation>
+    </message>
+    <message>
+        <source>Remove the dynamic contrast control from monitor cards.</source>
+        <translation>Rimuovi il controllo del contrasto dinamico dalle schede dei monitor.</translation>
+    </message>
+    <message>
+        <source>Remove the input-source control from monitor cards.</source>
+        <translation>Rimuovi il controllo della sorgente di ingresso dalle schede dei monitor.</translation>
+    </message>
+    <message>
+        <source>Remove the volume control from monitor cards.</source>
+        <translation>Rimuovi il controllo del volume dalle schede dei monitor.</translation>
+    </message>
+    <message>
+        <source>Scroll Step</source>
+        <translation>Passo di scorrimento</translation>
+    </message>
+    <message>
+        <source>Scroll Step:</source>
+        <translation>Passo di scorrimento:</translation>
+    </message>
+    <message>
+        <source>Send monitor control updates immediately.</source>
+        <translation>Invia immediatamente gli aggiornamenti dei controlli del monitor.</translation>
+    </message>
+    <message>
+        <source>Set contrast to %1 times brightness.</source>
+        <translation>Imposta il contrasto a %1 volte la luminosità.</translation>
+    </message>
+    <message>
+        <source>Set this monitor&apos;s contrast to %1 times its brightness.</source>
+        <translation>Imposta il contrasto di questo monitor a %1 volte la sua luminosità.</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Impostazioni</translation>
+    </message>
+    <message>
+        <source>Start Brightless on login without opening its window.</source>
+        <translation>Avvia Brightless all&apos;accesso senza aprire la finestra.</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>Sistema</translation>
+    </message>
+    <message>
+        <source>Use dynamic contrast on every compatible monitor.</source>
+        <translation>Usa il contrasto dinamico su ogni monitor compatibile.</translation>
+    </message>
+    <message>
+        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to all monitors.</source>
+        <translation>Codici VCP (esadecimali). Lascia vuoto per usare il valore predefinito in grigio. Le modifiche si applicano a tutti i monitor.</translation>
+    </message>
+    <message>
+        <source>VCP codes (hexadecimal). Leave empty to use the grey default. Changes apply to the selected monitor.</source>
+        <translation>Codici VCP (esadecimali). Lascia vuoto per usare il valore predefinito in grigio. Le modifiche si applicano al monitor selezionato.</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Versione %1</translation>
+    </message>
+    <message>
+        <source>View version, source code, and license information.</source>
+        <translation>Visualizza versione, codice sorgente e informazioni sulla licenza.</translation>
+    </message>
+    <message>
+        <source>Volume</source>
+        <translation>Volume</translation>
+    </message>
+    <message>
+        <source>Wait %1 ms before sending monitor control updates.</source>
+        <translation>Attendi %1 ms prima di inviare gli aggiornamenti dei controlli del monitor.</translation>
+    </message>
+</context>
+<context>
+    <name>SdrBrightnessCard</name>
+    <message>
+        <source>%1 — HDR</source>
+        <translation>%1 — HDR</translation>
     </message>
     <message>
         <source>Adjust the brightness of SDR content on this HDR screen.</source>
         <translation>Regola la luminosità dei contenuti SDR su questo schermo HDR.</translation>
     </message>
     <message>
-        <location filename="../src/qt/qml/Main.qml" line="+41"/>
-        <location line="+23"/>
-        <source>Settings</source>
-        <translation>Impostazioni</translation>
+        <source>SDR brightness (nits):</source>
+        <translation>Luminosità SDR (nit):</translation>
+    </message>
+</context>
+<context>
+    <name>Osd</name>
+    <message>
+        <source>Brightness</source>
+        <translation>Luminosità</translation>
     </message>
     <message>
-        <location line="-13"/>
-        <source>Error</source>
-        <translation>Errore</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Error: %1</source>
-        <translation>Errore: %1</translation>
-    </message>
-    <message>
-        <location line="+263"/>
-        <source>%1 Ratio</source>
-        <translation>Rapporto di %1</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Set this monitor&apos;s contrast to %1 times its brightness.</source>
-        <translation>Imposta il contrasto di questo monitor a %1 volte la sua luminosità.</translation>
-    </message>
-    <message>
-        <location line="+19"/>
-        <location line="+2"/>
-        <source>Autostart on login</source>
-        <translation>Avvia all&apos;accesso</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Launch Brightless automatically when you log in.</source>
-        <translation>Avvia automaticamente Brightless all&apos;accesso.</translation>
-    </message>
-    <message>
-        <location line="+28"/>
-        <location line="+2"/>
-        <source>Enable Plasma global shortcut</source>
-        <translation>Abilita scorciatoia globale di Plasma</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Add configurable monitor controls to Plasma&apos;s Global Shortcuts settings.</source>
-        <translation>Aggiungi controlli del monitor configurabili alle impostazioni delle scorciatoie globali di Plasma.</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <location line="+2"/>
-        <source>Close to tray icon</source>
-        <translation>Chiudi nell&apos;area di notifica</translation>
-    </message>
-    <message>
-        <location line="-191"/>
-        <source>Scroll Step:</source>
-        <translation>Passo di scorrimento:</translation>
-    </message>
-    <message>
-        <location line="-153"/>
-        <source>Open the settings window.</source>
-        <translation>Apri la finestra delle impostazioni.</translation>
-    </message>
-    <message>
-        <location line="+54"/>
-        <source>Appearance</source>
-        <translation>Aspetto</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Choose which monitor controls and icons are shown.</source>
-        <translation>Scegli quali controlli del monitor e icone mostrare.</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Behaviour</source>
-        <translation>Comportamento</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Adjust scrolling, DDC timing, and dynamic contrast.</source>
-        <translation>Regola lo scorrimento, la temporizzazione DDC e il contrasto dinamico.</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>System</source>
-        <translation>Sistema</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Configure startup and window-closing behaviour.</source>
-        <translation>Configura l&apos;avvio e il comportamento alla chiusura della finestra.</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>About</source>
-        <translation>Informazioni</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>View version, source code, and license information.</source>
-        <translation>Visualizza versione, codice sorgente e informazioni sulla licenza.</translation>
-    </message>
-    <message>
-        <location line="+20"/>
-        <source>Hide Dynamic Contrast Option</source>
-        <translation>Nascondi opzione contrasto dinamico</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Hide Brightness Option</source>
-        <translation>Nascondi opzione luminosità</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Remove the dynamic contrast control from monitor cards.</source>
-        <translation>Rimuovi il controllo del contrasto dinamico dalle schede dei monitor.</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Remove the brightness control from monitor cards.</source>
-        <translation>Rimuovi il controllo della luminosità dalle schede dei monitor.</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <location line="+2"/>
-        <source>Hide Contrast Option</source>
-        <translation>Nascondi opzione contrasto</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Remove the contrast control from monitor cards.</source>
-        <translation>Rimuovi il controllo del contrasto dalle schede dei monitor.</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <location line="+2"/>
-        <source>Hide Volume Option</source>
-        <translation>Nascondi opzione volume</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Remove the volume control from monitor cards.</source>
-        <translation>Rimuovi il controllo del volume dalle schede dei monitor.</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <location line="+2"/>
-        <source>Hide Input Option</source>
-        <translation>Nascondi opzione ingresso</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Remove the input-source control from monitor cards.</source>
-        <translation>Rimuovi il controllo della sorgente di ingresso dalle schede dei monitor.</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <location line="+2"/>
-        <source>Hide Tray Icon</source>
-        <translation>Nascondi icona area di notifica</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Remove Brightless from the system tray.</source>
-        <translation>Rimuovi Brightless dall&apos;area di notifica.</translation>
-    </message>
-    <message>
-        <location line="+26"/>
-        <source>Scroll Step</source>
-        <translation>Passo di scorrimento</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Change monitor values by %1% for each mouse-wheel step.</source>
-        <translation>Modifica i valori dei monitor del %1% a ogni scatto della rotellina.</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Delay to send DDC signal</source>
-        <translation>Ritardo prima dell&apos;invio del segnale DDC</translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Instant</source>
-        <translation>Istantaneo</translation>
-    </message>
-    <message>
-        <location line="+13"/>
-        <source>Send monitor control updates immediately.</source>
-        <translation>Invia immediatamente gli aggiornamenti dei controlli del monitor.</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Wait %1 ms before sending monitor control updates.</source>
-        <translation>Attendi %1 ms prima di inviare gli aggiornamenti dei controlli del monitor.</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Dynamic Contrast</source>
-        <translation>Contrasto dinamico</translation>
-    </message>
-    <message>
-        <location line="+4"/>
-        <location line="+2"/>
-        <source>Enable Dynamic Contrast</source>
-        <translation>Abilita contrasto dinamico</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Adjust brightness and contrast together using a configurable ratio.</source>
-        <translation>Regola insieme luminosità e contrasto usando un rapporto configurabile.</translation>
-    </message>
-    <message>
-        <location line="+13"/>
-        <location line="+2"/>
-        <source>Apply to all monitors</source>
-        <translation>Applica a tutti i monitor</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Use dynamic contrast on every compatible monitor.</source>
-        <translation>Usa il contrasto dinamico su ogni monitor compatibile.</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <source>Contrast Ratio:</source>
-        <translation>Rapporto di contrasto:</translation>
-    </message>
-    <message>
-        <location line="+10"/>
-        <source>Contrast Ratio</source>
-        <translation>Rapporto di contrasto</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Set contrast to %1 times brightness.</source>
-        <translation>Imposta il contrasto a %1 volte la luminosità.</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <location line="+2"/>
-        <source>Per-monitor ratio</source>
-        <translation>Rapporto per monitor</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Allow each monitor to use its own contrast ratio.</source>
-        <translation>Consenti a ogni monitor di usare il proprio rapporto di contrasto.</translation>
-    </message>
-    <message>
-        <location line="+17"/>
-        <source>%1 Ratio:</source>
-        <translation>Rapporto di %1:</translation>
-    </message>
-    <message>
-        <location line="+51"/>
-        <location line="+5"/>
-        <source>Autostart as tray icon</source>
-        <translation>Avvia automaticamente nell&apos;area di notifica</translation>
-    </message>
-    <message>
-        <location line="-8"/>
-        <source>Start Brightless on login without opening its window.</source>
-        <translation>Avvia Brightless all&apos;accesso senza aprire la finestra.</translation>
-    </message>
-    <message>
-        <location line="+34"/>
-        <source>Keep Brightless running after its window closes.</source>
-        <translation>Mantieni Brightless in esecuzione dopo la chiusura della finestra.</translation>
-    </message>
-    <message>
-        <location line="+28"/>
-        <source>Version %1</source>
-        <translation>Versione %1</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Brightless repository</source>
-        <translation>Repository di Brightless</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>GNU General Public License v3.0</source>
-        <translation>GNU General Public License v3.0</translation>
+        <source>Volume</source>
+        <translation>Volume</translation>
     </message>
 </context>
 <context>

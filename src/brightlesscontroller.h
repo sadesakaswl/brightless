@@ -19,6 +19,8 @@ class BrightlessController : public QObject
     Q_OBJECT
     QML_ELEMENT
     Q_PROPERTY(QString startup_error READ startupError NOTIFY startupErrorChanged)
+    Q_PROPERTY(QString operation_error READ operationError NOTIFY operationErrorChanged)
+    Q_PROPERTY(bool loading READ loading NOTIFY loadingChanged)
     Q_PROPERTY(QStringList monitor_names READ monitorNames NOTIFY monitorNamesChanged)
     Q_PROPERTY(QVariantList ddc_monitors READ ddcMonitors NOTIFY monitorNamesChanged)
     Q_PROPERTY(int monitor_count READ monitorCount NOTIFY monitorCountChanged)
@@ -38,6 +40,10 @@ public:
     ~BrightlessController() override;
 
     QString startupError() const;
+    QString operationError() const { return operationError_; }
+    bool loading() const { return loading_; }
+    void setOperationError(const QString &error);
+    void flushSettings();
     QStringList monitorNames() const;
     QVariantList ddcMonitors() const;
     int monitorCount() const;
@@ -107,6 +113,8 @@ public:
 
 signals:
     void startupErrorChanged();
+    void operationErrorChanged();
+    void loadingChanged();
     void monitorNamesChanged();
     void monitorCountChanged();
     void revisionChanged();
@@ -129,9 +137,13 @@ private:
                  std::initializer_list<std::pair<std::uint8_t, std::uint16_t>> writes);
     void flushDdcWrites();
     void loadSettings();
-    void saveSettings() const;
+    void saveSettings();
 
     QString startupError_;
+    QString operationError_;
+    bool loading_ = false;
+    bool rescanRequested_ = false;
+    QTimer settingsTimer_;
     std::vector<std::unique_ptr<Monitor>> monitors_;
     QVariantList ddcMonitors_;
     int revision_ = 0;

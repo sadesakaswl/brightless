@@ -2,6 +2,7 @@
 #include "configpath.h"
 #include <QCryptographicHash>
 #include <QDir>
+#include <QDebug>
 #include <QElapsedTimer>
 #include <QLocalSocket>
 #include <QStandardPaths>
@@ -40,15 +41,19 @@ SingleInstance::SingleInstance(QObject *parent) : QObject(parent)
 
 int SingleInstance::start(bool autostart)
 {
+    const auto fail = [](const QString &error) {
+        qWarning().noquote() << "Single-instance IPC:" << error;
+        return -1;
+    };
     const auto root = brightless::configRoot()
         + QStringLiteral("/brightless");
-    if (!QDir().mkpath(root)) return -1;
+    if (!QDir().mkpath(root)) return fail(QStringLiteral("Cannot create configuration directory"));
     const auto name = QStringLiteral("brightless-") + QString::fromLatin1(
         QCryptographicHash::hash(root.toUtf8(), QCryptographicHash::Sha256).toHex().left(24));
     lock_ = std::make_unique<QLockFile>(root + QStringLiteral("/instance.lock"));
     lock_->setStaleLockTime(0); // A slow/live application must never be treated as stale.
     if (!lock_->tryLock()) {
-        if (lock_->error() != QLockFile::LockFailedError) return -1;
+        if (lock_->error() != QLockFile::LockFailedError) return fail(QStringLiteral("Cannot lock configuration directory"));
         if (autostart) return 1;
 #ifdef Q_OS_WIN
         qint64 pid = 0;
@@ -63,19 +68,22 @@ int SingleInstance::start(bool autostart)
             socket.abort();
             QThread::msleep(50);
         }
-        if (socket.state() != QLocalSocket::ConnectedState) return -1;
+        if (socket.state() != QLocalSocket::ConnectedState) return fail(socket.errorString());
         const auto token = qEnvironmentVariable("XDG_ACTIVATION_TOKEN").toUtf8().toBase64();
-        if (token.size() > 8000) return -1;
+        if (token.size() > 8000) return fail(QStringLiteral("Activation token too long"));
         socket.write("activate:" + token + '\n');
-        if (socket.bytesToWrite() && !socket.waitForBytesWritten(1000)) return -1;
+        // Named-pipe completion can race with the blocking wait on Windows.
+        if (socket.bytesToWrite() && !socket.waitForBytesWritten(1000) && socket.bytesToWrite())
+            return fail(QStringLiteral("Writing activation: %1").arg(socket.errorString()));
         QElapsedTimer timer;
         timer.start();
         while (!socket.canReadLine()) {
             const auto remaining = 5000 - timer.elapsed();
-            if (remaining <= 0 || !socket.waitForReadyRead(int(remaining))) return -1;
+            if (remaining <= 0 || (!socket.waitForReadyRead(int(remaining)) && !socket.canReadLine()))
+                return fail(QStringLiteral("Reading activation reply: %1").arg(socket.errorString()));
         }
-        return socket.readLine() == "ok\n" ? 1 : -1;
+        return socket.readLine() == "ok\n" ? 1 : fail(QStringLiteral("Invalid activation reply"));
     }
     QLocalServer::removeServer(name); // Only the lock owner can remove a stale endpoint.
-    return server_.listen(name) ? 0 : -1;
+    return server_.listen(name) ? 0 : fail(server_.errorString());
 }

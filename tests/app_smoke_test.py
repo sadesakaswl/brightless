@@ -12,9 +12,9 @@ import tempfile
 import time
 
 binary = str(Path(sys.argv[1]).resolve())
-with tempfile.TemporaryDirectory() as config, tempfile.TemporaryFile(mode="w+") as log:
+with tempfile.TemporaryDirectory() as config, tempfile.TemporaryFile(mode="w+", encoding="utf-8", errors="replace") as log:
     env = {**os.environ, "XDG_CONFIG_HOME": config, "QT_QPA_PLATFORM": "windows" if os.name == "nt" else "offscreen",
-           "QT_QUICK_BACKEND": "software"}
+           "QT_QUICK_BACKEND": "software", "QT_FORCE_STDERR_LOGGING": "1"}
     first = subprocess.Popen([binary, "--autostart"], env=env, stdout=log, stderr=log)
     try:
         time.sleep(2)
@@ -24,6 +24,10 @@ with tempfile.TemporaryDirectory() as config, tempfile.TemporaryFile(mode="w+") 
             subprocess.run([binary, *args], env=env, stdout=log, stderr=log, check=True, timeout=15)
         if first.poll() is not None:
             raise RuntimeError("Primary exited after activation")
+    except Exception:
+        log.seek(0)
+        print(log.read(), file=sys.stderr)
+        raise
     finally:
         first.terminate()
         try:

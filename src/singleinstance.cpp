@@ -72,15 +72,16 @@ int SingleInstance::start(bool autostart)
         const auto token = qEnvironmentVariable("XDG_ACTIVATION_TOKEN").toUtf8().toBase64();
         if (token.size() > 8000) return fail(QStringLiteral("Activation token too long"));
         socket.write("activate:" + token + '\n');
-        // Named-pipe writes complete asynchronously on Windows; the reply is the delivery proof.
+        socket.flush();
         QElapsedTimer timer;
         timer.start();
-        while (!socket.canReadLine()) {
-            const auto remaining = 5000 - timer.elapsed();
-            if (remaining <= 0 || (!socket.waitForReadyRead(int(remaining)) && !socket.canReadLine()))
-                return fail(QStringLiteral("Reading activation reply: %1").arg(socket.errorString()));
+        // Windows named-pipe waits can report false before the asynchronous operation completes.
+        while (!socket.canReadLine() && socket.state() == QLocalSocket::ConnectedState
+               && timer.elapsed() < 5000) {
+            socket.waitForReadyRead(100);
         }
-        return socket.readLine() == "ok\n" ? 1 : fail(QStringLiteral("Invalid activation reply"));
+        return socket.canReadLine() && socket.readLine() == "ok\n" ? 1
+            : fail(QStringLiteral("Activation reply: %1").arg(socket.errorString()));
     }
     QLocalServer::removeServer(name); // Only the lock owner can remove a stale endpoint.
     return server_.listen(name) ? 0 : fail(server_.errorString());

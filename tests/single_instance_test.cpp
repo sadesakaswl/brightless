@@ -31,10 +31,13 @@ int main(int argc, char *argv[])
         QObject::connect(&primary, &SingleInstance::activateRequested, &app, [&](const QString &token) {
             if (token == QStringLiteral("test-token")) ++activations;
         });
-        for (const bool autostart : {false, true}) {
+        int expectedActivations = 0;
+        for (int attempt = 0; attempt < 20; ++attempt) {
+            const bool autostart = attempt % 5 == 0;
             QProcess child;
             QStringList arguments{QStringLiteral("--child")};
             if (autostart) arguments.append(QStringLiteral("--autostart"));
+            else ++expectedActivations;
             child.start(QCoreApplication::applicationFilePath(), arguments);
             if (!child.waitForStarted()) return 3;
             QElapsedTimer timer;
@@ -43,7 +46,8 @@ int main(int argc, char *argv[])
                 app.processEvents();
                 QThread::msleep(1);
             }
-            if (child.state() != QProcess::NotRunning || child.exitCode() != 0 || activations != 1) return 4;
+            if (child.state() != QProcess::NotRunning || child.exitCode() != 0
+                || activations != expectedActivations) return 4;
         }
     }
     // A killed process leaves both a lock file and (on Unix) a socket path behind.

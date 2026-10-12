@@ -22,6 +22,7 @@ public:
 
 signals:
     void activateRequested();
+    void trayActivated();
     void osdRequested(const QString &kind, int percent);
 
 private:

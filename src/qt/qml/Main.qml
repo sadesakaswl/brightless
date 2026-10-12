@@ -14,6 +14,11 @@ ApplicationWindow {
     visible: false
     title: "Brightless"
 
+    onVisibleChanged: {
+        if (!visible)
+            settingsWindow.hide()
+    }
+
     BrightlessController {
         id: controller
         Component.onCompleted: initialize()

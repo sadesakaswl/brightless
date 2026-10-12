@@ -156,6 +156,14 @@
         <translation>Scegli quali controlli del monitor e icone mostrare.</translation>
     </message>
     <message>
+        <source>Hide the window when pressing on tray icon</source>
+        <translation>Nascondi la finestra quando si preme l&apos;icona nell&apos;area di notifica</translation>
+    </message>
+    <message>
+        <source>Click the tray icon to hide a visible window or show a hidden one.</source>
+        <translation>Fai clic sull&apos;icona nell&apos;area di notifica per nascondere una finestra visibile o mostrare una finestra nascosta.</translation>
+    </message>
+    <message>
         <source>Close to tray icon</source>
         <translation>Chiudi nell&apos;area di notifica</translation>
     </message>

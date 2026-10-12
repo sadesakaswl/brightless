@@ -156,6 +156,14 @@
         <translation>Выбрать отображаемые элементы управления мониторами и значки.</translation>
     </message>
     <message>
+        <source>Hide the window when pressing on tray icon</source>
+        <translation>Скрывать окно при нажатии на значок в трее</translation>
+    </message>
+    <message>
+        <source>Click the tray icon to hide a visible window or show a hidden one.</source>
+        <translation>Нажмите на значок в трее, чтобы скрыть видимое окно или показать скрытое.</translation>
+    </message>
+    <message>
         <source>Close to tray icon</source>
         <translation>Сворачивать в трей при закрытии</translation>
     </message>

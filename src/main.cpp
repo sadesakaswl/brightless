@@ -63,6 +63,14 @@ int main(int argc, char *argv[])
     };
     QObject::connect(&instance, &SingleInstance::activateRequested, window, activate);
     QObject::connect(&desktop, &DesktopIntegration::activateRequested, window, [activate] { activate({}); });
+    QObject::connect(&desktop, &DesktopIntegration::trayActivated, window, [controller, window, activate] {
+        if (controller->hideOnTrayClick() && window->isVisible()
+            && window->visibility() != QWindow::Minimized) {
+            window->hide();
+        } else {
+            activate({});
+        }
+    });
     desktop.attach(controller);
     QTimer rescan;
     rescan.setSingleShot(true);

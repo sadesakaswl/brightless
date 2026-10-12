@@ -156,6 +156,14 @@
         <translation>Choose which monitor controls and icons are shown.</translation>
     </message>
     <message>
+        <source>Hide the window when pressing on tray icon</source>
+        <translation>Hide the window when pressing on tray icon</translation>
+    </message>
+    <message>
+        <source>Click the tray icon to hide a visible window or show a hidden one.</source>
+        <translation>Click the tray icon to hide a visible window or show a hidden one.</translation>
+    </message>
+    <message>
         <source>Close to tray icon</source>
         <translation>Close to tray icon</translation>
     </message>

@@ -156,6 +156,14 @@
         <translation>选择要显示的显示器控件和图标。</translation>
     </message>
     <message>
+        <source>Hide the window when pressing on tray icon</source>
+        <translation>点击托盘图标时隐藏窗口</translation>
+    </message>
+    <message>
+        <source>Click the tray icon to hide a visible window or show a hidden one.</source>
+        <translation>点击托盘图标可隐藏当前显示的窗口或显示已隐藏的窗口。</translation>
+    </message>
+    <message>
         <source>Close to tray icon</source>
         <translation>关闭到系统托盘</translation>
     </message>

@@ -156,6 +156,14 @@
         <translation>Gösterilecek monitör denetimlerini ve simgeleri seç.</translation>
     </message>
     <message>
+        <source>Hide the window when pressing on tray icon</source>
+        <translation>Tepsi simgesine basıldığında pencereyi gizle</translation>
+    </message>
+    <message>
+        <source>Click the tray icon to hide a visible window or show a hidden one.</source>
+        <translation>Görünür pencereyi gizlemek veya gizli pencereyi göstermek için tepsi simgesine tıklayın.</translation>
+    </message>
+    <message>
         <source>Close to tray icon</source>
         <translation>Sistem tepsisine kapat</translation>
     </message>

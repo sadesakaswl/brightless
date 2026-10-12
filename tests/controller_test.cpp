@@ -159,6 +159,26 @@ int runTests(int argc, char *argv[])
         return 12;
     }
 
+    int trayClickChanges = 0;
+    QObject::connect(&controller, &BrightlessController::hideOnTrayClickChanged,
+                     &app, [&] { ++trayClickChanges; });
+    if (!controller.hideOnTrayClick()) {
+        std::cerr << "Hide on tray click should default to enabled\n";
+        return 1;
+    }
+    controller.setHideOnTrayClick(true);
+    controller.setHideOnTrayClick(false);
+    controller.setHideOnTrayClick(false);
+    if (BrightlessController restored; restored.hideOnTrayClick() || trayClickChanges != 1) {
+        std::cerr << "Disabling hide on tray click was not saved or notified correctly\n";
+        return 1;
+    }
+    controller.setHideOnTrayClick(true);
+    if (BrightlessController restored; !restored.hideOnTrayClick() || trayClickChanges != 2) {
+        std::cerr << "Hide on tray click was not saved or notified correctly\n";
+        return 1;
+    }
+
     if (controller.autostartAsTrayIcon()) {
         return 13;
     }

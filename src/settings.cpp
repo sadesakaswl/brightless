@@ -90,6 +90,9 @@ void BrightlessController::loadSettings()
     if (const auto value = object.value(QStringLiteral("close_to_tray")); value.isBool()) {
         closeToTray_ = value.toBool();
     }
+    if (const auto value = object.value(QStringLiteral("hide_on_tray_click")); value.isBool()) {
+        hideOnTrayClick_ = value.toBool();
+    }
     if (const auto value = object.value(QStringLiteral("autostart_as_tray_icon")); value.isBool()) {
         autostartAsTrayIcon_ = value.toBool();
     }
@@ -169,6 +172,7 @@ void BrightlessController::saveSettings()
     object.insert(QStringLiteral("scroll_step"), scrollStep_);
     object.insert(QStringLiteral("ddc_delay"), ddcDelay_);
     object.insert(QStringLiteral("close_to_tray"), closeToTray_);
+    object.insert(QStringLiteral("hide_on_tray_click"), hideOnTrayClick_);
     object.insert(QStringLiteral("autostart_as_tray_icon"), autostartAsTrayIcon_);
     object.insert(QStringLiteral("plasma_global_shortcuts"), plasmaGlobalShortcuts_);
     object.insert(QStringLiteral("hide_brightness"), hideBrightness_);

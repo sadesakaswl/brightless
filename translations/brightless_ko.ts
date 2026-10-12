@@ -156,6 +156,14 @@
         <translation>표시할 모니터 제어 항목과 아이콘을 선택합니다.</translation>
     </message>
     <message>
+        <source>Hide the window when pressing on tray icon</source>
+        <translation>트레이 아이콘을 클릭할 때 창 숨기기</translation>
+    </message>
+    <message>
+        <source>Click the tray icon to hide a visible window or show a hidden one.</source>
+        <translation>트레이 아이콘을 클릭하여 표시된 창을 숨기거나 숨겨진 창을 표시합니다.</translation>
+    </message>
+    <message>
         <source>Close to tray icon</source>
         <translation>닫을 때 시스템 트레이로 최소화</translation>
     </message>

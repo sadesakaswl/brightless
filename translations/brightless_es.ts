@@ -156,6 +156,14 @@
         <translation>Elige qué controles del monitor e iconos se muestran.</translation>
     </message>
     <message>
+        <source>Hide the window when pressing on tray icon</source>
+        <translation>Ocultar la ventana al pulsar el icono de la bandeja del sistema</translation>
+    </message>
+    <message>
+        <source>Click the tray icon to hide a visible window or show a hidden one.</source>
+        <translation>Haz clic en el icono de la bandeja del sistema para ocultar una ventana visible o mostrar una oculta.</translation>
+    </message>
+    <message>
         <source>Close to tray icon</source>
         <translation>Cerrar en la bandeja del sistema</translation>
     </message>

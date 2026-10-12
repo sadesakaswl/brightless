@@ -425,6 +425,23 @@ ApplicationWindow {
                     RowLayout {
                         Layout.fillWidth: true
                         enabled: !controller.hide_tray_icon && desktopIntegration.trayAvailable
+                        Label {
+                            text: qsTr("Hide the window when pressing on tray icon")
+                            wrapMode: Text.WordWrap
+                            Layout.fillWidth: true
+                        }
+                        Switch {
+                            Accessible.name: qsTr("Hide the window when pressing on tray icon")
+                            ToolTip.visible: hovered
+                            ToolTip.text: qsTr("Click the tray icon to hide a visible window or show a hidden one.")
+                            checked: controller.hide_on_tray_click
+                            onToggled: controller.hide_on_tray_click = checked
+                        }
+                    }
+
+                    RowLayout {
+                        Layout.fillWidth: true
+                        enabled: !controller.hide_tray_icon && desktopIntegration.trayAvailable
                         Label { text: qsTr("Close to tray icon"); Layout.fillWidth: true }
                         Switch {
                             Accessible.name: qsTr("Close to tray icon")

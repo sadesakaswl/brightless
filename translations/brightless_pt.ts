@@ -156,6 +156,14 @@
         <translation>Escolha os controlos do monitor e os ícones a apresentar.</translation>
     </message>
     <message>
+        <source>Hide the window when pressing on tray icon</source>
+        <translation>Ocultar a janela ao clicar no ícone da área de notificação</translation>
+    </message>
+    <message>
+        <source>Click the tray icon to hide a visible window or show a hidden one.</source>
+        <translation>Clique no ícone da área de notificação para ocultar uma janela visível ou mostrar uma janela oculta.</translation>
+    </message>
+    <message>
         <source>Close to tray icon</source>
         <translation>Fechar para a área de notificação</translation>
     </message>

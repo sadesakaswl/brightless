@@ -156,6 +156,14 @@
         <translation>Wybierz widoczne elementy sterujące monitorem i ikony.</translation>
     </message>
     <message>
+        <source>Hide the window when pressing on tray icon</source>
+        <translation>Ukrywaj okno po kliknięciu ikony w zasobniku systemowym</translation>
+    </message>
+    <message>
+        <source>Click the tray icon to hide a visible window or show a hidden one.</source>
+        <translation>Kliknij ikonę w zasobniku systemowym, aby ukryć widoczne okno lub pokazać ukryte.</translation>
+    </message>
+    <message>
         <source>Close to tray icon</source>
         <translation>Zamykaj do zasobnika systemowego</translation>
     </message>

@@ -156,6 +156,14 @@
         <translation>表示するモニターコントロールとアイコンを選択します。</translation>
     </message>
     <message>
+        <source>Hide the window when pressing on tray icon</source>
+        <translation>トレイアイコンをクリックしたときにウィンドウを非表示にする</translation>
+    </message>
+    <message>
+        <source>Click the tray icon to hide a visible window or show a hidden one.</source>
+        <translation>トレイアイコンをクリックすると、表示中のウィンドウを非表示にするか、非表示のウィンドウを表示します。</translation>
+    </message>
+    <message>
         <source>Close to tray icon</source>
         <translation>閉じたときにシステムトレイへ格納</translation>
     </message>

@@ -162,7 +162,7 @@ struct DesktopIntegration::Impl
             QObject::connect(tray.get(), &QSystemTrayIcon::activated, owner,
                 [this](QSystemTrayIcon::ActivationReason reason) {
                     if (reason == QSystemTrayIcon::Trigger || reason == QSystemTrayIcon::DoubleClick)
-                        emit owner->activateRequested();
+                        emit owner->trayActivated();
                 });
             tray->show();
 #else
@@ -173,7 +173,7 @@ struct DesktopIntegration::Impl
             tray->setStandardActionsEnabled(false);
             tray->setContextMenu(menu.release()); // KStatusNotifierItem owns its menu.
             QObject::connect(tray.get(), &KStatusNotifierItem::activateRequested,
-                             owner, &DesktopIntegration::activateRequested);
+                             owner, &DesktopIntegration::trayActivated);
             QObject::connect(tray.get(), &KStatusNotifierItem::scrollRequested, owner,
                 [this](int delta, Qt::Orientation orientation) {
                     if (orientation == Qt::Vertical)

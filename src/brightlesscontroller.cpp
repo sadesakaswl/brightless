@@ -217,6 +217,21 @@ void BrightlessController::setCloseToTray(bool value)
     emit closeToTrayChanged();
 }
 
+bool BrightlessController::hideOnTrayClick() const
+{
+    return hideOnTrayClick_;
+}
+
+void BrightlessController::setHideOnTrayClick(bool value)
+{
+    if (hideOnTrayClick_ == value) {
+        return;
+    }
+    hideOnTrayClick_ = value;
+    saveSettings();
+    emit hideOnTrayClickChanged();
+}
+
 bool BrightlessController::hideBrightness() const
 {
     return hideBrightness_;

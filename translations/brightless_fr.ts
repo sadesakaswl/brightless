@@ -156,6 +156,14 @@
         <translation>Choisir les commandes du moniteur et les icônes à afficher.</translation>
     </message>
     <message>
+        <source>Hide the window when pressing on tray icon</source>
+        <translation>Masquer la fenêtre en cliquant sur l&apos;icône de la zone de notification</translation>
+    </message>
+    <message>
+        <source>Click the tray icon to hide a visible window or show a hidden one.</source>
+        <translation>Cliquez sur l&apos;icône de la zone de notification pour masquer une fenêtre visible ou afficher une fenêtre masquée.</translation>
+    </message>
+    <message>
         <source>Close to tray icon</source>
         <translation>Fermer dans la zone de notification</translation>
     </message>

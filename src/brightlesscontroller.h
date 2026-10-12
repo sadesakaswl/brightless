@@ -26,6 +26,7 @@ class BrightlessController : public QObject
     Q_PROPERTY(int monitor_count READ monitorCount NOTIFY monitorCountChanged)
     Q_PROPERTY(int revision READ revision NOTIFY revisionChanged)
     Q_PROPERTY(bool close_to_tray READ closeToTray WRITE setCloseToTray NOTIFY closeToTrayChanged)
+    Q_PROPERTY(bool hide_on_tray_click READ hideOnTrayClick WRITE setHideOnTrayClick NOTIFY hideOnTrayClickChanged)
     Q_PROPERTY(bool autostart READ autostart WRITE setAutostart NOTIFY autostartChanged)
     Q_PROPERTY(bool autostart_as_tray_icon READ autostartAsTrayIcon WRITE setAutostartAsTrayIcon NOTIFY autostartAsTrayIconChanged)
     Q_PROPERTY(bool plasma_global_shortcuts READ plasmaGlobalShortcuts WRITE setPlasmaGlobalShortcuts NOTIFY plasmaGlobalShortcutsChanged)
@@ -50,6 +51,8 @@ public:
     int revision() const;
     bool closeToTray() const;
     void setCloseToTray(bool value);
+    bool hideOnTrayClick() const;
+    void setHideOnTrayClick(bool value);
     bool autostart() const;
     void setAutostart(bool value);
     bool autostartAsTrayIcon() const;
@@ -119,6 +122,7 @@ signals:
     void monitorCountChanged();
     void revisionChanged();
     void closeToTrayChanged();
+    void hideOnTrayClickChanged();
     void autostartChanged();
     void autostartAsTrayIconChanged();
     void plasmaGlobalShortcutsChanged();
@@ -156,6 +160,7 @@ private:
     bool vcpPerMonitor_ = false;
     QHash<QString, QHash<int, int>> monitorVcpCodes_;
     bool closeToTray_ = true;
+    bool hideOnTrayClick_ = true;
     bool autostartAsTrayIcon_ = false;
     bool plasmaGlobalShortcuts_ = false;
     bool hideBrightness_ = false;

@@ -156,6 +156,14 @@
         <translation>Festlegen, welche Monitorregler und Symbole angezeigt werden.</translation>
     </message>
     <message>
+        <source>Hide the window when pressing on tray icon</source>
+        <translation>Fenster beim Klicken auf das Symbol im Systembereich ausblenden</translation>
+    </message>
+    <message>
+        <source>Click the tray icon to hide a visible window or show a hidden one.</source>
+        <translation>Auf das Symbol im Systembereich klicken, um ein sichtbares Fenster auszublenden oder ein ausgeblendetes anzuzeigen.</translation>
+    </message>
+    <message>
         <source>Close to tray icon</source>
         <translation>In den Systembereich schließen</translation>
     </message>

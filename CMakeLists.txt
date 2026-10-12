@@ -124,16 +124,17 @@ if(BUILD_TESTING)
         ${CMAKE_CURRENT_SOURCE_DIR}/tests/translations_test.py
         ${CMAKE_CURRENT_SOURCE_DIR}/src/qt/qml ${CMAKE_CURRENT_SOURCE_DIR}/translations)
     if(TARGET Qt6::qmltestrunner)
+        # Native Windows styling needs window handles unavailable with the offscreen platform.
         add_test(NAME timing-ui COMMAND Qt6::qmltestrunner
             -input ${CMAKE_CURRENT_SOURCE_DIR}/tests/tst_timing_page.qml)
         set_tests_properties(timing-ui PROPERTIES TIMEOUT 30
-            ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_FORCE_STDERR_LOGGING=1")
+            ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Fusion;QT_FORCE_STDERR_LOGGING=1")
         foreach(ui_test IN ITEMS monitor_slider monitor_card settings_window)
             string(REPLACE "_" "-" test_name "${ui_test}")
             add_test(NAME ${test_name}-ui COMMAND Qt6::qmltestrunner
                 -input ${CMAKE_CURRENT_SOURCE_DIR}/tests/tst_${ui_test}.qml)
             set_tests_properties(${test_name}-ui PROPERTIES TIMEOUT 30
-                ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_FORCE_STDERR_LOGGING=1")
+                ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Fusion;QT_FORCE_STDERR_LOGGING=1")
         endforeach()
     endif()
     add_executable(brightless_model_test tests/model_test.cpp)

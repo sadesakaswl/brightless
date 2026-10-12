@@ -4,103 +4,52 @@
   <img src="resources/icon.png" alt="Brightless icon" width="192">
 </p>
 
-A Qt DDC/CI control application for external monitors on Linux and Windows.
+A Qt DDC/CI application for controlling external monitors on Linux and Windows.
 
 ## Features
 
-- **Brightness, Contrast & Volume Control** — Adjust external monitor settings via DDC/CI
-- **SDR Brightness in HDR** — Adjust SDR content brightness per HDR-enabled screen on KDE Plasma Wayland, even without DDC/CI
-- **Input Source Selection** — Switch between HDMI, DisplayPort, VGA, DVI, and USB-C
-- **Power Mode Control** — Turn monitors on, off, or to standby/suspend
-- **Monitor Detection** — Discover displays asynchronously, refresh on Qt screen changes, or rescan using the refresh button
-- **Mouse Scroll Support** — Scroll over sliders with a configurable 1–10% step; Linux also supports tray scrolling
-- **Global Shortcuts & OSD** — Configurable monitor shortcuts with brightness/volume feedback; native Plasma OSD on Linux, Qt OSD on Windows
-- **Dynamic Contrast** — Link brightness and contrast globally or per monitor
-- **Schedules** — Trigger brightness/dynamic contrast, contrast, volume, power, or input changes by daily time or battery percentage, for all monitors or a selected monitor
-- **Settings Persistence** — Atomically save preferences and window size; debounce frequent settings-slider updates
-- **Optional Autostart** — XDG autostart on Linux, per-user Windows login startup; disabled by default
-- **Optional System Tray** — Keep Brightless available after closing its window
-- **Single Instance** — Launching Brightless again restores the existing window
-- **System Language** — Automatically use Chinese, English, French, German, Italian, Japanese, Korean, Polish, Portuguese, Russian, Spanish, or Turkish
-- **Qt 6 UI** — Adaptive monitor cards, scalable system fonts, native light/dark colors, and settings pages loaded only while in use; native C++23 backend with QML and Qt Quick Controls
+- **Monitor controls** — Brightness, contrast, monitor-speaker volume, input selection (HDMI, DisplayPort, VGA, DVI, USB-C), and power modes (on, off, standby, suspend).
+- **SDR brightness in HDR** — Per-screen SDR white-level control on KDE Plasma Wayland, without requiring DDC/CI.
+- **Dynamic contrast** — Link brightness and contrast globally or per monitor, with configurable ratios.
+- **Schedules** — Daily time or battery-percentage triggers for DDC monitor controls, targeting one or all monitors; 12- or 24-hour time display.
+- **Monitor detection** — Asynchronous discovery, automatic refresh on screen changes, and manual rescanning.
+- **Mouse wheel** — Configurable 1–10% slider steps; Linux also supports tray scrolling.
+- **Global shortcuts and OSD** — Configurable shortcuts with brightness/volume feedback through Plasma's OSD on Linux or Qt's OSD on Windows.
+- **Themes and settings** — Auto, Light, or Dark mode; adaptive monitor cards, scalable fonts, optional control visibility, custom VCP codes, and adjustable DDC delay.
+- **Tray and autostart** — Optional close-to-tray behavior and per-user login startup, including starting minimized to the tray.
+- **Saved preferences** — Atomic settings and window-size persistence, with frequent slider updates debounced.
+- **Single instance** — Launching Brightless again restores the existing window.
+- **Translations** — Automatically follows the system language: Chinese, English, French, German, Italian, Japanese, Korean, Polish, Portuguese, Russian, Spanish, or Turkish.
 
 ## Requirements
 
-Both platforms need DDC/CI-capable external monitors. Enable DDC/CI in the monitor's menu. Dock, adapter, GPU-driver, and monitor support varies; built-in laptop backlight control is not implemented. Volume controls the **monitor's speakers**, not the system audio mixer.
+For monitor controls, enable **DDC/CI** in the external monitor's menu. Compatibility depends on the monitor, dock, adapter, and graphics driver. Laptop backlight control is not supported, and volume controls the monitor's speakers—not system audio.
 
-### Common build requirements
+To build: **C++23**, **CMake 3.21+**, and **Qt 6.4+** with LinguistTools, Network, Quick, QuickControls2, and Widgets. Tests require Python 3; disable them with `-DBUILD_TESTING=OFF` if needed.
 
-- A C++23 compiler
-- CMake 3.21+
-- Qt 6.4+ (`LinguistTools`, `Network`, `Quick`, `QuickControls2`, and `Widgets`)
-- Python 3 for tests (or configure with `-DBUILD_TESTING=OFF`)
+- **Linux:** Qt DBus, KDE Frameworks 6 GlobalAccel and StatusNotifierItem, libkscreen 6.0+, libddcutil 1.2+, pkg-config, and permission to access I²C devices. SDR brightness requires KDE Plasma 6 Wayland with HDR enabled; battery triggers require UPower.
+- **Windows:** Windows 10/11 x64, Visual Studio 2022 C++ tools, Windows SDK, and matching Qt MSVC libraries. No KDE or libddcutil dependencies; SDR brightness controls are Linux-only.
 
-### Linux
-
-- Permission to access the system I²C devices
-- KDE Plasma 6 Wayland with HDR enabled for SDR brightness controls
-- Qt `DBus`
-- KDE Frameworks 6 `GlobalAccel` and `StatusNotifierItem`
-- libkscreen 6.0+
-- libddcutil 1.2+
-- pkg-config
-
-For Debian/Ubuntu:
-
-```bash
-sudo apt install cmake g++ pkg-config qt6-base-dev qt6-declarative-dev qt6-tools-dev libkf6globalaccel-dev libkf6statusnotifieritem-dev libkscreen-dev libddcutil-dev
-```
-
-For Fedora:
-
-```bash
-sudo dnf install cmake gcc-c++ pkgconf-pkg-config qt6-qtbase-devel qt6-qtdeclarative-devel qt6-qttools-devel kf6-kglobalaccel-devel kf6-kstatusnotifieritem-devel libkscreen-devel libddcutil-devel
-```
-
-For Arch Linux:
-
-```bash
-sudo pacman -S cmake gcc pkgconf qt6-declarative qt6-tools kglobalaccel kstatusnotifieritem libkscreen ddcutil
-```
-
-### Windows
-
-- Windows 10/11 x64 and a graphics driver exposing physical-monitor DDC/CI
-- Visual Studio 2022 C++ tools, Windows SDK, and matching Qt MSVC libraries
-- CI targets Qt 6.8.3 / MSVC 2022; no KDE or libddcutil dependencies
-
-Windows uses Qt for the UI, tray, shortcut editor, settings, and single-instance IPC. Monitor operations use Windows Monitor Configuration APIs (`Dxva2`); global shortcut registration uses `RegisterHotKey`. HDR SDR-white-level controls are currently Linux/Plasma-only and are hidden on Windows.
-
-## Build
+## Build and run
 
 ### Linux
 
 ```bash
 cmake -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j
-```
-
-Optional: run tests.
-
-```bash
 ctest --test-dir build --output-on-failure
-```
-
-## Run
-
-```bash
 ./build/brightless
 ```
 
-Install it with:
+Optional installation:
 
 ```bash
 cmake --install build --prefix ~/.local
 ```
 
-### Windows build and deployment
+### Windows
 
-From a Visual Studio developer terminal with Qt on `CMAKE_PREFIX_PATH`:
+From a Visual Studio developer terminal, adjust the Qt path to your installation:
 
 ```powershell
 cmake -S . -B build -A x64 -DCMAKE_PREFIX_PATH=C:/Qt/6.8.3/msvc2022_64
@@ -110,40 +59,31 @@ cmake --install build --config Release --prefix stage
 ./stage/bin/brightless.exe
 ```
 
-Installation deploys Qt libraries and QML plugins. Run `cpack --config build/CPackConfig.cmake -C Release` to create a ZIP. Windows artifacts are unsigned; Linux ZIPs require the distribution's Qt/KDE/libddcutil runtime packages and are not standalone bundles. CI builds, tests, installs, and smoke-tests both platform artifacts; physical-monitor compatibility still requires hardware testing.
+Windows installation deploys Qt libraries and QML plugins; artifacts are unsigned. Linux installations require the distribution's Qt/KDE/libddcutil runtime packages.
 
-Release builds retain LTO when the compiler supports it and use `-O3` on GCC/Clang or `/O2` on MSVC. Unsupported LTO does not prevent building. No machine-specific instruction flags are enabled for release artifacts.
+## Usage
 
-### Preferences and platform behavior
+- **Monitor cards:** drag sliders or use the mouse wheel; dropdowns select input and power modes. HDR cards accept SDR brightness from 50–10,000 nits. Tray scrolling and shortcuts still control DDC brightness.
+- **Settings:** open the gear button to configure appearance, monitor controls, schedules, and system integration. **Appearance → Theme** switches Auto/Light/Dark immediately and saves the choice. Auto follows the system; Fusion styling keeps colors consistent across platforms.
+- **Shortcuts:** unassigned by default. Enable Plasma shortcuts and assign keys in Plasma settings on Linux; use **System → Configure global shortcuts** on Windows.
+- **Tray:** enable **Close to tray icon** to keep running after closing the window. Click the tray icon or select **Show Brightless** to restore it.
+- **Refresh:** sliders and OSD show requested values, not hardware readback. Use refresh to reread monitors; errors appear in the main window.
 
-- Linux preferences: `$XDG_CONFIG_HOME/brightless/settings.json` (normally `~/.config/brightless/settings.json`).
-- Windows preferences: `%LOCALAPPDATA%/brightless/settings.json`; global shortcut assignments use Qt `QSettings` under the per-user `Brightless/Brightless` registry key.
-- Shortcuts are unassigned by default. Linux: enable Plasma shortcuts, then assign keys in Plasma settings. Windows: use **Settings → System → Configure global shortcuts**; use a single key combination per action. Conflicts or unsupported combinations are reported in the main window.
-- Autostart uses a per-user entry only; no administrator rights are needed.
-- **Settings → Appearance → Theme**: choose **Auto** (the default, following the system appearance), **Light**, or **Dark**. The choice is saved and applies immediately to all windows and the on-screen display. Fusion styling keeps both modes consistent on Linux and Windows.
-- DDC errors are shown in the main window. Sliders and OSD display requested values optimistically, not hardware readback; use refresh to reread the monitor.
-- **Settings → Schedules**: add an entry, choose its **Trigger**, monitor, control and value, then enable it. Entries start disabled. **Daily time** repeats at a local time; **Time format** selects 24-hour (the default) or 12-hour (AM/PM) without changing stored times. **Battery percentage** accepts an **At or below** or **At or above** threshold (0–100%). It runs once when the condition becomes true, including the first valid reading after startup or enabling, and re-arms when the condition becomes false. Battery status is checked at startup and every 30 seconds using Linux UPower's system battery or Windows system power status; absent/unknown battery readings never trigger actions or re-arm an already-fired entry. Both charging and discharging can meet a threshold. Brightness uses each monitor's dynamic-contrast settings. Brightless must remain running (the window may be hidden); missed times while asleep or closed are skipped, and unsupported controls or unavailable monitors are ignored. Power-on schedules depend on the monitor accepting DDC while asleep/off. Entries triggered together run in list order, with the last value winning for a shared control. Existing daily schedules remain compatible.
-- Per-monitor dynamic-contrast preferences migrate from model names to device IDs. Linux IDs currently include the I²C bus; moving a monitor between connectors may require reapplying its settings.
+### Schedules
 
-### Code layout
+Add an entry under **Settings → Schedules**, choose its trigger, monitor, control, and value, then enable it. Entries start disabled; brightness follows each monitor's dynamic-contrast settings.
 
-- `src/brightlesscontroller.*`: shared monitor state, operations, and serialized asynchronous DDC work.
-- `src/settings.cpp`: validated JSON persistence and atomic writes.
-- `src/platform/{linux,windows}`: compile-time-selected DDC, battery status, and autostart implementations.
-- `src/desktopintegration.*`: shared actions plus Qt/Plasma/native desktop integration.
-- `src/singleinstance.*`: per-user local IPC and process locking through Qt Network.
-- `src/qt/qml`: main window, settings window, monitor cards, and fallback OSD.
+- **Daily time:** repeats at the chosen local time. Missed times while asleep or closed are skipped.
+- **Battery percentage:** runs once when the charge is **at or below** or **at or above** a 0–100% threshold, including the first matching reading after startup or enabling. It re-arms when the condition becomes false. Readings are checked every 30 seconds during charging or discharging; unavailable readings never trigger or re-arm entries.
 
-The small DDC contract is declared in `src/platform/ddcbackend.h`; tests replace that boundary without accessing hardware. Discovery and writes share one worker to avoid races with handle replacement. No plugin system is needed.
+Brightless must remain running, but its window can be hidden. Unsupported controls and unavailable monitors are ignored; entries triggered together run in list order. Power-on actions require the monitor to accept DDC/CI while asleep or off.
 
-### Controls
+### Preferences
 
-- **Sliders** — Drag to adjust brightness, contrast, or volume
-- **SDR brightness (nits)** — HDR screen cards control SDR white level separately from DDC brightness. Use the slider or enter 50–10,000 nits; mouse-wheel steps use the scroll-step setting in nits. Plasma manages this value; tray scrolling and global shortcuts still control DDC brightness.
-- **Dropdowns** — Select an input source or power mode
-- **Mouse wheel** — Scroll over a slider to change its value; on Linux, tray scrolling changes brightness (and contrast when Dynamic Contrast is enabled)
-- **Settings** — Use the gear button and category selector to configure appearance, scroll, dynamic contrast, VCP codes, schedules, autostart, tray, and global shortcuts
-- **System tray** — Enable “Close to tray icon” in settings, then click the tray icon or choose “Show Brightless” to restore the window
+- **Linux:** `$XDG_CONFIG_HOME/brightless/settings.json`, normally `~/.config/brightless/settings.json`.
+- **Windows:** `%LOCALAPPDATA%/brightless/settings.json`; shortcut assignments are stored separately in the per-user Qt settings registry.
+
+Linux monitor IDs include the I²C bus, so moving a monitor between connectors may require reapplying per-monitor settings.
 
 ## License
 

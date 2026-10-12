@@ -1,6 +1,7 @@
 #include "brightlesscontroller.h"
 #include "desktopintegration.h"
 #include "singleinstance.h"
+#include "theme.h"
 
 #include <QApplication>
 #include <QFontInfo>
@@ -10,6 +11,7 @@
 #include <QQmlContext>
 #include <QQmlProperty>
 #include <QScreen>
+#include <QQuickStyle>
 #include <QTranslator>
 #include <QTimer>
 #include <QWindow>
@@ -17,6 +19,9 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    // Fusion honors application palettes on both Linux and Windows, unlike native styles.
+    QApplication::setStyle(QStringLiteral("Fusion"));
+    QQuickStyle::setStyle(QStringLiteral("Fusion"));
     auto font = QApplication::font();
     font.setPointSizeF(qMax(12.0, QFontInfo(font).pointSizeF()));
     QApplication::setFont(font);
@@ -45,6 +50,11 @@ int main(int argc, char *argv[])
     auto *window = qobject_cast<QWindow *>(engine.rootObjects().constFirst());
     auto *controller = window ? window->findChild<BrightlessController *>() : nullptr;
     if (!window || !controller) return 1;
+    const auto applyTheme = [controller] {
+        QApplication::setPalette(brightless::themePalette(controller->themeMode()));
+    };
+    QObject::connect(controller, &BrightlessController::themeModeChanged, &app, applyTheme);
+    applyTheme();
 
     auto windowSize = controller->savedWindowSize();
     if (!windowSize.isEmpty()) {

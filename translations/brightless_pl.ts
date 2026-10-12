@@ -92,6 +92,22 @@
 <context>
     <name>SettingsWindow</name>
     <message>
+        <source>Theme</source>
+        <translation>Motyw</translation>
+    </message>
+    <message>
+        <source>Auto</source>
+        <translation>Automatycznie</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>Jasny</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>Ciemny</translation>
+    </message>
+    <message>
         <source>Trigger monitor changes by time or battery percentage.</source>
         <translation>Wyzwalaj zmiany monitora według czasu lub poziomu baterii.</translation>
     </message>

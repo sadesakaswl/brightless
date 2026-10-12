@@ -61,6 +61,8 @@ void BrightlessController::loadSettings()
     }
 
     const auto object = document.object();
+    const auto theme = object.value(QStringLiteral("theme_mode")).toString();
+    if (theme == "light" || theme == "dark") themeMode_ = theme;
     use12HourTime_ = object.value(QStringLiteral("use_12_hour_time")).toBool(false);
     for (const auto &entry : object.value(QStringLiteral("timings")).toArray()) {
         if (auto timing = parseTiming(entry.toObject())) {
@@ -184,6 +186,7 @@ void BrightlessController::saveSettings()
     object.insert(QStringLiteral("hide_on_tray_click"), hideOnTrayClick_);
     object.insert(QStringLiteral("autostart_as_tray_icon"), autostartAsTrayIcon_);
     object.insert(QStringLiteral("plasma_global_shortcuts"), plasmaGlobalShortcuts_);
+    object.insert(QStringLiteral("theme_mode"), themeMode_);
     object.insert(QStringLiteral("hide_brightness"), hideBrightness_);
     object.insert(QStringLiteral("hide_contrast"), hideContrast_);
     object.insert(QStringLiteral("hide_volume"), hideVolume_);

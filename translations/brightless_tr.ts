@@ -92,6 +92,22 @@
 <context>
     <name>SettingsWindow</name>
     <message>
+        <source>Theme</source>
+        <translation>Tema</translation>
+    </message>
+    <message>
+        <source>Auto</source>
+        <translation>Otomatik</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>Açık</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>Koyu</translation>
+    </message>
+    <message>
         <source>Trigger monitor changes by time or battery percentage.</source>
         <translation>Monitör değişikliklerini saate veya pil yüzdesine göre tetikleyin.</translation>
     </message>

@@ -44,7 +44,7 @@ qt_add_executable(brightless
     src/desktopintegration.cpp src/desktopintegration.h
     src/singleinstance.cpp src/singleinstance.h
     src/sdrbrightnesscontroller.h
-    src/model.h
+    src/model.h src/theme.h
     ${PLATFORM_SOURCES}
 )
 set_target_properties(brightless PROPERTIES WIN32_EXECUTABLE TRUE)
@@ -143,6 +143,16 @@ if(BUILD_TESTING)
                 APPEND PROPERTY ENVIRONMENT "QT_QPA_FONTDIR=$ENV{WINDIR}/Fonts")
         endif()
     endif()
+    qt_add_executable(brightless_theme_test tests/theme_test.cpp)
+    target_include_directories(brightless_theme_test PRIVATE src)
+    target_link_libraries(brightless_theme_test PRIVATE Qt6::Quick Qt6::QuickControls2 Qt6::Widgets)
+    add_test(NAME theme COMMAND brightless_theme_test)
+    set_tests_properties(theme PROPERTIES TIMEOUT 30
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_FORCE_STDERR_LOGGING=1")
+    if(WIN32)
+        set_property(TEST theme APPEND PROPERTY ENVIRONMENT "QT_QPA_FONTDIR=$ENV{WINDIR}/Fonts")
+    endif()
+
     add_executable(brightless_model_test tests/model_test.cpp)
     target_include_directories(brightless_model_test PRIVATE src)
     add_test(NAME model COMMAND brightless_model_test)

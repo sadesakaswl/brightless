@@ -92,6 +92,22 @@
 <context>
     <name>SettingsWindow</name>
     <message>
+        <source>Theme</source>
+        <translation>テーマ</translation>
+    </message>
+    <message>
+        <source>Auto</source>
+        <translation>自動</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>ライト</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>ダーク</translation>
+    </message>
+    <message>
         <source>Trigger monitor changes by time or battery percentage.</source>
         <translation>時刻またはバッテリー残量に応じてモニターの変更を実行します。</translation>
     </message>

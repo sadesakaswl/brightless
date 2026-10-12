@@ -6,6 +6,7 @@ QtObject {
     property var monitor_names: ["Test display"]
     property var ddc_monitors: [{ id: "display-0", name: "Test display" }]
     property bool loading: false
+    property string theme_mode: "auto"
     property bool hide_brightness: false
     property bool hide_contrast: false
     property bool hide_volume: false

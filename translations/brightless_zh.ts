@@ -92,6 +92,22 @@
 <context>
     <name>SettingsWindow</name>
     <message>
+        <source>Theme</source>
+        <translation>主题</translation>
+    </message>
+    <message>
+        <source>Auto</source>
+        <translation>自动</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>浅色</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>深色</translation>
+    </message>
+    <message>
         <source>Trigger monitor changes by time or battery percentage.</source>
         <translation>按时间或电池电量百分比触发显示器更改。</translation>
     </message>

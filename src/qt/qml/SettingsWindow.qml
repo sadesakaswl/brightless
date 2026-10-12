@@ -114,6 +114,28 @@ ApplicationWindow {
                 RowLayout {
                     Layout.fillWidth: true
                     Label {
+                        text: qsTr("Theme")
+                        wrapMode: Text.WordWrap
+                        Layout.fillWidth: true
+                    }
+                    ComboBox {
+                        objectName: "themeSelector"
+                        Accessible.name: qsTr("Theme")
+                        model: [
+                            { text: qsTr("Auto"), mode: "auto" },
+                            { text: qsTr("Light"), mode: "light" },
+                            { text: qsTr("Dark"), mode: "dark" }
+                        ]
+                        textRole: "text"
+                        valueRole: "mode"
+                        currentIndex: model.findIndex(theme => theme.mode === settingsWindow.controller.theme_mode)
+                        onActivated: settingsWindow.controller.theme_mode = currentValue
+                    }
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    Label {
                         id: hideBrightnessLabel
                         wrapMode: Text.WordWrap
                         text: window.refreshed(controller.dynamic_contrast_enabled()) ? qsTr("Hide Dynamic Contrast Option") : qsTr("Hide Brightness Option")

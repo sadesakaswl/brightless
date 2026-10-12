@@ -242,6 +242,14 @@ void BrightlessController::setHideOnTrayClick(bool value)
     emit hideOnTrayClickChanged();
 }
 
+void BrightlessController::setThemeMode(const QString &mode)
+{
+    if (themeMode_ == mode || (mode != "auto" && mode != "light" && mode != "dark")) return;
+    themeMode_ = mode;
+    saveSettings();
+    emit themeModeChanged();
+}
+
 bool BrightlessController::hideBrightness() const
 {
     return hideBrightness_;

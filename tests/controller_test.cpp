@@ -262,6 +262,41 @@ void testTimings(const QString &settingsPath)
     check(!BrightlessController().use12HourTime(), "malformed time format preference accepted");
 }
 
+void testThemeMode(const QString &settingsPath)
+{
+    const auto check = [](bool condition, const char *message) {
+        if (!condition) {
+            std::cerr << "Theme preference check failed: " << message << '\n';
+            std::exit(60);
+        }
+    };
+    BrightlessController controller;
+    check(controller.themeMode() == "auto", "existing settings must default to auto");
+    int changes = 0;
+    QObject::connect(&controller, &BrightlessController::themeModeChanged, [&] { ++changes; });
+    for (const auto &mode : {"light", "dark", "auto"}) {
+        controller.setThemeMode(QString::fromLatin1(mode));
+        check(controller.themeMode() == mode && BrightlessController().themeMode() == mode,
+              "theme mode was not persisted");
+        controller.setThemeMode(QString::fromLatin1(mode));
+    }
+    controller.setThemeMode(QStringLiteral("invalid"));
+    check(controller.themeMode() == "auto" && changes == 3, "invalid/redundant change notified");
+    for (const auto &invalid : {QJsonValue("invalid"), QJsonValue(2), QJsonValue(true)}) {
+        QFile file(settingsPath);
+        check(file.open(QIODevice::ReadOnly), "cannot read settings fixture");
+        auto settings = QJsonDocument::fromJson(file.readAll()).object();
+        file.close();
+        settings.insert("theme_mode", invalid);
+        check(file.open(QIODevice::WriteOnly | QIODevice::Truncate), "cannot write settings fixture");
+        file.write(QJsonDocument(settings).toJson());
+        file.close();
+        check(BrightlessController().themeMode() == "auto", "malformed theme mode accepted");
+    }
+    controller.setThemeMode(QStringLiteral("light"));
+    controller.setThemeMode(QStringLiteral("auto"));
+}
+
 void testBatteryTimings()
 {
     const auto check = [](bool condition, const char *message) {
@@ -759,6 +794,7 @@ int runTests(int argc, char *argv[])
             || !qFuzzyCompare(migrated.monitor_ratio(1), 0.8F) || !migrated.monitor_dynamic_contrast_enabled(1)) return 56;
     }
     testTimings(settings.fileName());
+    testThemeMode(settings.fileName());
     testBatteryTimings();
     return controller.autostart() || QFileInfo::exists(path) ? 57 : 0;
 }

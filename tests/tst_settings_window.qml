@@ -76,6 +76,28 @@ Item {
             compare(backend.timings.length, 1)
         }
 
+        function test_theme_selector() {
+            const loader = findChild(settings, "settingsPage")
+            settings.open()
+            tryCompare(loader, "status", Loader.Ready)
+            const selector = findChild(loader.item, "themeSelector")
+            verify(!!selector)
+            compare(selector.currentValue, "auto")
+            for (const index of [1, 2, 0]) {
+                while (selector.currentIndex < index) selector.incrementCurrentIndex()
+                while (selector.currentIndex > index) selector.decrementCurrentIndex()
+                selector.activated(index)
+                compare(backend.theme_mode, ["auto", "light", "dark"][index])
+            }
+            backend.theme_mode = "dark"
+            tryCompare(selector, "currentIndex", 2)
+            settings.hide()
+            tryCompare(loader, "item", null)
+            settings.open()
+            tryCompare(loader, "status", Loader.Ready)
+            compare(findChild(loader.item, "themeSelector").currentValue, "dark")
+        }
+
         function test_wheel_updates_slider_values_without_scrolling_page() {
             const loader = findChild(settings, "settingsPage")
             const category = findChild(settings, "settingsCategory")

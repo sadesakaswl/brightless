@@ -37,6 +37,7 @@ class BrightlessController : public QObject
     Q_PROPERTY(bool autostart READ autostart WRITE setAutostart NOTIFY autostartChanged)
     Q_PROPERTY(bool autostart_as_tray_icon READ autostartAsTrayIcon WRITE setAutostartAsTrayIcon NOTIFY autostartAsTrayIconChanged)
     Q_PROPERTY(bool plasma_global_shortcuts READ plasmaGlobalShortcuts WRITE setPlasmaGlobalShortcuts NOTIFY plasmaGlobalShortcutsChanged)
+    Q_PROPERTY(QString theme_mode READ themeMode WRITE setThemeMode NOTIFY themeModeChanged)
     Q_PROPERTY(bool hide_brightness READ hideBrightness WRITE setHideBrightness NOTIFY visibilitySettingsChanged)
     Q_PROPERTY(bool hide_contrast READ hideContrast WRITE setHideContrast NOTIFY visibilitySettingsChanged)
     Q_PROPERTY(bool hide_volume READ hideVolume WRITE setHideVolume NOTIFY visibilitySettingsChanged)
@@ -66,6 +67,8 @@ public:
     void setAutostartAsTrayIcon(bool value);
     bool plasmaGlobalShortcuts() const;
     void setPlasmaGlobalShortcuts(bool value);
+    QString themeMode() const { return themeMode_; }
+    void setThemeMode(const QString &mode);
     bool hideBrightness() const;
     void setHideBrightness(bool value);
     bool hideContrast() const;
@@ -146,6 +149,7 @@ signals:
     void autostartAsTrayIconChanged();
     void plasmaGlobalShortcutsChanged();
     void visibilitySettingsChanged();
+    void themeModeChanged();
 
 private:
     struct Monitor;
@@ -203,6 +207,7 @@ private:
     bool hideOnTrayClick_ = true;
     bool autostartAsTrayIcon_ = false;
     bool plasmaGlobalShortcuts_ = false;
+    QString themeMode_ = QStringLiteral("auto");
     bool hideBrightness_ = false;
     bool hideContrast_ = false;
     bool hideVolume_ = false;

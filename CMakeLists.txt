@@ -136,6 +136,10 @@ if(BUILD_TESTING)
             set_tests_properties(${test_name}-ui PROPERTIES TIMEOUT 30
                 ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Fusion;QT_FORCE_STDERR_LOGGING=1")
         endforeach()
+        if(WIN32)
+            set_property(TEST timing-ui monitor-slider-ui monitor-card-ui settings-window-ui
+                APPEND PROPERTY ENVIRONMENT "QT_QPA_FONTDIR=$ENV{WINDIR}/Fonts")
+        endif()
     endif()
     add_executable(brightless_model_test tests/model_test.cpp)
     target_include_directories(brightless_model_test PRIVATE src)

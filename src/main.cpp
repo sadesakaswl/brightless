@@ -3,6 +3,7 @@
 #include "singleinstance.h"
 
 #include <QApplication>
+#include <QFontInfo>
 #include <QIcon>
 #include <QLocale>
 #include <QQmlApplicationEngine>
@@ -16,6 +17,9 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    auto font = QApplication::font();
+    font.setPointSizeF(qMax(12.0, QFontInfo(font).pointSizeF()));
+    QApplication::setFont(font);
     QApplication::setOrganizationName(QStringLiteral("Brightless"));
     QApplication::setApplicationName(QStringLiteral("Brightless"));
     QApplication::setApplicationDisplayName(QStringLiteral("Brightless"));

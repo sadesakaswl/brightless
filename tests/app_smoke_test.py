@@ -4,6 +4,7 @@
 On Windows run this only in a disposable CI account: QStandardPaths uses that user's
 AppData. Linux runs with an isolated XDG configuration directory.
 """
+import json
 import os
 from pathlib import Path
 import subprocess
@@ -15,6 +16,14 @@ binary = str(Path(sys.argv[1]).resolve())
 with tempfile.TemporaryDirectory() as config, tempfile.TemporaryFile(mode="w+", encoding="utf-8", errors="replace") as log:
     env = {**os.environ, "XDG_CONFIG_HOME": config, "QT_QPA_PLATFORM": "windows" if os.name == "nt" else "offscreen",
            "QT_QUICK_BACKEND": "software", "QT_FORCE_STDERR_LOGGING": "1"}
+    if os.name != "nt":
+        settings = Path(config) / "brightless" / "settings.json"
+        settings.parent.mkdir()
+        settings.write_text(json.dumps({"timings": [
+            {"time": "12:30", "monitor_id": "disconnected-monitor", "control": control,
+             "value": value, "enabled": False}
+            for control, value in ((0x10, 50), (0x12, 50), (0x62, 50), (0xd6, 4), (0x60, 17))
+        ]}), encoding="utf-8")
     first = subprocess.Popen([binary, "--autostart"], env=env, stdout=log, stderr=log)
     try:
         time.sleep(2)

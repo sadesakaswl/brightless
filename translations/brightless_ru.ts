@@ -355,6 +355,14 @@
         <source>Wait %1 ms before sending monitor control updates.</source>
         <translation>Ждать %1 мс перед отправкой изменений параметров монитора.</translation>
     </message>
+    <message>
+        <source>Schedule daily monitor changes.</source>
+        <translation>Запланировать ежедневные изменения настроек мониторов.</translation>
+    </message>
+    <message>
+        <source>Schedules</source>
+        <translation>Расписания</translation>
+    </message>
 </context>
 <context>
     <name>SdrBrightnessCard</name>
@@ -508,6 +516,121 @@
         <location line="+2"/>
         <source>Quit</source>
         <translation>Выход</translation>
+    </message>
+</context>
+<context>
+    <name>TimingPage</name>
+    <message>
+        <source>Add entry</source>
+        <translation>Добавить запись</translation>
+    </message>
+    <message>
+        <source>All monitors</source>
+        <translation>Все мониторы</translation>
+    </message>
+    <message>
+        <source>Brightness</source>
+        <translation>Яркость</translation>
+    </message>
+    <message>
+        <source>Brightness uses dynamic contrast on monitors where it is enabled.</source>
+        <translation>Для яркости используется динамическая контрастность на мониторах, где она включена.</translation>
+    </message>
+    <message>
+        <source>Contrast</source>
+        <translation>Контрастность</translation>
+    </message>
+    <message>
+        <source>Control</source>
+        <translation>Параметр</translation>
+    </message>
+    <message>
+        <source>Dynamic Contrast</source>
+        <translation>Динамическая контрастность</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Включено</translation>
+    </message>
+    <message>
+        <source>Entries repeat daily in local time while Brightless is running. Missed times are skipped.</source>
+        <translation>Записи повторяются ежедневно по местному времени, пока Brightless работает. Пропущенное время не наверстывается.</translation>
+    </message>
+    <message>
+        <source>Input source</source>
+        <translation>Источник входного сигнала</translation>
+    </message>
+    <message>
+        <source>Monitor</source>
+        <translation>Монитор</translation>
+    </message>
+    <message>
+        <source>No timing entries.</source>
+        <translation>Нет записей расписания.</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <translation>Обычный</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>Выключен</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>Включён</translation>
+    </message>
+    <message>
+        <source>Power mode</source>
+        <translation>Режим питания</translation>
+    </message>
+    <message>
+        <source>Remove entry</source>
+        <translation>Удалить запись</translation>
+    </message>
+    <message>
+        <source>Standby</source>
+        <translation>Режим ожидания</translation>
+    </message>
+    <message>
+        <source>Suspend</source>
+        <translation>Спящий режим</translation>
+    </message>
+    <message>
+        <source>Time format</source>
+        <translation>Формат времени</translation>
+    </message>
+    <message>
+        <source>24-hour</source>
+        <translation>24-часовой</translation>
+    </message>
+    <message>
+        <source>12-hour (AM/PM)</source>
+        <translation>12-часовой (AM/PM)</translation>
+    </message>
+    <message>
+        <source>Time (hh:mm AM/PM)</source>
+        <translation>Время (hh:mm AM/PM)</translation>
+    </message>
+    <message>
+        <source>Time (HH:mm)</source>
+        <translation>Время (HH:mm)</translation>
+    </message>
+    <message>
+        <source>Unavailable monitor (%1)</source>
+        <translation>Недоступный монитор (%1)</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation>Значение</translation>
+    </message>
+    <message>
+        <source>Value (%)</source>
+        <translation>Значение (%)</translation>
+    </message>
+    <message>
+        <source>Volume</source>
+        <translation>Громкость</translation>
     </message>
 </context>
 </TS>

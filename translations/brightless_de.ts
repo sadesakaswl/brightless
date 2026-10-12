@@ -355,6 +355,14 @@
         <source>Wait %1 ms before sending monitor control updates.</source>
         <translation>Vor dem Senden von Aktualisierungen der Monitorsteuerung %1 ms warten.</translation>
     </message>
+    <message>
+        <source>Schedule daily monitor changes.</source>
+        <translation>Tägliche Monitoränderungen planen.</translation>
+    </message>
+    <message>
+        <source>Schedules</source>
+        <translation>Zeitpläne</translation>
+    </message>
 </context>
 <context>
     <name>SdrBrightnessCard</name>
@@ -508,6 +516,121 @@
         <location line="+2"/>
         <source>Quit</source>
         <translation>Beenden</translation>
+    </message>
+</context>
+<context>
+    <name>TimingPage</name>
+    <message>
+        <source>Add entry</source>
+        <translation>Eintrag hinzufügen</translation>
+    </message>
+    <message>
+        <source>All monitors</source>
+        <translation>Alle Monitore</translation>
+    </message>
+    <message>
+        <source>Brightness</source>
+        <translation>Helligkeit</translation>
+    </message>
+    <message>
+        <source>Brightness uses dynamic contrast on monitors where it is enabled.</source>
+        <translation>Die Helligkeit verwendet dynamischen Kontrast auf Monitoren, auf denen er aktiviert ist.</translation>
+    </message>
+    <message>
+        <source>Contrast</source>
+        <translation>Kontrast</translation>
+    </message>
+    <message>
+        <source>Control</source>
+        <translation>Steuerung</translation>
+    </message>
+    <message>
+        <source>Dynamic Contrast</source>
+        <translation>Dynamischer Kontrast</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Aktiviert</translation>
+    </message>
+    <message>
+        <source>Entries repeat daily in local time while Brightless is running. Missed times are skipped.</source>
+        <translation>Einträge werden täglich zur lokalen Uhrzeit ausgeführt, solange Brightless läuft. Verpasste Zeiten werden übersprungen.</translation>
+    </message>
+    <message>
+        <source>Input source</source>
+        <translation>Eingangsquelle</translation>
+    </message>
+    <message>
+        <source>Monitor</source>
+        <translation>Monitor</translation>
+    </message>
+    <message>
+        <source>No timing entries.</source>
+        <translation>Keine Zeitplaneinträge.</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <translation>Normal</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>Aus</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>Ein</translation>
+    </message>
+    <message>
+        <source>Power mode</source>
+        <translation>Energiemodus</translation>
+    </message>
+    <message>
+        <source>Remove entry</source>
+        <translation>Eintrag entfernen</translation>
+    </message>
+    <message>
+        <source>Standby</source>
+        <translation>Bereitschaft</translation>
+    </message>
+    <message>
+        <source>Suspend</source>
+        <translation>Ruhezustand</translation>
+    </message>
+    <message>
+        <source>Time format</source>
+        <translation>Zeitformat</translation>
+    </message>
+    <message>
+        <source>24-hour</source>
+        <translation>24 Stunden</translation>
+    </message>
+    <message>
+        <source>12-hour (AM/PM)</source>
+        <translation>12 Stunden (AM/PM)</translation>
+    </message>
+    <message>
+        <source>Time (hh:mm AM/PM)</source>
+        <translation>Uhrzeit (hh:mm AM/PM)</translation>
+    </message>
+    <message>
+        <source>Time (HH:mm)</source>
+        <translation>Uhrzeit (HH:mm)</translation>
+    </message>
+    <message>
+        <source>Unavailable monitor (%1)</source>
+        <translation>Nicht verfügbarer Monitor (%1)</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation>Wert</translation>
+    </message>
+    <message>
+        <source>Value (%)</source>
+        <translation>Wert (%)</translation>
+    </message>
+    <message>
+        <source>Volume</source>
+        <translation>Lautstärke</translation>
     </message>
 </context>
 </TS>

@@ -39,24 +39,35 @@ ApplicationWindow {
     }
 
     header: ToolBar {
+        padding: 8
         RowLayout {
             anchors.fill: parent
+            spacing: 8
             Label {
                 text: "Brightless"
-                font.bold: true
-                horizontalAlignment: Text.AlignHCenter
+                font.weight: Font.Medium
+                font.pointSize: window.font.pointSize * 1.25
+                leftPadding: 8
                 Layout.fillWidth: true
             }
             ToolButton {
                 text: "↻"
+                font.pointSize: window.font.pointSize * 1.25
+                Layout.minimumWidth: 40
+                Layout.minimumHeight: 40
                 Accessible.name: qsTr("Refresh monitors")
+                ToolTip.visible: hovered || activeFocus
+                ToolTip.text: qsTr("Refresh monitors")
                 enabled: !controller.loading
                 onClicked: controller.initialize()
             }
             ToolButton {
                 text: "⚙"
+                font.pointSize: window.font.pointSize * 1.25
+                Layout.minimumWidth: 40
+                Layout.minimumHeight: 40
                 Accessible.name: qsTr("Settings")
-                ToolTip.visible: hovered
+                ToolTip.visible: hovered || activeFocus
                 ToolTip.text: qsTr("Open the settings window.")
                 onClicked: settingsWindow.open()
             }
@@ -67,6 +78,7 @@ ApplicationWindow {
         id: errorDialog
         title: qsTr("Error")
         modal: true
+        anchors.centerIn: parent
         standardButtons: Dialog.Ok
         visible: !controller.loading && controller.startup_error.length > 0
             && sdrController.ready && sdrController.outputs.length === 0
@@ -83,9 +95,11 @@ ApplicationWindow {
         id: settingsWindow
         controller: window.backend
         appWindow: window
+        desktop: desktopIntegration
     }
 
     ScrollView {
+        id: monitorScroll
         anchors.fill: parent
         anchors.margins: 16
         clip: true
@@ -94,11 +108,11 @@ ApplicationWindow {
 
         ColumnLayout {
             id: monitorColumn
-            width: parent.width
-            spacing: 12
+            width: monitorScroll.availableWidth
+            spacing: 16
 
             BusyIndicator {
-                running: controller.loading
+                running: window.visible && controller.loading
                 visible: running
                 Layout.alignment: Qt.AlignHCenter
                 Accessible.name: qsTr("Detecting displays")

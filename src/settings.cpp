@@ -5,6 +5,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QSaveFile>
@@ -60,6 +61,12 @@ void BrightlessController::loadSettings()
     }
 
     const auto object = document.object();
+    use12HourTime_ = object.value(QStringLiteral("use_12_hour_time")).toBool(false);
+    for (const auto &entry : object.value(QStringLiteral("timings")).toArray()) {
+        if (auto timing = parseTiming(entry.toObject())) {
+            timings_.push_back(*timing);
+        }
+    }
     vcpCodes_ = loadVcpCodes(object.value(QStringLiteral("vcp_codes")).toObject());
     vcpPerMonitor_ = object.value(QStringLiteral("vcp_per_monitor")).toBool(false);
     const auto monitorCodes = object.value(QStringLiteral("monitor_vcp_codes")).toObject();
@@ -166,6 +173,8 @@ void BrightlessController::saveSettings()
     }
 
     QJsonObject object;
+    object.insert(QStringLiteral("timings"), QJsonArray::fromVariantList(timings()));
+    object.insert(QStringLiteral("use_12_hour_time"), use12HourTime_);
     object.insert(QStringLiteral("vcp_codes"), saveVcpCodes(vcpCodes_));
     object.insert(QStringLiteral("vcp_per_monitor"), vcpPerMonitor_);
     object.insert(QStringLiteral("monitor_vcp_codes"), monitorCodes);

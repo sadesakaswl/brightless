@@ -16,12 +16,13 @@ A Qt DDC/CI control application for external monitors on Linux and Windows.
 - **Mouse Scroll Support** — Scroll over sliders with a configurable 1–10% step; Linux also supports tray scrolling
 - **Global Shortcuts & OSD** — Configurable monitor shortcuts with brightness/volume feedback; native Plasma OSD on Linux, Qt OSD on Windows
 - **Dynamic Contrast** — Link brightness and contrast globally or per monitor
+- **Schedules** — Schedule daily brightness/dynamic contrast, contrast, volume, power, or input changes for all monitors or a selected monitor
 - **Settings Persistence** — Atomically save preferences and window size; debounce frequent settings-slider updates
 - **Optional Autostart** — XDG autostart on Linux, per-user Windows login startup; disabled by default
 - **Optional System Tray** — Keep Brightless available after closing its window
 - **Single Instance** — Launching Brightless again restores the existing window
 - **System Language** — Automatically use Chinese, English, French, German, Italian, Japanese, Korean, Polish, Portuguese, Russian, Spanish, or Turkish
-- **Qt 6 UI** — Native C++23 backend with QML and Qt Quick Controls
+- **Qt 6 UI** — Adaptive monitor cards, scalable system fonts, native light/dark colors, and settings pages loaded only while in use; native C++23 backend with QML and Qt Quick Controls
 
 ## Requirements
 
@@ -120,6 +121,7 @@ Release builds retain LTO when the compiler supports it and use `-O3` on GCC/Cla
 - Shortcuts are unassigned by default. Linux: enable Plasma shortcuts, then assign keys in Plasma settings. Windows: use **Settings → System → Configure global shortcuts**; use a single key combination per action. Conflicts or unsupported combinations are reported in the main window.
 - Autostart uses a per-user entry only; no administrator rights are needed.
 - DDC errors are shown in the main window. Sliders and OSD display requested values optimistically, not hardware readback; use refresh to reread the monitor.
+- **Settings → Schedules**: choose **24-hour** (the default) or **12-hour (AM/PM)** under **Time format**, then add an entry, set its local time, monitor, control and value, and enable it. The format choice is saved and does not change existing scheduled times. Entries repeat daily and start disabled. Brightness automatically uses each monitor's dynamic-contrast settings. Brightless must remain running (the window may be hidden); missed times while asleep or closed are skipped, and unsupported controls or unavailable monitors are ignored. Power-on schedules depend on the monitor accepting DDC while asleep/off. Entries at the same time run in list order, with the last value winning for a shared control.
 - Per-monitor dynamic-contrast preferences migrate from model names to device IDs. Linux IDs currently include the I²C bus; moving a monitor between connectors may require reapplying its settings.
 
 ### Code layout
@@ -139,7 +141,7 @@ The small DDC contract is declared in `src/platform/ddcbackend.h`; tests replace
 - **SDR brightness (nits)** — HDR screen cards control SDR white level separately from DDC brightness. Use the slider or enter 50–10,000 nits; mouse-wheel steps use the scroll-step setting in nits. Plasma manages this value; tray scrolling and global shortcuts still control DDC brightness.
 - **Dropdowns** — Select an input source or power mode
 - **Mouse wheel** — Scroll over a slider to change its value; on Linux, tray scrolling changes brightness (and contrast when Dynamic Contrast is enabled)
-- **Settings** — Use the gear button to configure autostart, tray, global shortcuts, scroll, and dynamic contrast
+- **Settings** — Use the gear button and category selector to configure appearance, scroll, dynamic contrast, VCP codes, schedules, autostart, tray, and global shortcuts
 - **System tray** — Enable “Close to tray icon” in settings, then click the tray icon or choose “Show Brightless” to restore the window
 
 ## License

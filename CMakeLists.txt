@@ -50,6 +50,9 @@ set_target_properties(brightless PROPERTIES WIN32_EXECUTABLE TRUE)
 set(QML_FILES
     src/qt/qml/Main.qml
     src/qt/qml/SettingsWindow.qml
+    src/qt/qml/TimingPage.qml
+    src/qt/qml/ControlCard.qml
+    src/qt/qml/MonitorSlider.qml
     src/qt/qml/MonitorCard.qml
     src/qt/qml/SdrBrightnessCard.qml
     src/qt/qml/Osd.qml
@@ -120,6 +123,19 @@ if(BUILD_TESTING)
     add_test(NAME translations COMMAND ${Python3_EXECUTABLE}
         ${CMAKE_CURRENT_SOURCE_DIR}/tests/translations_test.py
         ${CMAKE_CURRENT_SOURCE_DIR}/src/qt/qml ${CMAKE_CURRENT_SOURCE_DIR}/translations)
+    if(TARGET Qt6::qmltestrunner)
+        add_test(NAME timing-ui COMMAND Qt6::qmltestrunner
+            -input ${CMAKE_CURRENT_SOURCE_DIR}/tests/tst_timing_page.qml)
+        set_tests_properties(timing-ui PROPERTIES TIMEOUT 30
+            ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_FORCE_STDERR_LOGGING=1")
+        foreach(ui_test IN ITEMS monitor_slider monitor_card settings_window)
+            string(REPLACE "_" "-" test_name "${ui_test}")
+            add_test(NAME ${test_name}-ui COMMAND Qt6::qmltestrunner
+                -input ${CMAKE_CURRENT_SOURCE_DIR}/tests/tst_${ui_test}.qml)
+            set_tests_properties(${test_name}-ui PROPERTIES TIMEOUT 30
+                ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_FORCE_STDERR_LOGGING=1")
+        endforeach()
+    endif()
     add_executable(brightless_model_test tests/model_test.cpp)
     target_include_directories(brightless_model_test PRIVATE src)
     add_test(NAME model COMMAND brightless_model_test)

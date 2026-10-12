@@ -355,6 +355,14 @@
         <source>Wait %1 ms before sending monitor control updates.</source>
         <translation>Espera %1 ms antes de enviar las actualizaciones de control del monitor.</translation>
     </message>
+    <message>
+        <source>Schedule daily monitor changes.</source>
+        <translation>Programar cambios diarios en los monitores.</translation>
+    </message>
+    <message>
+        <source>Schedules</source>
+        <translation>Horarios</translation>
+    </message>
 </context>
 <context>
     <name>SdrBrightnessCard</name>
@@ -508,6 +516,121 @@
         <location line="+2"/>
         <source>Quit</source>
         <translation>Salir</translation>
+    </message>
+</context>
+<context>
+    <name>TimingPage</name>
+    <message>
+        <source>Add entry</source>
+        <translation>Añadir entrada</translation>
+    </message>
+    <message>
+        <source>All monitors</source>
+        <translation>Todos los monitores</translation>
+    </message>
+    <message>
+        <source>Brightness</source>
+        <translation>Brillo</translation>
+    </message>
+    <message>
+        <source>Brightness uses dynamic contrast on monitors where it is enabled.</source>
+        <translation>El brillo utiliza el contraste dinámico en los monitores donde está activado.</translation>
+    </message>
+    <message>
+        <source>Contrast</source>
+        <translation>Contraste</translation>
+    </message>
+    <message>
+        <source>Control</source>
+        <translation>Control</translation>
+    </message>
+    <message>
+        <source>Dynamic Contrast</source>
+        <translation>Contraste dinámico</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Activado</translation>
+    </message>
+    <message>
+        <source>Entries repeat daily in local time while Brightless is running. Missed times are skipped.</source>
+        <translation>Las entradas se repiten cada día a la hora local mientras Brightless está en ejecución. Se omiten las horas perdidas.</translation>
+    </message>
+    <message>
+        <source>Input source</source>
+        <translation>Fuente de entrada</translation>
+    </message>
+    <message>
+        <source>Monitor</source>
+        <translation>Monitor</translation>
+    </message>
+    <message>
+        <source>No timing entries.</source>
+        <translation>No hay entradas programadas.</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <translation>Normal</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>Apagado</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>Encendido</translation>
+    </message>
+    <message>
+        <source>Power mode</source>
+        <translation>Modo de energía</translation>
+    </message>
+    <message>
+        <source>Remove entry</source>
+        <translation>Eliminar entrada</translation>
+    </message>
+    <message>
+        <source>Standby</source>
+        <translation>En espera</translation>
+    </message>
+    <message>
+        <source>Suspend</source>
+        <translation>Suspensión</translation>
+    </message>
+    <message>
+        <source>Time format</source>
+        <translation>Formato de hora</translation>
+    </message>
+    <message>
+        <source>24-hour</source>
+        <translation>24 horas</translation>
+    </message>
+    <message>
+        <source>12-hour (AM/PM)</source>
+        <translation>12 horas (AM/PM)</translation>
+    </message>
+    <message>
+        <source>Time (hh:mm AM/PM)</source>
+        <translation>Hora (hh:mm AM/PM)</translation>
+    </message>
+    <message>
+        <source>Time (HH:mm)</source>
+        <translation>Hora (HH:mm)</translation>
+    </message>
+    <message>
+        <source>Unavailable monitor (%1)</source>
+        <translation>Monitor no disponible (%1)</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation>Valor</translation>
+    </message>
+    <message>
+        <source>Value (%)</source>
+        <translation>Valor (%)</translation>
+    </message>
+    <message>
+        <source>Volume</source>
+        <translation>Volumen</translation>
     </message>
 </context>
 </TS>

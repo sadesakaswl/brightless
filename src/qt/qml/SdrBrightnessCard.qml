@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-Frame {
+ControlCard {
     id: hdrCard
     required property int modelData
     required property var sdrController
@@ -12,9 +12,12 @@ Frame {
 
     ColumnLayout {
         anchors.fill: parent
+        spacing: 12
         Label {
             text: qsTr("%1 — HDR").arg(sdrController.name(hdrCard.modelData))
-            font.bold: true
+            font.weight: Font.Medium
+            font.pointSize: hdrCard.font.pointSize * 1.125
+            elide: Text.ElideRight
             Layout.fillWidth: true
         }
         Label {
@@ -30,17 +33,23 @@ Frame {
                 stepSize: 1
                 value: sdrController.brightness[hdrCard.modelData] ?? 200
                 Layout.fillWidth: true
+                Layout.minimumHeight: 40
                 Accessible.name: sdrLabel.text
-                ToolTip.visible: hovered
+                ToolTip.visible: hovered || activeFocus
                 ToolTip.text: qsTr("Adjust the brightness of SDR content on this HDR screen.")
                 onMoved: sdrController.setBrightness(hdrCard.modelData, Math.round(value))
                 WheelHandler {
+                    target: null
+                    acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
                     onWheel: (event) => {
-                        if (event.angleDelta.y !== 0) {
-                            sdrController.setBrightness(hdrCard.modelData,
-                                sdrValue.value + Math.sign(event.angleDelta.y) * controller.scroll_step())
-                            event.accepted = true
+                        const delta = event.angleDelta.y || event.pixelDelta.y
+                        if (delta === 0) {
+                            event.accepted = false
+                            return
                         }
+                        sdrController.setBrightness(hdrCard.modelData,
+                            sdrValue.value + Math.sign(delta) * controller.scroll_step())
+                        event.accepted = true
                     }
                 }
             }

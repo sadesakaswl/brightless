@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QDateTime>
 #include <QHash>
 #include <QObject>
 #include <QSize>
@@ -11,8 +12,11 @@
 #include <cstdint>
 #include <initializer_list>
 #include <memory>
+#include <optional>
 #include <utility>
 #include <vector>
+
+class QJsonObject;
 
 class BrightlessController : public QObject
 {
@@ -25,6 +29,8 @@ class BrightlessController : public QObject
     Q_PROPERTY(QVariantList ddc_monitors READ ddcMonitors NOTIFY monitorNamesChanged)
     Q_PROPERTY(int monitor_count READ monitorCount NOTIFY monitorCountChanged)
     Q_PROPERTY(int revision READ revision NOTIFY revisionChanged)
+    Q_PROPERTY(QVariantList timings READ timings NOTIFY timingsChanged)
+    Q_PROPERTY(bool use_12_hour_time READ use12HourTime WRITE setUse12HourTime NOTIFY timeFormatChanged)
     Q_PROPERTY(bool close_to_tray READ closeToTray WRITE setCloseToTray NOTIFY closeToTrayChanged)
     Q_PROPERTY(bool hide_on_tray_click READ hideOnTrayClick WRITE setHideOnTrayClick NOTIFY hideOnTrayClickChanged)
     Q_PROPERTY(bool autostart READ autostart WRITE setAutostart NOTIFY autostartChanged)
@@ -75,6 +81,13 @@ public:
     void adjustAllContrast(int direction);
     int adjustAllVolume(int direction);
     void changeAllInputSources();
+    bool use12HourTime() const { return use12HourTime_; }
+    void setUse12HourTime(bool value);
+    QVariantList timings() const;
+    void runTimings(const QDateTime &now);
+    Q_INVOKABLE void add_timing();
+    Q_INVOKABLE bool update_timing(int index, const QVariantMap &entry);
+    Q_INVOKABLE void remove_timing(int index);
 
     Q_INVOKABLE void initialize();
     Q_INVOKABLE int brightness(int index) const;
@@ -121,6 +134,8 @@ signals:
     void monitorNamesChanged();
     void monitorCountChanged();
     void revisionChanged();
+    void timingsChanged();
+    void timeFormatChanged();
     void closeToTrayChanged();
     void hideOnTrayClickChanged();
     void autostartChanged();
@@ -131,6 +146,15 @@ signals:
 private:
     struct Monitor;
     struct DdcWorker;
+    struct Timing {
+        QString time;
+        QString monitorId;
+        int control = 0x10;
+        int value = 50;
+        bool enabled = false;
+        QDate lastRun;
+    };
+    static std::optional<Timing> parseTiming(const QJsonObject &entry);
 
     Monitor *monitorAt(int index);
     const Monitor *monitorAt(int index) const;
@@ -148,6 +172,9 @@ private:
     bool loading_ = false;
     bool rescanRequested_ = false;
     QTimer settingsTimer_;
+    QTimer timingTimer_;
+    std::vector<Timing> timings_;
+    bool use12HourTime_ = false;
     std::vector<std::unique_ptr<Monitor>> monitors_;
     QVariantList ddcMonitors_;
     int revision_ = 0;

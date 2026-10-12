@@ -6,6 +6,7 @@
 #include "platform/autostart.h"
 
 #include <QCoreApplication>
+#include <QJsonObject>
 #include <QThreadPool>
 
 #include <algorithm>
@@ -148,6 +149,10 @@ BrightlessController::BrightlessController(QObject *parent)
     settingsTimer_.setInterval(250);
     connect(&settingsTimer_, &QTimer::timeout, this, &BrightlessController::saveSettings);
     loadSettings();
+    connect(&timingTimer_, &QTimer::timeout, this, [this] {
+        runTimings(QDateTime::currentDateTime());
+    });
+    timingTimer_.start(1000);
 }
 
 BrightlessController::~BrightlessController()
@@ -402,6 +407,120 @@ void BrightlessController::changeAllInputSources()
         auto *monitor = monitorAt(index);
         if (monitor->supportsInputSource) {
             set_input_source(index, brightless::nextInputSource(monitor->inputSourceCode));
+        }
+    }
+}
+
+std::optional<BrightlessController::Timing> BrightlessController::parseTiming(const QJsonObject &entry)
+{
+    if (!entry.value("monitor_id").isString() || !entry.value("enabled").isBool()) {
+        return std::nullopt;
+    }
+    Timing timing{entry.value("time").toString(), entry.value("monitor_id").toString(),
+                  entry.value("control").toInt(-1), entry.value("value").toInt(-1),
+                  entry.value("enabled").toBool(), {}};
+    const auto time = QTime::fromString(timing.time, QStringLiteral("HH:mm"));
+    if (!time.isValid() || time.toString(QStringLiteral("HH:mm")) != timing.time) {
+        return std::nullopt;
+    }
+    switch (timing.control) {
+    case 0x10:
+    case 0x12:
+    case 0x62:
+        if (timing.value < 0 || timing.value > 100) return std::nullopt;
+        break;
+    case 0x60:
+        if (std::find(brightless::inputSourceCodes.begin(), brightless::inputSourceCodes.end(),
+                      timing.value) == brightless::inputSourceCodes.end()) return std::nullopt;
+        break;
+    case 0xd6:
+        if (timing.value < 1 || timing.value > 5) return std::nullopt;
+        break;
+    default:
+        return std::nullopt;
+    }
+    return timing;
+}
+
+void BrightlessController::setUse12HourTime(bool value)
+{
+    if (use12HourTime_ == value) return;
+    use12HourTime_ = value;
+    saveSettings();
+    emit timeFormatChanged();
+}
+
+QVariantList BrightlessController::timings() const
+{
+    QVariantList entries;
+    for (const auto &timing : timings_) {
+        entries.append(QVariantMap{{"time", timing.time}, {"monitor_id", timing.monitorId},
+            {"control", timing.control}, {"value", timing.value}, {"enabled", timing.enabled}});
+    }
+    return entries;
+}
+
+void BrightlessController::add_timing()
+{
+    timings_.push_back({QTime::currentTime().toString(QStringLiteral("HH:mm")), {}});
+    saveSettings();
+    emit timingsChanged();
+}
+
+bool BrightlessController::update_timing(int index, const QVariantMap &entry)
+{
+    if (!brightless::validIndex(index, timings_.size())) return false;
+    auto timing = parseTiming(QJsonObject::fromVariantMap(entry));
+    if (!timing) return false;
+    if (timing->time == timings_[index].time) {
+        timing->lastRun = timings_[index].lastRun;
+    }
+    timings_[index] = *timing;
+    saveSettings();
+    emit timingsChanged();
+    return true;
+}
+
+void BrightlessController::remove_timing(int index)
+{
+    if (!brightless::validIndex(index, timings_.size())) return;
+    timings_.erase(timings_.begin() + index);
+    saveSettings();
+    emit timingsChanged();
+}
+
+void BrightlessController::runTimings(const QDateTime &now)
+{
+    if (!now.isValid() || loading_ || monitors_.empty()) return;
+    const auto time = now.time().toString(QStringLiteral("HH:mm"));
+    for (auto &timing : timings_) {
+        // shortcut: missed minutes are skipped; add resume catch-up if needed.
+        if (!timing.enabled || timing.time != time || timing.lastRun == now.date()) continue;
+        timing.lastRun = now.date();
+        for (int index = 0; index < monitorCount(); ++index) {
+            const auto *monitor = monitorAt(index);
+            if (!timing.monitorId.isEmpty() && timing.monitorId != monitor->id) continue;
+            switch (timing.control) {
+            case 0x10:
+                if (monitor_dynamic_contrast_enabled(index)) {
+                    set_dynamic_contrast_brightness(index, timing.value);
+                } else {
+                    set_brightness(index, timing.value);
+                }
+                break;
+            case 0x12:
+                if (supports_contrast(index)) set_contrast(index, timing.value);
+                break;
+            case 0x62:
+                if (supports_volume(index)) set_volume(index, timing.value);
+                break;
+            case 0x60:
+                if (supports_input_source(index)) set_input_source(index, timing.value);
+                break;
+            case 0xd6:
+                if (supports_power_mode(index)) set_power_mode(index, timing.value);
+                break;
+            }
         }
     }
 }

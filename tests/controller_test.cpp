@@ -4,6 +4,9 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QTemporaryDir>
 
 #include "platform/ddcbackend.h"
@@ -77,6 +80,173 @@ QString write(const Device &device, const Writes &values)
     }
     return {};
 }
+}
+
+void testTimings(const QString &settingsPath)
+{
+    const auto check = [](bool condition, const char *message) {
+        if (!condition) {
+            std::cerr << "Timing check failed: " << message << '\n';
+            std::exit(58);
+        }
+    };
+    responses = {};
+    reverseMonitors = false;
+    BrightlessController controller;
+    controller.set_dynamic_contrast_enabled(false);
+    controller.set_ddc_delay(0);
+    initialize(controller);
+    check(controller.timings().isEmpty(), "old settings must have no schedules");
+    check(!controller.use12HourTime(), "old settings must default to 24-hour time");
+    int formatChanges = 0;
+    QObject::connect(&controller, &BrightlessController::timeFormatChanged, [&] { ++formatChanges; });
+    controller.setUse12HourTime(true);
+    controller.setUse12HourTime(true);
+    check(BrightlessController().use12HourTime() && formatChanges == 1,
+          "12-hour preference was not saved or notified correctly");
+    controller.setUse12HourTime(false);
+    check(!BrightlessController().use12HourTime() && formatChanges == 2,
+          "24-hour preference was not saved or notified correctly");
+    int changes = 0;
+    QObject::connect(&controller, &BrightlessController::timingsChanged, [&] { ++changes; });
+    controller.add_timing();
+    check(!controller.timings()[0].toMap()["enabled"].toBool() && changes == 1,
+          "new entries must be disabled and notify the UI");
+
+    const auto time = QTime::currentTime().addSecs(3600);
+    const QDateTime now(QDate(2000, 1, 1), QTime(time.hour(), time.minute()));
+    QVariantMap entry{{"time", now.time().toString("HH:mm")}, {"monitor_id", "monitor-0"},
+                      {"control", 0x10}, {"value", 80}, {"enabled", true}};
+    for (const auto &invalid : std::array<std::pair<QString, QVariant>, 12>{{
+             {"time", "24:00"}, {"time", "8:30"}, {"time", "12:60"}, {"time", "12:30:00"},
+             {"monitor_id", 0}, {"enabled", "true"}, {"control", 0x99}, {"control", 16.5},
+             {"value", -1}, {"value", 101}, {"value", 50.5}, {"value", "50"}}}) {
+        auto bad = entry;
+        bad[invalid.first] = invalid.second;
+        check(!controller.update_timing(0, bad), "invalid entry accepted");
+    }
+    for (const auto &[control, value] : {std::pair{0x60, 2}, std::pair{0xd6, 0}, std::pair{0xd6, 6}}) {
+        auto bad = entry;
+        bad["control"] = control;
+        bad["value"] = value;
+        check(!controller.update_timing(0, bad), "invalid input/power value accepted");
+    }
+    check(!controller.update_timing(-1, entry) && !controller.update_timing(1, entry), "bad index accepted");
+    check(controller.update_timing(0, entry), "valid entry rejected");
+    const auto originalTimings = controller.timings();
+    controller.setUse12HourTime(true);
+    check(controller.timings() == originalTimings && BrightlessController().timings() == originalTimings,
+          "changing the display format changed a scheduled time");
+    controller.add_timing(); // This disabled entry must never run.
+    writes = {};
+    controller.runTimings(now.addSecs(-60));
+    initialize(controller);
+    check(writes[0].empty() && writes[1].empty(), "entry ran early or while disabled");
+    controller.runTimings(now);
+    initialize(controller);
+    check(writes[0] == std::map<int, int>{{0x10, 80}} && writes[1].empty(), "wrong monitor/value");
+    writes = {};
+    controller.runTimings(now.addSecs(30));
+    initialize(controller);
+    check(writes[0].empty() && writes[1].empty(), "entry ran twice in the same minute");
+    reverseMonitors = true;
+    initialize(controller);
+    controller.runTimings(now.addDays(1));
+    initialize(controller);
+    check(writes[0] == std::map<int, int>{{0x10, 80}} && writes[1].empty(),
+          "entry must repeat daily and follow the device ID after reordering");
+
+    controller.set_dynamic_contrast_enabled(true);
+    controller.set_dynamic_contrast_global(false);
+    controller.set_dynamic_contrast_per_monitor_ratio(false);
+    controller.set_dynamic_contrast_ratio(0.5F);
+    controller.set_monitor_dynamic_contrast_enabled(0, true); // monitor-1 after reordering
+    controller.set_monitor_dynamic_contrast_enabled(1, false);
+    entry["monitor_id"] = "";
+    entry["value"] = 60;
+    controller.update_timing(0, entry);
+    writes = {};
+    controller.runTimings(now.addDays(2));
+    initialize(controller);
+    check(writes[0] == std::map<int, int>{{0x10, 60}}
+          && writes[1] == std::map<int, int>{{0x10, 60}, {0x12, 30}},
+          "brightness must use each monitor's dynamic-contrast setting");
+
+    entry["enabled"] = false;
+    controller.update_timing(0, entry);
+    responses[0] = {{0x12, {200, 50}}, {0xe0, {200, 50}}, {0x60, {0, 17}}, {0xd6, {0, 1}}};
+    responses[1] = {{0x12, {0, -1}}, {0xe0, {0, -1}}, {0x60, {0, -1}}, {0xd6, {0, -1}}};
+    controller.set_vcp_code(0x62, 0xe0);
+    initialize(controller);
+    for (const auto &[control, value] : {std::pair{0x12, 25}, std::pair{0x62, 75},
+                                       std::pair{0xd6, 4}, std::pair{0x60, 18}}) {
+        controller.add_timing();
+        auto action = entry;
+        action["control"] = control;
+        action["value"] = value;
+        action["enabled"] = true;
+        check(controller.update_timing(controller.timings().size() - 1, action), "control entry rejected");
+    }
+    writes = {};
+    controller.runTimings(now.addDays(3));
+    initialize(controller);
+    check(writes[0] == std::map<int, int>{{0x12, 50}, {0xe0, 150}, {0xd6, 4}, {0x60, 18}}
+          && writes[1].empty(), "control support, VCP overrides or percent scaling ignored");
+
+    for (int index = 0; index < controller.timings().size(); ++index) {
+        auto action = controller.timings()[index].toMap();
+        action["enabled"] = false;
+        controller.update_timing(index, action);
+    }
+    entry["enabled"] = true;
+    entry["monitor_id"] = "disconnected-monitor";
+    controller.update_timing(0, entry);
+    writes = {};
+    controller.runTimings(now.addDays(4));
+    initialize(controller);
+    check(writes[0].empty() && writes[1].empty(), "missing monitor must not fall back to all monitors");
+    entry["monitor_id"] = "";
+    controller.update_timing(0, entry);
+    controller.runTimings(now.addDays(5).addSecs(60));
+    initialize(controller);
+    check(writes[0].empty() && writes[1].empty(), "missed times must not run late");
+    controller.initialize();
+    controller.runTimings(now.addDays(6));
+    initialize(controller);
+    check(writes[0].empty() && writes[1].empty(), "entry ran during discovery");
+    controller.runTimings(now.addDays(6));
+    initialize(controller);
+    check(!writes[0].empty() && !writes[1].empty(), "discovery must not consume the due entry");
+
+    // Moving an already-fired entry to a later time must allow it to run today.
+    const auto later = now.addDays(6).addSecs(60);
+    entry["time"] = later.time().toString("HH:mm");
+    controller.update_timing(0, entry);
+    writes = {};
+    controller.runTimings(later);
+    initialize(controller);
+    check(!writes[0].empty() && !writes[1].empty(), "edited time did not run on the same day");
+
+    const auto saved = controller.timings();
+    check(BrightlessController().timings() == saved, "entries were not persisted");
+    controller.remove_timing(-1);
+    controller.remove_timing(saved.size());
+    check(controller.timings() == saved, "invalid removal changed entries");
+    controller.remove_timing(0);
+    check(controller.timings().size() == saved.size() - 1
+          && BrightlessController().timings() == controller.timings(), "removal not saved");
+    while (!controller.timings().isEmpty()) controller.remove_timing(0);
+    check(BrightlessController().timings().isEmpty(), "removing the last entry was not saved");
+
+    QJsonArray malformed{QJsonObject::fromVariantMap(entry), QJsonObject{{"time", "12:00"}},
+                         QJsonObject{{"time", "24:00"}, {"monitor_id", ""}, {"enabled", true},
+                                     {"control", 0xd6}, {"value", 4}}, "not an entry"};
+    QFile file(settingsPath);
+    check(file.open(QIODevice::WriteOnly | QIODevice::Truncate), "cannot write malformed fixture");
+    file.write(QJsonDocument(QJsonObject{{"timings", malformed}, {"use_12_hour_time", "true"}}).toJson());
+    file.close();
+    check(BrightlessController().timings() == QVariantList{entry}, "invalid saved entries were not discarded");
+    check(!BrightlessController().use12HourTime(), "malformed time format preference accepted");
 }
 
 int runTests(int argc, char *argv[])
@@ -446,6 +616,7 @@ int runTests(int argc, char *argv[])
         if (!qFuzzyCompare(migrated.monitor_ratio(0), 1.2F) || migrated.monitor_dynamic_contrast_enabled(0)
             || !qFuzzyCompare(migrated.monitor_ratio(1), 0.8F) || !migrated.monitor_dynamic_contrast_enabled(1)) return 56;
     }
+    testTimings(settings.fileName());
     return controller.autostart() || QFileInfo::exists(path) ? 57 : 0;
 }
 

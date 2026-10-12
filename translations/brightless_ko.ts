@@ -355,6 +355,14 @@
         <source>Wait %1 ms before sending monitor control updates.</source>
         <translation>모니터 제어 업데이트를 보내기 전에 %1ms 기다립니다.</translation>
     </message>
+    <message>
+        <source>Schedule daily monitor changes.</source>
+        <translation>매일 모니터 설정 변경을 예약합니다.</translation>
+    </message>
+    <message>
+        <source>Schedules</source>
+        <translation>일정</translation>
+    </message>
 </context>
 <context>
     <name>SdrBrightnessCard</name>
@@ -508,6 +516,121 @@
         <location line="+2"/>
         <source>Quit</source>
         <translation>종료</translation>
+    </message>
+</context>
+<context>
+    <name>TimingPage</name>
+    <message>
+        <source>Add entry</source>
+        <translation>항목 추가</translation>
+    </message>
+    <message>
+        <source>All monitors</source>
+        <translation>모든 모니터</translation>
+    </message>
+    <message>
+        <source>Brightness</source>
+        <translation>밝기</translation>
+    </message>
+    <message>
+        <source>Brightness uses dynamic contrast on monitors where it is enabled.</source>
+        <translation>동적 명암이 활성화된 모니터에서는 밝기에 동적 명암을 사용합니다.</translation>
+    </message>
+    <message>
+        <source>Contrast</source>
+        <translation>명암</translation>
+    </message>
+    <message>
+        <source>Control</source>
+        <translation>제어 항목</translation>
+    </message>
+    <message>
+        <source>Dynamic Contrast</source>
+        <translation>동적 명암비</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>활성화</translation>
+    </message>
+    <message>
+        <source>Entries repeat daily in local time while Brightless is running. Missed times are skipped.</source>
+        <translation>Brightless가 실행 중이면 항목이 매일 현지 시간에 반복됩니다. 놓친 시간은 건너뜁니다.</translation>
+    </message>
+    <message>
+        <source>Input source</source>
+        <translation>입력 소스</translation>
+    </message>
+    <message>
+        <source>Monitor</source>
+        <translation>모니터</translation>
+    </message>
+    <message>
+        <source>No timing entries.</source>
+        <translation>예약 항목이 없습니다.</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <translation>일반</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>꺼짐</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>켜짐</translation>
+    </message>
+    <message>
+        <source>Power mode</source>
+        <translation>전원 모드</translation>
+    </message>
+    <message>
+        <source>Remove entry</source>
+        <translation>항목 삭제</translation>
+    </message>
+    <message>
+        <source>Standby</source>
+        <translation>대기</translation>
+    </message>
+    <message>
+        <source>Suspend</source>
+        <translation>절전</translation>
+    </message>
+    <message>
+        <source>Time format</source>
+        <translation>시간 형식</translation>
+    </message>
+    <message>
+        <source>24-hour</source>
+        <translation>24시간제</translation>
+    </message>
+    <message>
+        <source>12-hour (AM/PM)</source>
+        <translation>12시간제 (AM/PM)</translation>
+    </message>
+    <message>
+        <source>Time (hh:mm AM/PM)</source>
+        <translation>시간 (hh:mm AM/PM)</translation>
+    </message>
+    <message>
+        <source>Time (HH:mm)</source>
+        <translation>시간 (HH:mm)</translation>
+    </message>
+    <message>
+        <source>Unavailable monitor (%1)</source>
+        <translation>사용할 수 없는 모니터 (%1)</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation>값</translation>
+    </message>
+    <message>
+        <source>Value (%)</source>
+        <translation>값 (%)</translation>
+    </message>
+    <message>
+        <source>Volume</source>
+        <translation>음량</translation>
     </message>
 </context>
 </TS>

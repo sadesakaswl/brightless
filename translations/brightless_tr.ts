@@ -355,6 +355,14 @@
         <source>Wait %1 ms before sending monitor control updates.</source>
         <translation>Monitör denetimi güncellemelerini göndermeden önce %1 ms bekle.</translation>
     </message>
+    <message>
+        <source>Schedule daily monitor changes.</source>
+        <translation>Günlük monitör değişikliklerini zamanlayın.</translation>
+    </message>
+    <message>
+        <source>Schedules</source>
+        <translation>Zamanlamalar</translation>
+    </message>
 </context>
 <context>
     <name>SdrBrightnessCard</name>
@@ -508,6 +516,121 @@
         <location line="+2"/>
         <source>Quit</source>
         <translation>Çıkış</translation>
+    </message>
+</context>
+<context>
+    <name>TimingPage</name>
+    <message>
+        <source>Add entry</source>
+        <translation>Kayıt ekle</translation>
+    </message>
+    <message>
+        <source>All monitors</source>
+        <translation>Tüm monitörler</translation>
+    </message>
+    <message>
+        <source>Brightness</source>
+        <translation>Parlaklık</translation>
+    </message>
+    <message>
+        <source>Brightness uses dynamic contrast on monitors where it is enabled.</source>
+        <translation>Parlaklık, dinamik karşıtlığın etkin olduğu monitörlerde dinamik karşıtlığı kullanır.</translation>
+    </message>
+    <message>
+        <source>Contrast</source>
+        <translation>Kontrast</translation>
+    </message>
+    <message>
+        <source>Control</source>
+        <translation>Kontrol</translation>
+    </message>
+    <message>
+        <source>Dynamic Contrast</source>
+        <translation>Dinamik kontrast</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Etkin</translation>
+    </message>
+    <message>
+        <source>Entries repeat daily in local time while Brightless is running. Missed times are skipped.</source>
+        <translation>Kayıtlar, Brightless çalışırken her gün yerel saate göre tekrarlanır. Kaçırılan zamanlar atlanır.</translation>
+    </message>
+    <message>
+        <source>Input source</source>
+        <translation>Giriş kaynağı</translation>
+    </message>
+    <message>
+        <source>Monitor</source>
+        <translation>Monitör</translation>
+    </message>
+    <message>
+        <source>No timing entries.</source>
+        <translation>Zamanlama kaydı yok.</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <translation>Normal</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>Kapalı</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>Açık</translation>
+    </message>
+    <message>
+        <source>Power mode</source>
+        <translation>Güç modu</translation>
+    </message>
+    <message>
+        <source>Remove entry</source>
+        <translation>Kaydı kaldır</translation>
+    </message>
+    <message>
+        <source>Standby</source>
+        <translation>Bekleme</translation>
+    </message>
+    <message>
+        <source>Suspend</source>
+        <translation>Askıya al</translation>
+    </message>
+    <message>
+        <source>Time format</source>
+        <translation>Saat biçimi</translation>
+    </message>
+    <message>
+        <source>24-hour</source>
+        <translation>24 saat</translation>
+    </message>
+    <message>
+        <source>12-hour (AM/PM)</source>
+        <translation>12 saat (AM/PM)</translation>
+    </message>
+    <message>
+        <source>Time (hh:mm AM/PM)</source>
+        <translation>Saat (hh:mm AM/PM)</translation>
+    </message>
+    <message>
+        <source>Time (HH:mm)</source>
+        <translation>Saat (HH:mm)</translation>
+    </message>
+    <message>
+        <source>Unavailable monitor (%1)</source>
+        <translation>Kullanılamayan monitör (%1)</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation>Değer</translation>
+    </message>
+    <message>
+        <source>Value (%)</source>
+        <translation>Değer (%)</translation>
+    </message>
+    <message>
+        <source>Volume</source>
+        <translation>Ses</translation>
     </message>
 </context>
 </TS>

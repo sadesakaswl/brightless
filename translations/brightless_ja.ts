@@ -355,6 +355,14 @@
         <source>Wait %1 ms before sending monitor control updates.</source>
         <translation>モニター制御の更新を送信する前に %1 ミリ秒待機します。</translation>
     </message>
+    <message>
+        <source>Schedule daily monitor changes.</source>
+        <translation>モニターの変更を毎日実行するように設定します。</translation>
+    </message>
+    <message>
+        <source>Schedules</source>
+        <translation>スケジュール</translation>
+    </message>
 </context>
 <context>
     <name>SdrBrightnessCard</name>
@@ -508,6 +516,121 @@
         <location line="+2"/>
         <source>Quit</source>
         <translation>終了</translation>
+    </message>
+</context>
+<context>
+    <name>TimingPage</name>
+    <message>
+        <source>Add entry</source>
+        <translation>項目を追加</translation>
+    </message>
+    <message>
+        <source>All monitors</source>
+        <translation>すべてのモニター</translation>
+    </message>
+    <message>
+        <source>Brightness</source>
+        <translation>明るさ</translation>
+    </message>
+    <message>
+        <source>Brightness uses dynamic contrast on monitors where it is enabled.</source>
+        <translation>ダイナミックコントラストが有効なモニターでは、明るさにダイナミックコントラストを使用します。</translation>
+    </message>
+    <message>
+        <source>Contrast</source>
+        <translation>コントラスト</translation>
+    </message>
+    <message>
+        <source>Control</source>
+        <translation>制御項目</translation>
+    </message>
+    <message>
+        <source>Dynamic Contrast</source>
+        <translation>ダイナミックコントラスト</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>有効</translation>
+    </message>
+    <message>
+        <source>Entries repeat daily in local time while Brightless is running. Missed times are skipped.</source>
+        <translation>Brightlessの実行中、各項目は毎日ローカル時刻に繰り返されます。過ぎた時刻の項目は実行されません。</translation>
+    </message>
+    <message>
+        <source>Input source</source>
+        <translation>入力ソース</translation>
+    </message>
+    <message>
+        <source>Monitor</source>
+        <translation>モニター</translation>
+    </message>
+    <message>
+        <source>No timing entries.</source>
+        <translation>時刻設定の項目はありません。</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <translation>通常</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>オフ</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>オン</translation>
+    </message>
+    <message>
+        <source>Power mode</source>
+        <translation>電源モード</translation>
+    </message>
+    <message>
+        <source>Remove entry</source>
+        <translation>項目を削除</translation>
+    </message>
+    <message>
+        <source>Standby</source>
+        <translation>スタンバイ</translation>
+    </message>
+    <message>
+        <source>Suspend</source>
+        <translation>サスペンド</translation>
+    </message>
+    <message>
+        <source>Time format</source>
+        <translation>時刻の形式</translation>
+    </message>
+    <message>
+        <source>24-hour</source>
+        <translation>24時間制</translation>
+    </message>
+    <message>
+        <source>12-hour (AM/PM)</source>
+        <translation>12時間制（AM/PM）</translation>
+    </message>
+    <message>
+        <source>Time (hh:mm AM/PM)</source>
+        <translation>時刻（hh:mm AM/PM）</translation>
+    </message>
+    <message>
+        <source>Time (HH:mm)</source>
+        <translation>時刻（HH:mm）</translation>
+    </message>
+    <message>
+        <source>Unavailable monitor (%1)</source>
+        <translation>利用できないモニター（%1）</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation>値</translation>
+    </message>
+    <message>
+        <source>Value (%)</source>
+        <translation>値（%）</translation>
+    </message>
+    <message>
+        <source>Volume</source>
+        <translation>音量</translation>
     </message>
 </context>
 </TS>

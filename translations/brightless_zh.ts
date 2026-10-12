@@ -355,6 +355,14 @@
         <source>Wait %1 ms before sending monitor control updates.</source>
         <translation>等待 %1 毫秒后再发送显示器控制更新。</translation>
     </message>
+    <message>
+        <source>Schedule daily monitor changes.</source>
+        <translation>安排每日显示器设置更改。</translation>
+    </message>
+    <message>
+        <source>Schedules</source>
+        <translation>计划任务</translation>
+    </message>
 </context>
 <context>
     <name>SdrBrightnessCard</name>
@@ -508,6 +516,121 @@
         <location line="+2"/>
         <source>Quit</source>
         <translation>退出</translation>
+    </message>
+</context>
+<context>
+    <name>TimingPage</name>
+    <message>
+        <source>Add entry</source>
+        <translation>添加条目</translation>
+    </message>
+    <message>
+        <source>All monitors</source>
+        <translation>所有显示器</translation>
+    </message>
+    <message>
+        <source>Brightness</source>
+        <translation>亮度</translation>
+    </message>
+    <message>
+        <source>Brightness uses dynamic contrast on monitors where it is enabled.</source>
+        <translation>在已启用动态对比度的显示器上，亮度会使用动态对比度。</translation>
+    </message>
+    <message>
+        <source>Contrast</source>
+        <translation>对比度</translation>
+    </message>
+    <message>
+        <source>Control</source>
+        <translation>控制项</translation>
+    </message>
+    <message>
+        <source>Dynamic Contrast</source>
+        <translation>动态对比度</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>启用</translation>
+    </message>
+    <message>
+        <source>Entries repeat daily in local time while Brightless is running. Missed times are skipped.</source>
+        <translation>Brightless 运行时，条目每天按本地时间重复执行。错过的时间将被跳过。</translation>
+    </message>
+    <message>
+        <source>Input source</source>
+        <translation>输入源</translation>
+    </message>
+    <message>
+        <source>Monitor</source>
+        <translation>显示器</translation>
+    </message>
+    <message>
+        <source>No timing entries.</source>
+        <translation>没有定时条目。</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <translation>正常</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>关闭</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>开启</translation>
+    </message>
+    <message>
+        <source>Power mode</source>
+        <translation>电源模式</translation>
+    </message>
+    <message>
+        <source>Remove entry</source>
+        <translation>删除条目</translation>
+    </message>
+    <message>
+        <source>Standby</source>
+        <translation>待机</translation>
+    </message>
+    <message>
+        <source>Suspend</source>
+        <translation>挂起</translation>
+    </message>
+    <message>
+        <source>Time format</source>
+        <translation>时间格式</translation>
+    </message>
+    <message>
+        <source>24-hour</source>
+        <translation>24 小时制</translation>
+    </message>
+    <message>
+        <source>12-hour (AM/PM)</source>
+        <translation>12 小时制（AM/PM）</translation>
+    </message>
+    <message>
+        <source>Time (hh:mm AM/PM)</source>
+        <translation>时间（hh:mm AM/PM）</translation>
+    </message>
+    <message>
+        <source>Time (HH:mm)</source>
+        <translation>时间（HH:mm）</translation>
+    </message>
+    <message>
+        <source>Unavailable monitor (%1)</source>
+        <translation>不可用的显示器（%1）</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation>数值</translation>
+    </message>
+    <message>
+        <source>Value (%)</source>
+        <translation>数值（%）</translation>
+    </message>
+    <message>
+        <source>Volume</source>
+        <translation>音量</translation>
     </message>
 </context>
 </TS>

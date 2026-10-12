@@ -92,6 +92,10 @@
 <context>
     <name>SettingsWindow</name>
     <message>
+        <source>Trigger monitor changes by time or battery percentage.</source>
+        <translation>按时间或电池电量百分比触发显示器更改。</translation>
+    </message>
+    <message>
         <source>%1 Ratio</source>
         <translation>%1 比率</translation>
     </message>
@@ -520,6 +524,50 @@
 </context>
 <context>
     <name>TimingPage</name>
+    <message>
+        <source>Daily time</source>
+        <translation>每日时间</translation>
+    </message>
+    <message>
+        <source>Battery percentage</source>
+        <translation>电池电量百分比</translation>
+    </message>
+    <message>
+        <source>At or below</source>
+        <translation>低于或等于</translation>
+    </message>
+    <message>
+        <source>At or above</source>
+        <translation>高于或等于</translation>
+    </message>
+    <message>
+        <source>Schedules run while Brightless is running. Daily times use local time; missed times are skipped.</source>
+        <translation>计划在 Brightless 运行时执行。每日时间使用本地时间；错过的时间将被跳过。</translation>
+    </message>
+    <message>
+        <source>Battery entries run once when the condition becomes true, including at startup, and re-arm when it becomes false.</source>
+        <translation>电池条目在条件满足时执行一次，包括启动时；条件不再满足时会重新准备触发。</translation>
+    </message>
+    <message>
+        <source>Current battery: %1%</source>
+        <translation>当前电量：%1%</translation>
+    </message>
+    <message>
+        <source>Battery percentage unavailable. Battery entries will not run.</source>
+        <translation>电池电量百分比不可用。电池条目将不会执行。</translation>
+    </message>
+    <message>
+        <source>Trigger</source>
+        <translation>触发条件</translation>
+    </message>
+    <message>
+        <source>Battery condition</source>
+        <translation>电池条件</translation>
+    </message>
+    <message>
+        <source>Battery threshold (%)</source>
+        <translation>电池阈值 (%)</translation>
+    </message>
     <message>
         <source>Add entry</source>
         <translation>添加条目</translation>

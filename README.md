@@ -16,7 +16,7 @@ A Qt DDC/CI control application for external monitors on Linux and Windows.
 - **Mouse Scroll Support** — Scroll over sliders with a configurable 1–10% step; Linux also supports tray scrolling
 - **Global Shortcuts & OSD** — Configurable monitor shortcuts with brightness/volume feedback; native Plasma OSD on Linux, Qt OSD on Windows
 - **Dynamic Contrast** — Link brightness and contrast globally or per monitor
-- **Schedules** — Schedule daily brightness/dynamic contrast, contrast, volume, power, or input changes for all monitors or a selected monitor
+- **Schedules** — Trigger brightness/dynamic contrast, contrast, volume, power, or input changes by daily time or battery percentage, for all monitors or a selected monitor
 - **Settings Persistence** — Atomically save preferences and window size; debounce frequent settings-slider updates
 - **Optional Autostart** — XDG autostart on Linux, per-user Windows login startup; disabled by default
 - **Optional System Tray** — Keep Brightless available after closing its window
@@ -121,14 +121,14 @@ Release builds retain LTO when the compiler supports it and use `-O3` on GCC/Cla
 - Shortcuts are unassigned by default. Linux: enable Plasma shortcuts, then assign keys in Plasma settings. Windows: use **Settings → System → Configure global shortcuts**; use a single key combination per action. Conflicts or unsupported combinations are reported in the main window.
 - Autostart uses a per-user entry only; no administrator rights are needed.
 - DDC errors are shown in the main window. Sliders and OSD display requested values optimistically, not hardware readback; use refresh to reread the monitor.
-- **Settings → Schedules**: choose **24-hour** (the default) or **12-hour (AM/PM)** under **Time format**, then add an entry, set its local time, monitor, control and value, and enable it. The format choice is saved and does not change existing scheduled times. Entries repeat daily and start disabled. Brightness automatically uses each monitor's dynamic-contrast settings. Brightless must remain running (the window may be hidden); missed times while asleep or closed are skipped, and unsupported controls or unavailable monitors are ignored. Power-on schedules depend on the monitor accepting DDC while asleep/off. Entries at the same time run in list order, with the last value winning for a shared control.
+- **Settings → Schedules**: add an entry, choose its **Trigger**, monitor, control and value, then enable it. Entries start disabled. **Daily time** repeats at a local time; **Time format** selects 24-hour (the default) or 12-hour (AM/PM) without changing stored times. **Battery percentage** accepts an **At or below** or **At or above** threshold (0–100%). It runs once when the condition becomes true, including the first valid reading after startup or enabling, and re-arms when the condition becomes false. Battery status is checked at startup and every 30 seconds using Linux UPower's system battery or Windows system power status; absent/unknown battery readings never trigger actions or re-arm an already-fired entry. Both charging and discharging can meet a threshold. Brightness uses each monitor's dynamic-contrast settings. Brightless must remain running (the window may be hidden); missed times while asleep or closed are skipped, and unsupported controls or unavailable monitors are ignored. Power-on schedules depend on the monitor accepting DDC while asleep/off. Entries triggered together run in list order, with the last value winning for a shared control. Existing daily schedules remain compatible.
 - Per-monitor dynamic-contrast preferences migrate from model names to device IDs. Linux IDs currently include the I²C bus; moving a monitor between connectors may require reapplying its settings.
 
 ### Code layout
 
 - `src/brightlesscontroller.*`: shared monitor state, operations, and serialized asynchronous DDC work.
 - `src/settings.cpp`: validated JSON persistence and atomic writes.
-- `src/platform/{linux,windows}`: compile-time-selected DDC and autostart implementations.
+- `src/platform/{linux,windows}`: compile-time-selected DDC, battery status, and autostart implementations.
 - `src/desktopintegration.*`: shared actions plus Qt/Plasma/native desktop integration.
 - `src/singleinstance.*`: per-user local IPC and process locking through Qt Network.
 - `src/qt/qml`: main window, settings window, monitor cards, and fallback OSD.

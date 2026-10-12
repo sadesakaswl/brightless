@@ -10,6 +10,7 @@
 #include <QTemporaryDir>
 
 #include "platform/ddcbackend.h"
+#include "platform/battery.h"
 #include <QElapsedTimer>
 #include <QThread>
 #include <iostream>
@@ -79,6 +80,13 @@ QString write(const Device &device, const Writes &values)
         writes[*static_cast<int *>(device.native.get())][code] = value;
     }
     return {};
+}
+}
+
+namespace brightless::battery {
+void readPercentage(QObject *, std::function<void(std::optional<int>)> completion)
+{
+    completion(std::nullopt);
 }
 }
 
@@ -245,8 +253,142 @@ void testTimings(const QString &settingsPath)
     check(file.open(QIODevice::WriteOnly | QIODevice::Truncate), "cannot write malformed fixture");
     file.write(QJsonDocument(QJsonObject{{"timings", malformed}, {"use_12_hour_time", "true"}}).toJson());
     file.close();
-    check(BrightlessController().timings() == QVariantList{entry}, "invalid saved entries were not discarded");
+    auto migratedEntry = entry;
+    migratedEntry.insert("trigger", "time");
+    migratedEntry.insert("battery_percent", 20);
+    migratedEntry.insert("battery_condition", "below");
+    check(BrightlessController().timings() == QVariantList{migratedEntry},
+          "legacy entry not migrated or invalid saved entries not discarded");
     check(!BrightlessController().use12HourTime(), "malformed time format preference accepted");
+}
+
+void testBatteryTimings()
+{
+    const auto check = [](bool condition, const char *message) {
+        if (!condition) {
+            std::cerr << "Battery schedule check failed: " << message << '\n';
+            std::exit(59);
+        }
+    };
+    responses = {};
+    reverseMonitors = false;
+    BrightlessController controller;
+    while (!controller.timings().isEmpty()) controller.remove_timing(0);
+    controller.set_dynamic_contrast_enabled(false);
+    controller.set_ddc_delay(0);
+    controller.add_timing();
+    QVariantMap entry{{"trigger", "battery"}, {"battery_percent", 20},
+                      {"battery_condition", "below"}, {"monitor_id", "monitor-0"},
+                      {"control", 0x10}, {"value", 35}, {"enabled", true}};
+    for (const auto &invalid : std::initializer_list<std::pair<QString, QVariant>>{
+             {"trigger", "unknown"}, {"trigger", 1}, {"battery_percent", -1},
+             {"battery_percent", 101}, {"battery_percent", 20.5}, {"battery_percent", "20"},
+             {"battery_condition", "equal"}, {"battery_condition", 1}}) {
+        auto bad = entry;
+        bad[invalid.first] = invalid.second;
+        check(!controller.update_timing(0, bad), "invalid trigger accepted");
+    }
+    for (const auto &key : {"battery_percent", "battery_condition"}) {
+        auto bad = entry;
+        bad.remove(key);
+        check(!controller.update_timing(0, bad), "incomplete battery trigger accepted");
+    }
+    check(controller.update_timing(0, entry), "battery trigger rejected");
+    entry = controller.timings()[0].toMap();
+    check(BrightlessController().timings() == controller.timings(), "battery trigger not persisted");
+    controller.runBatteryTimings(20); // No monitors must not consume this condition.
+    initialize(controller);
+    const auto run = [&](std::optional<int> percentage) {
+        writes = {};
+        controller.runBatteryTimings(percentage);
+        initialize(controller); // Wait for the async fake DDC worker.
+    };
+    run(20);
+    check(writes[0] == std::map<int, int>{{0x10, 35}} && writes[1].empty(),
+          "first matching reading did not run at the inclusive threshold");
+    run(19);
+    check(writes[0].empty(), "condition repeatedly fired while true");
+    run(std::nullopt);
+    check(controller.batteryPercent() == -1 && writes[0].empty(), "unknown reading fired");
+    run(19);
+    check(writes[0].empty(), "unknown reading re-armed the trigger");
+    run(101);
+    check(controller.batteryPercent() == -1 && writes[0].empty(), "invalid reading accepted");
+    run(21);
+    check(writes[0].empty(), "nonmatching reading fired");
+    run(18);
+    check(writes[0] == std::map<int, int>{{0x10, 35}}, "crossing back did not re-arm");
+    entry["value"] = 45;
+    controller.update_timing(0, entry);
+    run(18);
+    check(writes[0].empty(), "editing an action re-armed the trigger");
+    entry["enabled"] = false;
+    controller.update_timing(0, entry);
+    run(18);
+    check(writes[0].empty(), "disabled trigger fired");
+    entry["enabled"] = true;
+    controller.update_timing(0, entry);
+    controller.initialize();
+    controller.runBatteryTimings(18);
+    initialize(controller);
+    check(writes[0].empty(), "trigger ran during discovery");
+    run(18);
+    check(writes[0] == std::map<int, int>{{0x10, 45}}, "enabling did not re-arm");
+    entry["battery_condition"] = "above";
+    entry["battery_percent"] = 80;
+    entry["monitor_id"] = "";
+    controller.update_timing(0, entry);
+    run(79);
+    check(writes[0].empty() && writes[1].empty(), "above trigger fired early");
+    run(80);
+    check(writes[0] == std::map<int, int>{{0x10, 45}} && writes[1] == writes[0],
+          "above trigger did not apply to all monitors");
+    run(90);
+    check(writes[0].empty(), "above trigger repeatedly fired");
+    entry["battery_percent"] = 100;
+    controller.update_timing(0, entry);
+    controller.add_timing();
+    auto last = entry;
+    last["value"] = 60;
+    check(controller.update_timing(1, last), "second battery entry rejected");
+    run(100);
+    check(writes[0] == std::map<int, int>{{0x10, 60}} && writes[1] == writes[0],
+          "threshold edit did not re-arm or list order was ignored");
+    entry["trigger"] = "time";
+    entry["time"] = "12:34";
+    check(controller.update_timing(0, entry), "switch to time rejected");
+    run(0);
+    check(writes[0].empty(), "battery evaluation ran a time entry");
+    writes = {};
+    controller.runTimings(QDateTime(QDate(2000, 1, 1), QTime(12, 34)));
+    initialize(controller);
+    check(writes[0] == std::map<int, int>{{0x10, 45}}, "switched time trigger did not run");
+    entry["trigger"] = "battery";
+    entry["battery_condition"] = "below";
+    entry["battery_percent"] = 0;
+    check(controller.update_timing(0, entry), "zero threshold rejected");
+    run(0);
+    check(writes[0] == std::map<int, int>{{0x10, 45}}, "zero threshold did not run");
+    check(BrightlessController().timings() == controller.timings(), "edited triggers not persisted");
+    controller.set_dynamic_contrast_enabled(true);
+    controller.set_dynamic_contrast_global(true);
+    controller.set_dynamic_contrast_per_monitor_ratio(false);
+    controller.set_dynamic_contrast_ratio(0.5F);
+    run(1);
+    run(0);
+    check(writes[0] == std::map<int, int>{{0x10, 45}, {0x12, 23}} && writes[1] == writes[0],
+          "battery brightness did not use dynamic contrast");
+    controller.flushSettings();
+    {
+        BrightlessController restored;
+        initialize(restored);
+        writes = {};
+        restored.runBatteryTimings(0);
+        initialize(restored);
+        check(writes[0] == std::map<int, int>{{0x10, 45}, {0x12, 23}},
+              "matching condition did not fire after restart");
+    }
+    while (!controller.timings().isEmpty()) controller.remove_timing(0);
 }
 
 int runTests(int argc, char *argv[])
@@ -617,6 +759,7 @@ int runTests(int argc, char *argv[])
             || !qFuzzyCompare(migrated.monitor_ratio(1), 0.8F) || !migrated.monitor_dynamic_contrast_enabled(1)) return 56;
     }
     testTimings(settings.fileName());
+    testBatteryTimings();
     return controller.autostart() || QFileInfo::exists(path) ? 57 : 0;
 }
 

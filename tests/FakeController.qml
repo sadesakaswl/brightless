@@ -18,6 +18,7 @@ QtObject {
     property bool close_to_tray: true
     property bool use_12_hour_time: false
     property var timings: []
+    property int battery_percent: -1
     property bool hasContrast: true
     property bool hasVolume: true
     property bool hasInput: true
@@ -76,7 +77,8 @@ QtObject {
     function vcp_code(code, scope) { return vcpCodes[code] ?? code }
     function set_vcp_code(code, value, scope) { vcpCodes[code] = value; revision++; return true }
     function add_timing() {
-        timings = timings.concat([{ time: "12:00", monitor_id: "", control: 0x10, value: 50, enabled: false }])
+        timings = timings.concat([{ trigger: "time", time: "12:00", battery_percent: 20, battery_condition: "below",
+                                    monitor_id: "", control: 0x10, value: 50, enabled: false }])
     }
     function update_timing(index, entry) {
         const copy = timings.slice()

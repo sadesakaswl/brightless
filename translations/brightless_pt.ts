@@ -92,6 +92,10 @@
 <context>
     <name>SettingsWindow</name>
     <message>
+        <source>Trigger monitor changes by time or battery percentage.</source>
+        <translation>Acionar alterações do monitor por hora ou percentagem da bateria.</translation>
+    </message>
+    <message>
         <source>%1 Ratio</source>
         <translation>Relação para %1</translation>
     </message>
@@ -520,6 +524,50 @@
 </context>
 <context>
     <name>TimingPage</name>
+    <message>
+        <source>Daily time</source>
+        <translation>Hora diária</translation>
+    </message>
+    <message>
+        <source>Battery percentage</source>
+        <translation>Percentagem da bateria</translation>
+    </message>
+    <message>
+        <source>At or below</source>
+        <translation>Igual ou inferior a</translation>
+    </message>
+    <message>
+        <source>At or above</source>
+        <translation>Igual ou superior a</translation>
+    </message>
+    <message>
+        <source>Schedules run while Brightless is running. Daily times use local time; missed times are skipped.</source>
+        <translation>Os agendamentos são executados enquanto o Brightless está ativo. As horas diárias usam a hora local; as horas perdidas são ignoradas.</translation>
+    </message>
+    <message>
+        <source>Battery entries run once when the condition becomes true, including at startup, and re-arm when it becomes false.</source>
+        <translation>As entradas da bateria são executadas uma vez quando a condição é satisfeita, incluindo no arranque, e ficam novamente prontas quando deixa de ser satisfeita.</translation>
+    </message>
+    <message>
+        <source>Current battery: %1%</source>
+        <translation>Bateria atual: %1%</translation>
+    </message>
+    <message>
+        <source>Battery percentage unavailable. Battery entries will not run.</source>
+        <translation>Percentagem da bateria indisponível. As entradas da bateria não serão executadas.</translation>
+    </message>
+    <message>
+        <source>Trigger</source>
+        <translation>Acionador</translation>
+    </message>
+    <message>
+        <source>Battery condition</source>
+        <translation>Condição da bateria</translation>
+    </message>
+    <message>
+        <source>Battery threshold (%)</source>
+        <translation>Limite da bateria (%)</translation>
+    </message>
     <message>
         <source>Add entry</source>
         <translation>Adicionar entrada</translation>

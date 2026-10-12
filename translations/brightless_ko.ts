@@ -92,6 +92,10 @@
 <context>
     <name>SettingsWindow</name>
     <message>
+        <source>Trigger monitor changes by time or battery percentage.</source>
+        <translation>시간 또는 배터리 비율에 따라 모니터 변경을 실행합니다.</translation>
+    </message>
+    <message>
         <source>%1 Ratio</source>
         <translation>%1 비율</translation>
     </message>
@@ -520,6 +524,50 @@
 </context>
 <context>
     <name>TimingPage</name>
+    <message>
+        <source>Daily time</source>
+        <translation>매일 지정 시간</translation>
+    </message>
+    <message>
+        <source>Battery percentage</source>
+        <translation>배터리 비율</translation>
+    </message>
+    <message>
+        <source>At or below</source>
+        <translation>이하</translation>
+    </message>
+    <message>
+        <source>At or above</source>
+        <translation>이상</translation>
+    </message>
+    <message>
+        <source>Schedules run while Brightless is running. Daily times use local time; missed times are skipped.</source>
+        <translation>Brightless가 실행 중일 때 예약이 실행됩니다. 매일 지정 시간은 현지 시간을 사용하며 놓친 시간은 건너뜁니다.</translation>
+    </message>
+    <message>
+        <source>Battery entries run once when the condition becomes true, including at startup, and re-arm when it becomes false.</source>
+        <translation>배터리 항목은 시작 시를 포함하여 조건이 충족되면 한 번 실행되고, 조건이 충족되지 않으면 다시 실행할 준비가 됩니다.</translation>
+    </message>
+    <message>
+        <source>Current battery: %1%</source>
+        <translation>현재 배터리: %1%</translation>
+    </message>
+    <message>
+        <source>Battery percentage unavailable. Battery entries will not run.</source>
+        <translation>배터리 비율을 확인할 수 없습니다. 배터리 항목은 실행되지 않습니다.</translation>
+    </message>
+    <message>
+        <source>Trigger</source>
+        <translation>실행 조건</translation>
+    </message>
+    <message>
+        <source>Battery condition</source>
+        <translation>배터리 조건</translation>
+    </message>
+    <message>
+        <source>Battery threshold (%)</source>
+        <translation>배터리 임계값 (%)</translation>
+    </message>
     <message>
         <source>Add entry</source>
         <translation>항목 추가</translation>

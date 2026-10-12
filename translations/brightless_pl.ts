@@ -92,6 +92,10 @@
 <context>
     <name>SettingsWindow</name>
     <message>
+        <source>Trigger monitor changes by time or battery percentage.</source>
+        <translation>Wyzwalaj zmiany monitora według czasu lub poziomu baterii.</translation>
+    </message>
+    <message>
         <source>%1 Ratio</source>
         <translation>Współczynnik dla %1</translation>
     </message>
@@ -520,6 +524,50 @@
 </context>
 <context>
     <name>TimingPage</name>
+    <message>
+        <source>Daily time</source>
+        <translation>Codzienna godzina</translation>
+    </message>
+    <message>
+        <source>Battery percentage</source>
+        <translation>Poziom baterii</translation>
+    </message>
+    <message>
+        <source>At or below</source>
+        <translation>Równy lub niższy</translation>
+    </message>
+    <message>
+        <source>At or above</source>
+        <translation>Równy lub wyższy</translation>
+    </message>
+    <message>
+        <source>Schedules run while Brightless is running. Daily times use local time; missed times are skipped.</source>
+        <translation>Harmonogramy działają, gdy Brightless jest uruchomiony. Codzienne godziny używają czasu lokalnego; pominięte terminy są ignorowane.</translation>
+    </message>
+    <message>
+        <source>Battery entries run once when the condition becomes true, including at startup, and re-arm when it becomes false.</source>
+        <translation>Wpisy baterii są wykonywane raz po spełnieniu warunku, także przy uruchomieniu, i są ponownie uzbrajane, gdy warunek przestaje być spełniony.</translation>
+    </message>
+    <message>
+        <source>Current battery: %1%</source>
+        <translation>Aktualny poziom baterii: %1%</translation>
+    </message>
+    <message>
+        <source>Battery percentage unavailable. Battery entries will not run.</source>
+        <translation>Poziom baterii jest niedostępny. Wpisy baterii nie będą wykonywane.</translation>
+    </message>
+    <message>
+        <source>Trigger</source>
+        <translation>Wyzwalacz</translation>
+    </message>
+    <message>
+        <source>Battery condition</source>
+        <translation>Warunek baterii</translation>
+    </message>
+    <message>
+        <source>Battery threshold (%)</source>
+        <translation>Próg baterii (%)</translation>
+    </message>
     <message>
         <source>Add entry</source>
         <translation>Dodaj wpis</translation>

@@ -30,6 +30,7 @@ class BrightlessController : public QObject
     Q_PROPERTY(int monitor_count READ monitorCount NOTIFY monitorCountChanged)
     Q_PROPERTY(int revision READ revision NOTIFY revisionChanged)
     Q_PROPERTY(QVariantList timings READ timings NOTIFY timingsChanged)
+    Q_PROPERTY(int battery_percent READ batteryPercent NOTIFY batteryPercentChanged)
     Q_PROPERTY(bool use_12_hour_time READ use12HourTime WRITE setUse12HourTime NOTIFY timeFormatChanged)
     Q_PROPERTY(bool close_to_tray READ closeToTray WRITE setCloseToTray NOTIFY closeToTrayChanged)
     Q_PROPERTY(bool hide_on_tray_click READ hideOnTrayClick WRITE setHideOnTrayClick NOTIFY hideOnTrayClickChanged)
@@ -85,6 +86,8 @@ public:
     void setUse12HourTime(bool value);
     QVariantList timings() const;
     void runTimings(const QDateTime &now);
+    int batteryPercent() const { return batteryPercent_; }
+    void runBatteryTimings(std::optional<int> percentage);
     Q_INVOKABLE void add_timing();
     Q_INVOKABLE bool update_timing(int index, const QVariantMap &entry);
     Q_INVOKABLE void remove_timing(int index);
@@ -135,6 +138,7 @@ signals:
     void monitorCountChanged();
     void revisionChanged();
     void timingsChanged();
+    void batteryPercentChanged();
     void timeFormatChanged();
     void closeToTrayChanged();
     void hideOnTrayClickChanged();
@@ -153,8 +157,14 @@ private:
         int value = 50;
         bool enabled = false;
         QDate lastRun;
+        QString trigger = QStringLiteral("time");
+        int batteryPercent = 20;
+        QString batteryCondition = QStringLiteral("below");
+        bool batteryMatched = false;
     };
     static std::optional<Timing> parseTiming(const QJsonObject &entry);
+    void applyTiming(const Timing &timing);
+    void refreshBattery();
 
     Monitor *monitorAt(int index);
     const Monitor *monitorAt(int index) const;
@@ -173,6 +183,9 @@ private:
     bool rescanRequested_ = false;
     QTimer settingsTimer_;
     QTimer timingTimer_;
+    QTimer batteryTimer_;
+    int batteryPercent_ = -1;
+    bool batteryReadPending_ = false;
     std::vector<Timing> timings_;
     bool use12HourTime_ = false;
     std::vector<std::unique_ptr<Monitor>> monitors_;

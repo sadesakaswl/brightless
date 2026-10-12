@@ -92,6 +92,10 @@
 <context>
     <name>SettingsWindow</name>
     <message>
+        <source>Trigger monitor changes by time or battery percentage.</source>
+        <translation>時刻またはバッテリー残量に応じてモニターの変更を実行します。</translation>
+    </message>
+    <message>
         <source>%1 Ratio</source>
         <translation>%1 の比率</translation>
     </message>
@@ -520,6 +524,50 @@
 </context>
 <context>
     <name>TimingPage</name>
+    <message>
+        <source>Daily time</source>
+        <translation>毎日の時刻</translation>
+    </message>
+    <message>
+        <source>Battery percentage</source>
+        <translation>バッテリー残量</translation>
+    </message>
+    <message>
+        <source>At or below</source>
+        <translation>以下</translation>
+    </message>
+    <message>
+        <source>At or above</source>
+        <translation>以上</translation>
+    </message>
+    <message>
+        <source>Schedules run while Brightless is running. Daily times use local time; missed times are skipped.</source>
+        <translation>スケジュールは Brightless の実行中に動作します。毎日の時刻は現地時間を使用し、過ぎた時刻はスキップされます。</translation>
+    </message>
+    <message>
+        <source>Battery entries run once when the condition becomes true, including at startup, and re-arm when it becomes false.</source>
+        <translation>バッテリー項目は起動時も含め、条件を満たしたときに一度実行され、条件を満たさなくなると再び実行可能になります。</translation>
+    </message>
+    <message>
+        <source>Current battery: %1%</source>
+        <translation>現在のバッテリー残量：%1%</translation>
+    </message>
+    <message>
+        <source>Battery percentage unavailable. Battery entries will not run.</source>
+        <translation>バッテリー残量を取得できません。バッテリー項目は実行されません。</translation>
+    </message>
+    <message>
+        <source>Trigger</source>
+        <translation>トリガー</translation>
+    </message>
+    <message>
+        <source>Battery condition</source>
+        <translation>バッテリー条件</translation>
+    </message>
+    <message>
+        <source>Battery threshold (%)</source>
+        <translation>バッテリーしきい値 (%)</translation>
+    </message>
     <message>
         <source>Add entry</source>
         <translation>項目を追加</translation>

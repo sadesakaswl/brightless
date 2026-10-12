@@ -71,7 +71,7 @@ ApplicationWindow {
                     },
                     {
                         text: qsTr("Schedules"),
-                        tip: qsTr("Schedule daily monitor changes.")
+                        tip: qsTr("Trigger monitor changes by time or battery percentage.")
                     },
                     {
                         text: qsTr("System"),

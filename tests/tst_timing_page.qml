@@ -15,6 +15,7 @@ Item {
         ]
         property var ddc_monitors: [{ id: "monitor-0", name: "Test display" }]
         property int revision: 0
+        property int battery_percent: 55
         property bool use_12_hour_time: false
         property bool dynamic: false
         function dynamic_contrast_enabled() { return dynamic }
@@ -121,6 +122,48 @@ Item {
             compare(field.maximumLength, 5)
             compare(JSON.stringify(backend.timings), updatedSchedules)
 
+            const trigger = findChild(firstRow, "triggerSelector")
+            verify(trigger !== null)
+            trigger.currentIndex = 1
+            trigger.activated(1)
+            wait(0)
+            compare(backend.timings[0].trigger, "battery")
+            compare(backend.timings[0].battery_percent, 20)
+            compare(findChild(firstRow, "scheduleTime"), null)
+            const threshold = findChild(firstRow, "batteryThreshold")
+            verify(threshold !== null)
+            threshold.value = 35
+            threshold.valueModified()
+            const condition = findChild(firstRow, "batteryCondition")
+            condition.currentIndex = 1
+            condition.activated(1)
+            wait(0)
+            compare(backend.timings[0].battery_percent, 35)
+            compare(backend.timings[0].battery_condition, "above")
+            compare(backend.timings[0].value, 70)
+            verify(backend.timings[0].enabled)
+            root.width = 360
+            root.height = 200
+            wait(0)
+            verify(page.compact)
+            verify(threshold.width > 0)
+            verify(findChild(page, "scheduleScroll").height > 100)
+            root.width = 536
+            root.height = 560
+            trigger.currentIndex = 0
+            trigger.activated(0)
+            wait(0)
+            compare(findChild(firstRow, "batteryThreshold"), null)
+            compare(findChild(firstRow, "scheduleTime").text, "15:07")
+            trigger.currentIndex = 1
+            trigger.activated(1)
+            wait(0)
+            compare(findChild(firstRow, "batteryThreshold").value, 35)
+            compare(findChild(firstRow, "batteryCondition").currentValue, "above")
+            backend.battery_percent = -1
+            wait(0)
+            verify(findItem(page, item => (item.text || "").includes("Battery percentage unavailable")) !== null)
+
             const brightnessLabel = page.controls[0].text
             backend.dynamic = true
             backend.revision++
@@ -139,6 +182,12 @@ Item {
             backend.add_timing()
             wait(0)
             compare(findItem(page, item => item.entry !== undefined).entry.control, 0xd6)
+            const lastRow = findItem(page, item => item.entry !== undefined)
+            lastRow.update({ trigger: "battery", battery_percent: 20, battery_condition: "below" })
+            wait(0)
+            backend.remove_timing(0)
+            wait(0)
+            compare(backend.timings.length, 0)
         }
     }
 }

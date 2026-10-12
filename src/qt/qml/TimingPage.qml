@@ -25,6 +25,15 @@ ColumnLayout {
         return (hour < 10 ? "0" : "") + hour + text.slice(2, 5)
     }
 
+    readonly property var triggers: [
+        { text: qsTr("Daily time"), key: "time" },
+        { text: qsTr("Battery percentage"), key: "battery" }
+    ]
+    readonly property var batteryConditions: [
+        { text: qsTr("At or below"), key: "below" },
+        { text: qsTr("At or above"), key: "above" }
+    ]
+
     readonly property var controls: {
         controller.revision
         return [
@@ -48,31 +57,9 @@ ColumnLayout {
         { text: qsTr("Normal"), code: 5 }
     ]
 
-    Label {
-        text: qsTr("Entries repeat daily in local time while Brightless is running. Missed times are skipped.")
-        wrapMode: Text.WordWrap
-        Layout.fillWidth: true
-    }
-    Label {
-        text: qsTr("Brightness uses dynamic contrast on monitors where it is enabled.")
-        wrapMode: Text.WordWrap
-        Layout.fillWidth: true
-    }
-
-    RowLayout {
-        Layout.fillWidth: true
-        Label { text: qsTr("Time format"); Layout.fillWidth: true }
-        ComboBox {
-            objectName: "timeFormatSelector"
-            Accessible.name: qsTr("Time format")
-            model: [qsTr("24-hour"), qsTr("12-hour (AM/PM)")]
-            currentIndex: page.use12HourTime ? 1 : 0
-            onActivated: page.controller.use_12_hour_time = currentIndex === 1
-        }
-    }
-
     ScrollView {
         id: scroll
+        objectName: "scheduleScroll"
         Layout.fillWidth: true
         Layout.fillHeight: true
         clip: true
@@ -82,6 +69,41 @@ ColumnLayout {
         ColumnLayout {
             width: scroll.availableWidth
             spacing: 12
+
+            Label {
+                text: qsTr("Schedules run while Brightless is running. Daily times use local time; missed times are skipped.")
+                wrapMode: Text.WordWrap
+                Layout.fillWidth: true
+            }
+            Label {
+                text: qsTr("Brightness uses dynamic contrast on monitors where it is enabled.")
+                wrapMode: Text.WordWrap
+                Layout.fillWidth: true
+            }
+            Label {
+                text: qsTr("Battery entries run once when the condition becomes true, including at startup, and re-arm when it becomes false.")
+                wrapMode: Text.WordWrap
+                Layout.fillWidth: true
+            }
+            Label {
+                text: page.controller.battery_percent >= 0
+                    ? qsTr("Current battery: %1%").arg(page.controller.battery_percent)
+                    : qsTr("Battery percentage unavailable. Battery entries will not run.")
+                wrapMode: Text.WordWrap
+                Layout.fillWidth: true
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+                Label { text: qsTr("Time format"); Layout.fillWidth: true }
+                ComboBox {
+                    objectName: "timeFormatSelector"
+                    Accessible.name: qsTr("Time format")
+                    model: [qsTr("24-hour"), qsTr("12-hour (AM/PM)")]
+                    currentIndex: page.use12HourTime ? 1 : 0
+                    onActivated: page.controller.use_12_hour_time = currentIndex === 1
+                }
+            }
 
             Label {
                 text: qsTr("No timing entries.")
@@ -97,7 +119,9 @@ ColumnLayout {
                     required property int index
                     // A removed entry can disappear before its delegate is destroyed.
                     readonly property var entry: page.controller.timings[index]
-                        ?? { time: "00:00", monitor_id: "", control: 0x10, value: 50, enabled: false }
+                        ?? { trigger: "time", time: "00:00", battery_percent: 20, battery_condition: "below",
+                             monitor_id: "", control: 0x10, value: 50, enabled: false }
+                    readonly property var triggerEditors: ({ time: timeEditor, battery: batteryEditor })
                     readonly property var monitors: {
                         const choices = [{ name: qsTr("All monitors"), id: "" }].concat(page.controller.ddc_monitors)
                         if (entry.monitor_id && !choices.some(monitor => monitor.id === entry.monitor_id))
@@ -120,34 +144,21 @@ ColumnLayout {
                             columns: page.compact ? 2 : 4
                             rowSpacing: 8
                             Label {
-                                text: page.use12HourTime ? qsTr("Time (hh:mm AM/PM)") : qsTr("Time (HH:mm)")
-                                wrapMode: Text.WordWrap
+                                text: qsTr("Trigger")
                                 Layout.columnSpan: page.compact ? 2 : 1
                             }
-                            TextField {
+                            ComboBox {
+                                objectName: "triggerSelector"
                                 Layout.columnSpan: page.compact ? 2 : 1
                                 Layout.fillWidth: true
-                                Layout.preferredWidth: page.use12HourTime ? 140 : 80
-                                Accessible.name: page.use12HourTime ? qsTr("Time (hh:mm AM/PM)") : qsTr("Time (HH:mm)")
-                                text: page.formattedTime(row.entry.time)
-                                maximumLength: page.use12HourTime ? 8 : 5
-                                selectByMouse: true
-                                validator: RegularExpressionValidator {
-                                    regularExpression: page.use12HourTime
-                                        ? /^(?:0[1-9]|1[0-2]):[0-5][0-9] [AP]M$/i
-                                        : /^(?:[01][0-9]|2[0-3]):[0-5][0-9]$/
-                                }
-                                onActiveFocusChanged: {
-                                    if (!activeFocus) {
-                                        if (acceptableInput) {
-                                            const time = page.canonicalTime(text)
-                                            if (time !== row.entry.time)
-                                                row.update({ time: time })
-                                        }
-                                        text = Qt.binding(() => page.formattedTime(row.entry.time))
-                                    }
-                                }
-                                onAccepted: focus = false
+                                Accessible.name: qsTr("Trigger")
+                                model: page.triggers
+                                textRole: "text"
+                                valueRole: "key"
+                                currentIndex: page.triggers.findIndex(trigger => trigger.key === (row.entry.trigger ?? "time"))
+                                onActivated: row.update({ trigger: currentValue,
+                                    battery_percent: row.entry.battery_percent ?? 20,
+                                    battery_condition: row.entry.battery_condition ?? "below" })
                             }
                             Switch {
                                 text: qsTr("Enabled")
@@ -162,6 +173,11 @@ ColumnLayout {
                                 ToolTip.text: qsTr("Remove entry")
                                 onClicked: page.controller.remove_timing(row.index)
                             }
+                        }
+
+                        Loader {
+                            Layout.fillWidth: true
+                            sourceComponent: row.triggerEditors[row.entry.trigger ?? "time"]
                         }
 
                         ComboBox {
@@ -209,6 +225,66 @@ ColumnLayout {
                                 currentIndex: row.valueChoices.findIndex(choice => choice.code === row.entry.value)
                                 onActivated: row.update({ value: currentValue })
                             }
+                        }
+                    }
+
+                    Component {
+                        id: timeEditor
+                        RowLayout {
+                            Label {
+                                text: page.use12HourTime ? qsTr("Time (hh:mm AM/PM)") : qsTr("Time (HH:mm)")
+                                wrapMode: Text.WordWrap
+                                Layout.fillWidth: true
+                            }
+                            TextField {
+                                objectName: "scheduleTime"
+                                Layout.preferredWidth: page.use12HourTime ? 140 : 80
+                                Accessible.name: page.use12HourTime ? qsTr("Time (hh:mm AM/PM)") : qsTr("Time (HH:mm)")
+                                text: page.formattedTime(row.entry.time)
+                                maximumLength: page.use12HourTime ? 8 : 5
+                                selectByMouse: true
+                                validator: RegularExpressionValidator {
+                                    regularExpression: page.use12HourTime
+                                        ? /^(?:0[1-9]|1[0-2]):[0-5][0-9] [AP]M$/i
+                                        : /^(?:[01][0-9]|2[0-3]):[0-5][0-9]$/
+                                }
+                                onActiveFocusChanged: {
+                                    if (!activeFocus) {
+                                        if (acceptableInput) {
+                                            const time = page.canonicalTime(text)
+                                            if (time !== row.entry.time)
+                                                row.update({ time: time })
+                                        }
+                                        text = Qt.binding(() => page.formattedTime(row.entry.time))
+                                    }
+                                }
+                                onAccepted: focus = false
+                            }
+                        }
+                    }
+                    Component {
+                        id: batteryEditor
+                        RowLayout {
+                            ComboBox {
+                                objectName: "batteryCondition"
+                                Layout.fillWidth: true
+                                Accessible.name: qsTr("Battery condition")
+                                model: page.batteryConditions
+                                textRole: "text"
+                                valueRole: "key"
+                                currentIndex: page.batteryConditions.findIndex(condition => condition.key === row.entry.battery_condition)
+                                onActivated: row.update({ battery_condition: currentValue })
+                            }
+                            SpinBox {
+                                objectName: "batteryThreshold"
+                                Accessible.name: qsTr("Battery threshold (%)")
+                                from: 0
+                                to: 100
+                                editable: true
+                                value: row.entry.battery_percent
+                                onValueModified: row.update({ battery_percent: value })
+                            }
+                            Label { text: "%" }
                         }
                     }
                 }

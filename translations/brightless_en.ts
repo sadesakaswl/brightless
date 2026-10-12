@@ -92,6 +92,10 @@
 <context>
     <name>SettingsWindow</name>
     <message>
+        <source>Trigger monitor changes by time or battery percentage.</source>
+        <translation>Trigger monitor changes by time or battery percentage.</translation>
+    </message>
+    <message>
         <source>%1 Ratio</source>
         <translation>%1 Ratio</translation>
     </message>
@@ -520,6 +524,50 @@
 </context>
 <context>
     <name>TimingPage</name>
+    <message>
+        <source>Daily time</source>
+        <translation>Daily time</translation>
+    </message>
+    <message>
+        <source>Battery percentage</source>
+        <translation>Battery percentage</translation>
+    </message>
+    <message>
+        <source>At or below</source>
+        <translation>At or below</translation>
+    </message>
+    <message>
+        <source>At or above</source>
+        <translation>At or above</translation>
+    </message>
+    <message>
+        <source>Schedules run while Brightless is running. Daily times use local time; missed times are skipped.</source>
+        <translation>Schedules run while Brightless is running. Daily times use local time; missed times are skipped.</translation>
+    </message>
+    <message>
+        <source>Battery entries run once when the condition becomes true, including at startup, and re-arm when it becomes false.</source>
+        <translation>Battery entries run once when the condition becomes true, including at startup, and re-arm when it becomes false.</translation>
+    </message>
+    <message>
+        <source>Current battery: %1%</source>
+        <translation>Current battery: %1%</translation>
+    </message>
+    <message>
+        <source>Battery percentage unavailable. Battery entries will not run.</source>
+        <translation>Battery percentage unavailable. Battery entries will not run.</translation>
+    </message>
+    <message>
+        <source>Trigger</source>
+        <translation>Trigger</translation>
+    </message>
+    <message>
+        <source>Battery condition</source>
+        <translation>Battery condition</translation>
+    </message>
+    <message>
+        <source>Battery threshold (%)</source>
+        <translation>Battery threshold (%)</translation>
+    </message>
     <message>
         <source>Add entry</source>
         <translation>Add entry</translation>

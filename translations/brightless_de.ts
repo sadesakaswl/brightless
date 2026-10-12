@@ -92,6 +92,10 @@
 <context>
     <name>SettingsWindow</name>
     <message>
+        <source>Trigger monitor changes by time or battery percentage.</source>
+        <translation>Monitoränderungen nach Uhrzeit oder Akkustand auslösen.</translation>
+    </message>
+    <message>
         <source>%1 Ratio</source>
         <translation>Verhältnis für %1</translation>
     </message>
@@ -520,6 +524,50 @@
 </context>
 <context>
     <name>TimingPage</name>
+    <message>
+        <source>Daily time</source>
+        <translation>Tägliche Uhrzeit</translation>
+    </message>
+    <message>
+        <source>Battery percentage</source>
+        <translation>Akkustand</translation>
+    </message>
+    <message>
+        <source>At or below</source>
+        <translation>Gleich oder niedriger</translation>
+    </message>
+    <message>
+        <source>At or above</source>
+        <translation>Gleich oder höher</translation>
+    </message>
+    <message>
+        <source>Schedules run while Brightless is running. Daily times use local time; missed times are skipped.</source>
+        <translation>Zeitpläne werden ausgeführt, solange Brightless läuft. Tägliche Uhrzeiten verwenden die Ortszeit; verpasste Zeiten werden übersprungen.</translation>
+    </message>
+    <message>
+        <source>Battery entries run once when the condition becomes true, including at startup, and re-arm when it becomes false.</source>
+        <translation>Akkueinträge werden einmal ausgeführt, wenn die Bedingung erfüllt wird, auch beim Start, und erneut aktiviert, sobald sie nicht mehr erfüllt ist.</translation>
+    </message>
+    <message>
+        <source>Current battery: %1%</source>
+        <translation>Aktueller Akkustand: %1%</translation>
+    </message>
+    <message>
+        <source>Battery percentage unavailable. Battery entries will not run.</source>
+        <translation>Akkustand nicht verfügbar. Akkueinträge werden nicht ausgeführt.</translation>
+    </message>
+    <message>
+        <source>Trigger</source>
+        <translation>Auslöser</translation>
+    </message>
+    <message>
+        <source>Battery condition</source>
+        <translation>Akkubedingung</translation>
+    </message>
+    <message>
+        <source>Battery threshold (%)</source>
+        <translation>Akkuschwelle (%)</translation>
+    </message>
     <message>
         <source>Add entry</source>
         <translation>Eintrag hinzufügen</translation>

@@ -92,6 +92,10 @@
 <context>
     <name>SettingsWindow</name>
     <message>
+        <source>Trigger monitor changes by time or battery percentage.</source>
+        <translation>Изменять параметры монитора по времени или уровню заряда батареи.</translation>
+    </message>
+    <message>
         <source>%1 Ratio</source>
         <translation>Коэффициент для %1</translation>
     </message>
@@ -520,6 +524,50 @@
 </context>
 <context>
     <name>TimingPage</name>
+    <message>
+        <source>Daily time</source>
+        <translation>Ежедневное время</translation>
+    </message>
+    <message>
+        <source>Battery percentage</source>
+        <translation>Уровень заряда батареи</translation>
+    </message>
+    <message>
+        <source>At or below</source>
+        <translation>Не выше</translation>
+    </message>
+    <message>
+        <source>At or above</source>
+        <translation>Не ниже</translation>
+    </message>
+    <message>
+        <source>Schedules run while Brightless is running. Daily times use local time; missed times are skipped.</source>
+        <translation>Расписания выполняются, пока Brightless работает. Ежедневные задания используют местное время; пропущенное время игнорируется.</translation>
+    </message>
+    <message>
+        <source>Battery entries run once when the condition becomes true, including at startup, and re-arm when it becomes false.</source>
+        <translation>Задания батареи выполняются один раз при выполнении условия, в том числе при запуске, и снова готовы к запуску, когда условие перестаёт выполняться.</translation>
+    </message>
+    <message>
+        <source>Current battery: %1%</source>
+        <translation>Текущий заряд батареи: %1%</translation>
+    </message>
+    <message>
+        <source>Battery percentage unavailable. Battery entries will not run.</source>
+        <translation>Уровень заряда батареи недоступен. Задания батареи не будут выполняться.</translation>
+    </message>
+    <message>
+        <source>Trigger</source>
+        <translation>Триггер</translation>
+    </message>
+    <message>
+        <source>Battery condition</source>
+        <translation>Условие батареи</translation>
+    </message>
+    <message>
+        <source>Battery threshold (%)</source>
+        <translation>Порог заряда батареи (%)</translation>
+    </message>
     <message>
         <source>Add entry</source>
         <translation>Добавить запись</translation>

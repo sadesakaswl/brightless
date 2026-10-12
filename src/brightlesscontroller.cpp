@@ -4,6 +4,7 @@
 
 #include "platform/ddcbackend.h"
 #include "platform/autostart.h"
+#include "platform/battery.h"
 
 #include <QCoreApplication>
 #include <QJsonObject>
@@ -153,6 +154,10 @@ BrightlessController::BrightlessController(QObject *parent)
         runTimings(QDateTime::currentDateTime());
     });
     timingTimer_.start(1000);
+    connect(&batteryTimer_, &QTimer::timeout, this, &BrightlessController::refreshBattery);
+    // shortcut: battery changes are polled every 30s; use platform notifications if instant triggers are needed.
+    batteryTimer_.start(30000);
+    QTimer::singleShot(0, this, &BrightlessController::refreshBattery);
 }
 
 BrightlessController::~BrightlessController()
@@ -416,13 +421,29 @@ std::optional<BrightlessController::Timing> BrightlessController::parseTiming(co
     if (!entry.value("monitor_id").isString() || !entry.value("enabled").isBool()) {
         return std::nullopt;
     }
-    Timing timing{entry.value("time").toString(), entry.value("monitor_id").toString(),
-                  entry.value("control").toInt(-1), entry.value("value").toInt(-1),
-                  entry.value("enabled").toBool(), {}};
+    Timing timing{entry.value("time").toString(QStringLiteral("00:00")),
+                  entry.value("monitor_id").toString(), entry.value("control").toInt(-1),
+                  entry.value("value").toInt(-1), entry.value("enabled").toBool(), {}};
+    // Existing settings have no trigger field and remain daily time schedules.
+    if (entry.contains("trigger")) {
+        if (!entry.value("trigger").isString()) return std::nullopt;
+        timing.trigger = entry.value("trigger").toString();
+    }
     const auto time = QTime::fromString(timing.time, QStringLiteral("HH:mm"));
-    if (!time.isValid() || time.toString(QStringLiteral("HH:mm")) != timing.time) {
+    if (!time.isValid() || time.toString(QStringLiteral("HH:mm")) != timing.time
+        || (timing.trigger == "time" && !entry.value("time").isString())) {
         return std::nullopt;
     }
+    if (entry.contains("battery_percent") || timing.trigger == "battery") {
+        timing.batteryPercent = entry.value("battery_percent").toInt(-1);
+        if (timing.batteryPercent < 0 || timing.batteryPercent > 100) return std::nullopt;
+    }
+    if (entry.contains("battery_condition") || timing.trigger == "battery") {
+        timing.batteryCondition = entry.value("battery_condition").toString();
+        if (timing.batteryCondition != "below" && timing.batteryCondition != "above")
+            return std::nullopt;
+    }
+    if (timing.trigger != "time" && timing.trigger != "battery") return std::nullopt;
     switch (timing.control) {
     case 0x10:
     case 0x12:
@@ -455,7 +476,9 @@ QVariantList BrightlessController::timings() const
     QVariantList entries;
     for (const auto &timing : timings_) {
         entries.append(QVariantMap{{"time", timing.time}, {"monitor_id", timing.monitorId},
-            {"control", timing.control}, {"value", timing.value}, {"enabled", timing.enabled}});
+            {"control", timing.control}, {"value", timing.value}, {"enabled", timing.enabled},
+            {"trigger", timing.trigger}, {"battery_percent", timing.batteryPercent},
+            {"battery_condition", timing.batteryCondition}});
     }
     return entries;
 }
@@ -472,8 +495,14 @@ bool BrightlessController::update_timing(int index, const QVariantMap &entry)
     if (!brightless::validIndex(index, timings_.size())) return false;
     auto timing = parseTiming(QJsonObject::fromVariantMap(entry));
     if (!timing) return false;
-    if (timing->time == timings_[index].time) {
-        timing->lastRun = timings_[index].lastRun;
+    const auto &previous = timings_[index];
+    if (timing->trigger == previous.trigger) {
+        if (timing->time == previous.time) timing->lastRun = previous.lastRun;
+        if (timing->enabled == previous.enabled
+            && timing->batteryPercent == previous.batteryPercent
+            && timing->batteryCondition == previous.batteryCondition) {
+            timing->batteryMatched = previous.batteryMatched;
+        }
     }
     timings_[index] = *timing;
     saveSettings();
@@ -495,32 +524,67 @@ void BrightlessController::runTimings(const QDateTime &now)
     const auto time = now.time().toString(QStringLiteral("HH:mm"));
     for (auto &timing : timings_) {
         // shortcut: missed minutes are skipped; add resume catch-up if needed.
-        if (!timing.enabled || timing.time != time || timing.lastRun == now.date()) continue;
+        if (!timing.enabled || timing.trigger != "time" || timing.time != time
+            || timing.lastRun == now.date()) continue;
         timing.lastRun = now.date();
-        for (int index = 0; index < monitorCount(); ++index) {
-            const auto *monitor = monitorAt(index);
-            if (!timing.monitorId.isEmpty() && timing.monitorId != monitor->id) continue;
-            switch (timing.control) {
-            case 0x10:
-                if (monitor_dynamic_contrast_enabled(index)) {
-                    set_dynamic_contrast_brightness(index, timing.value);
-                } else {
-                    set_brightness(index, timing.value);
-                }
-                break;
-            case 0x12:
-                if (supports_contrast(index)) set_contrast(index, timing.value);
-                break;
-            case 0x62:
-                if (supports_volume(index)) set_volume(index, timing.value);
-                break;
-            case 0x60:
-                if (supports_input_source(index)) set_input_source(index, timing.value);
-                break;
-            case 0xd6:
-                if (supports_power_mode(index)) set_power_mode(index, timing.value);
-                break;
+        applyTiming(timing);
+    }
+}
+
+void BrightlessController::refreshBattery()
+{
+    if (batteryReadPending_) return;
+    batteryReadPending_ = true;
+    brightless::battery::readPercentage(this, [this](std::optional<int> percentage) {
+        batteryReadPending_ = false;
+        runBatteryTimings(percentage);
+    });
+}
+
+void BrightlessController::runBatteryTimings(std::optional<int> percentage)
+{
+    if (percentage && (*percentage < 0 || *percentage > 100)) percentage.reset();
+    const auto value = percentage.value_or(-1);
+    if (batteryPercent_ != value) {
+        batteryPercent_ = value;
+        emit batteryPercentChanged();
+    }
+    // Unknown readings do not re-arm a threshold that has already fired.
+    if (!percentage || loading_ || monitors_.empty()) return;
+    for (auto &timing : timings_) {
+        if (!timing.enabled || timing.trigger != "battery") continue;
+        const bool matched = timing.batteryCondition == "below"
+            ? *percentage <= timing.batteryPercent : *percentage >= timing.batteryPercent;
+        if (matched && !timing.batteryMatched) applyTiming(timing);
+        timing.batteryMatched = matched;
+    }
+}
+
+void BrightlessController::applyTiming(const Timing &timing)
+{
+    for (int index = 0; index < monitorCount(); ++index) {
+        const auto *monitor = monitorAt(index);
+        if (!timing.monitorId.isEmpty() && timing.monitorId != monitor->id) continue;
+        switch (timing.control) {
+        case 0x10:
+            if (monitor_dynamic_contrast_enabled(index)) {
+                set_dynamic_contrast_brightness(index, timing.value);
+            } else {
+                set_brightness(index, timing.value);
             }
+            break;
+        case 0x12:
+            if (supports_contrast(index)) set_contrast(index, timing.value);
+            break;
+        case 0x62:
+            if (supports_volume(index)) set_volume(index, timing.value);
+            break;
+        case 0x60:
+            if (supports_input_source(index)) set_input_source(index, timing.value);
+            break;
+        case 0xd6:
+            if (supports_power_mode(index)) set_power_mode(index, timing.value);
+            break;
         }
     }
 }

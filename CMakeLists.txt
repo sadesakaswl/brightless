@@ -14,6 +14,7 @@ if(WIN32)
     set(PLATFORM_SOURCES
         src/platform/windows/ddcbackend.cpp
         src/platform/windows/autostart.cpp
+        src/platform/windows/battery.cpp
         src/platform/windows/sdrbrightnesscontroller.cpp
         ${CMAKE_CURRENT_BINARY_DIR}/brightless.rc
     )
@@ -28,6 +29,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(PLATFORM_SOURCES
         src/platform/linux/ddcbackend.cpp
         src/platform/linux/autostart.cpp
+        src/platform/linux/battery.cpp
         src/sdrbrightnesscontroller.cpp
     )
     set(PLATFORM_LIBRARIES Qt6::DBus KF6::GlobalAccel KF6::StatusNotifierItem KF6::Screen PkgConfig::DDCUTIL)
@@ -169,6 +171,11 @@ if(BUILD_TESTING)
     if(NOT WIN32)
         find_program(DBUS_RUN_SESSION dbus-run-session)
         if(DBUS_RUN_SESSION)
+            qt_add_executable(brightless_battery_test tests/battery_test.cpp src/platform/linux/battery.cpp)
+            target_include_directories(brightless_battery_test PRIVATE src)
+            target_link_libraries(brightless_battery_test PRIVATE Qt6::DBus)
+            add_test(NAME battery COMMAND ${DBUS_RUN_SESSION} -- $<TARGET_FILE:brightless_battery_test>)
+            set_tests_properties(battery PROPERTIES TIMEOUT 30)
             add_test(NAME app-smoke COMMAND ${DBUS_RUN_SESSION} -- ${Python3_EXECUTABLE}
                 ${CMAKE_CURRENT_SOURCE_DIR}/tests/app_smoke_test.py $<TARGET_FILE:brightless>)
             set_tests_properties(app-smoke PROPERTIES TIMEOUT 45)

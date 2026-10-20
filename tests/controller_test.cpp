@@ -19,6 +19,14 @@
 #include <cstring>
 #include <map>
 
+#ifdef Q_OS_WIN
+#include "desktopintegration.h"
+#include <QAbstractEventDispatcher>
+#include <QApplication>
+#include <QSettings>
+#include <qt_windows.h>
+#endif
+
 namespace {
 int monitorIds[]{0, 1};
 std::array<std::map<int, int>, 2> reads, writes;
@@ -427,6 +435,67 @@ void testBatteryTimings()
     while (!controller.timings().isEmpty()) controller.remove_timing(0);
 }
 
+#ifdef Q_OS_WIN
+int runWindowsShortcutTests(int argc, char *argv[])
+{
+    QTemporaryDir config;
+    if (!config.isValid()) return 1;
+    qputenv("BRIGHTLESS_TEST_CONFIG", config.path().toUtf8());
+    QApplication app(argc, argv);
+    app.setOrganizationName(QStringLiteral("BrightlessTests"));
+    app.setApplicationName(QStringLiteral("WindowsShortcuts"));
+    QSettings::setDefaultFormat(QSettings::IniFormat);
+    QSettings::setPath(QSettings::IniFormat, QSettings::UserScope, config.path());
+    const auto check = [](bool condition, const char *message) {
+        if (!condition) {
+            std::cerr << "Windows shortcut check failed: " << message << '\n';
+            std::exit(1);
+        }
+    };
+
+    BrightlessController controller;
+    controller.setHideTrayIcon(true);
+    initialize(controller);
+    check(controller.monitorCount() == 2, "fake monitors not discovered");
+    DesktopIntegration desktop;
+    desktop.attach(&controller);
+    auto *dispatcher = QAbstractEventDispatcher::instance();
+    const auto eventType = QByteArrayLiteral("windows_generic_MSG");
+    MSG message{};
+    message.message = WM_HOTKEY;
+    message.wParam = 1;
+    qintptr result = 123;
+    check(dispatcher->filterNativeEvent(eventType, &message, &result)
+              && result == 0 && controller.brightness(0) == 52,
+          "hotkey with a result pointer was not handled");
+    check(dispatcher->filterNativeEvent(eventType, &message, nullptr)
+              && controller.brightness(0) == 54,
+          "hotkey with a null result pointer was not handled");
+    for (const WPARAM id : {WPARAM(0), WPARAM(8)}) {
+        message.wParam = id;
+        result = 123;
+        check(!dispatcher->filterNativeEvent(eventType, &message, &result) && result == 123,
+              "unknown hotkey ID was consumed");
+    }
+    message.message = WM_NULL;
+    message.wParam = 1;
+    check(!dispatcher->filterNativeEvent(eventType, &message, &result)
+              && result == 123 && controller.brightness(0) == 54,
+          "unrelated message triggered a shortcut");
+
+    check(PostThreadMessageW(GetCurrentThreadId(), WM_HOTKEY, 1, 0), "could not post hotkey");
+    QElapsedTimer timer;
+    timer.start();
+    while (controller.brightness(0) == 54 && timer.elapsed() < 5000) {
+        app.processEvents();
+        QThread::msleep(1);
+    }
+    check(controller.brightness(0) == 56 && controller.brightness(1) == 56,
+          "posted hotkey did not trigger exactly once for all monitors");
+    return 0;
+}
+#endif
+
 int runTests(int argc, char *argv[])
 {
     QTemporaryDir config;
@@ -802,6 +871,10 @@ int runTests(int argc, char *argv[])
 
 int main(int argc, char *argv[])
 {
+#ifdef Q_OS_WIN
+    if (argc == 2 && std::strcmp(argv[1], "--windows-shortcuts") == 0)
+        return runWindowsShortcutTests(argc, argv);
+#endif
     const auto result = runTests(argc, argv);
     if (result) std::cerr << "Controller check failed: " << result << '\n';
     return result;

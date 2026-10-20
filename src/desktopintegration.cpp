@@ -40,7 +40,8 @@ struct DesktopIntegration::Impl
             return false;
         }
         actions[msg->wParam - 1]->trigger();
-        *result = 0;
+        // Qt can pass a null result for thread-level messages such as WM_HOTKEY.
+        if (result) *result = 0;
         return true;
     }
 

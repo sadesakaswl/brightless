@@ -166,6 +166,13 @@ if(BUILD_TESTING)
     target_compile_definitions(brightless_controller_test PRIVATE BRIGHTLESS_TESTING)
     add_test(NAME controller COMMAND brightless_controller_test)
     set_tests_properties(controller PROPERTIES TIMEOUT 30)
+    if(WIN32)
+        target_sources(brightless_controller_test PRIVATE src/desktopintegration.cpp src/desktopintegration.h)
+        target_link_libraries(brightless_controller_test PRIVATE Qt6::Widgets user32)
+        target_compile_definitions(brightless_controller_test PRIVATE NOMINMAX WIN32_LEAN_AND_MEAN _WIN32_WINNT=0x0601)
+        add_test(NAME windows-shortcuts COMMAND brightless_controller_test --windows-shortcuts)
+        set_tests_properties(windows-shortcuts PROPERTIES TIMEOUT 30)
+    endif()
 
     add_executable(brightless_instance_test tests/single_instance_test.cpp
         src/singleinstance.cpp src/singleinstance.h)

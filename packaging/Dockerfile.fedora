@@ -1,0 +1,3 @@
+FROM fedora:44
+RUN dnf install -y cmake ninja-build gcc-c++ python3 pkgconf-pkg-config qt6-qtbase-devel qt6-qtdeclarative-devel qt6-qttools-devel kf6-kglobalaccel-devel kf6-kstatusnotifieritem-devel libkscreen-devel libddcutil-devel dbus-daemon desktop-file-utils appstream rpm-build zip flatpak flatpak-builder git xz && dnf clean all
+WORKDIR /work

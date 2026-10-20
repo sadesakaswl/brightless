@@ -1,0 +1,3 @@
+FROM archlinux:base-devel
+RUN pacman -Syu --noconfirm cmake ninja python qt6-base qt6-declarative qt6-tools kglobalaccel kstatusnotifieritem libkscreen ddcutil dbus desktop-file-utils appstream zip && pacman -Scc --noconfirm
+WORKDIR /work

@@ -1,0 +1,41 @@
+{
+  "app-id": "com.brightless.Brightless",
+  "runtime": "org.kde.Platform",
+  "runtime-version": "6.11",
+  "sdk": "org.kde.Sdk",
+  "command": "brightless",
+  "branch": "stable",
+  "finish-args": [
+    "--share=ipc", "--socket=wayland", "--socket=fallback-x11", "--device=all",
+    "--talk-name=org.kde.StatusNotifierWatcher", "--talk-name=org.kde.kglobalaccel",
+    "--talk-name=org.kde.plasmashell", "--system-talk-name=org.freedesktop.UPower"
+  ],
+  "build-options": { "env": { "CMAKE_BUILD_PARALLEL_LEVEL": "4" } },
+  "cleanup": ["/include", "/lib/cmake", "/lib/pkgconfig", "/lib/*.a", "/share/man", "/share/doc"],
+  "modules": [
+    {
+      "name": "ddcutil",
+      "buildsystem": "autotools",
+      "config-opts": ["--enable-install-lib-only", "--disable-static", "--disable-doxygen"],
+      "sources": [{
+        "type": "archive", "url": "https://github.com/rockowitz/ddcutil/archive/refs/tags/v2.2.0.tar.gz",
+        "sha256": "2a9a994b885974423a5b765aaa2c17159f7341881d15f9cb430c0bf1842185ee"
+      }]
+    },
+    {
+      "name": "libkscreen",
+      "buildsystem": "cmake-ninja",
+      "config-opts": ["-DBUILD_TESTING=OFF", "-DCMAKE_BUILD_TYPE=Release"],
+      "sources": [{
+        "type": "archive", "url": "https://download.kde.org/stable/plasma/6.3.4/libkscreen-6.3.4.tar.xz",
+        "sha256": "aced15601115acbd4009c2bc6bd445456fc21c1d046dee1641f22520eeb9ec3c"
+      }]
+    },
+    {
+      "name": "brightless",
+      "buildsystem": "cmake-ninja",
+      "config-opts": ["-DBUILD_TESTING=OFF", "-DCMAKE_BUILD_TYPE=Release"],
+      "sources": [{ "type": "dir", "path": "/src" }]
+    }
+  ]
+}

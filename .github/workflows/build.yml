@@ -3,6 +3,11 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+    inputs:
+      publish_release:
+        description: Publish the version in CMakeLists.txt after all packages pass
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -69,3 +74,63 @@ jobs:
         with:
           name: brightless-windows-x86_64
           path: build/brightless-*.zip
+
+  docker-packages:
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        format: [debian, fedora, arch, flatpak]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare source archive
+        run: |
+          mkdir -p build/release/source build/release/assets
+          git archive HEAD | tar -x -C build/release/source
+      - name: Build Docker image
+        env:
+          FORMAT: ${{ matrix.format }}
+        run: |
+          image=$FORMAT
+          if [ "$image" = flatpak ]; then image=fedora; fi
+          docker build -t brightless-package -f "packaging/Dockerfile.$image" packaging
+      - name: Build, install and smoke test packages
+        env:
+          FORMAT: ${{ matrix.format }}
+        run: |
+          options=()
+          script="bash /src/packaging/build.sh $FORMAT"
+          if [ "$FORMAT" = flatpak ]; then
+            # Bubblewrap needs mount namespaces inside this disposable container.
+            options=(--cap-add SYS_ADMIN --security-opt seccomp=unconfined --security-opt apparmor=unconfined)
+            script="bash /src/packaging/flatpak.sh"
+          fi
+          docker run --rm "${options[@]}" \
+            -v "$PWD/build/release/source:/src:ro" \
+            -v "$PWD/build/release/assets:/out" \
+            brightless-package $script
+      - uses: actions/upload-artifact@v4
+        with:
+          name: brightless-packages-${{ matrix.format }}
+          path: build/release/assets/*
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.publish_release)
+    needs: [linux, windows, docker-packages]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Verify artifacts and publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 tests/release_test.py
+          python3 packaging/release.py artifacts

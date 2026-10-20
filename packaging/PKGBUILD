@@ -1,0 +1,26 @@
+pkgname=brightless
+pkgver=@VERSION@
+pkgrel=1
+pkgdesc='Control external monitor brightness, contrast and volume'
+arch=('x86_64')
+url='https://github.com/sadesakaswl/brightless'
+license=('GPL-3.0-only')
+depends=('qt6-base' 'qt6-declarative' 'kglobalaccel' 'kstatusnotifieritem' 'libkscreen' 'ddcutil')
+makedepends=('cmake' 'ninja' 'qt6-tools')
+checkdepends=('python' 'dbus')
+source=('source.tar.gz')
+sha256sums=('@SHA256@')
+
+build() {
+    cmake -S "brightless-$pkgver" -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+    cmake --build build --parallel 4
+}
+
+check() {
+    # Arch's KScreen Fake test backend fails the SDR test; Fedora CI covers it.
+    dbus-run-session -- ctest --test-dir build -E '^sdr-brightness$' --output-on-failure
+}
+
+package() {
+    DESTDIR="$pkgdir" cmake --install build
+}

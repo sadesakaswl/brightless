@@ -92,12 +92,56 @@
 <context>
     <name>SettingsWindow</name>
     <message>
+        <source>Yellow</source>
+        <translation>黄色</translation>
+    </message>
+    <message>
+        <source>Light Green</source>
+        <translation>浅绿</translation>
+    </message>
+    <message>
+        <source>Dark Green</source>
+        <translation>深绿</translation>
+    </message>
+    <message>
+        <source>Light Blue</source>
+        <translation>浅蓝</translation>
+    </message>
+    <message>
+        <source>Dark Blue</source>
+        <translation>深蓝</translation>
+    </message>
+    <message>
+        <source>Purple</source>
+        <translation>紫色</translation>
+    </message>
+    <message>
+        <source>Red</source>
+        <translation>红色</translation>
+    </message>
+    <message>
+        <source>Orange</source>
+        <translation>橙色</translation>
+    </message>
+    <message>
+        <source>Grey</source>
+        <translation>灰色</translation>
+    </message>
+    <message>
+        <source>Brown</source>
+        <translation>棕色</translation>
+    </message>
+    <message>
         <source>Theme</source>
         <translation>主题</translation>
     </message>
     <message>
-        <source>Auto</source>
-        <translation>自动</translation>
+        <source>System</source>
+        <translation>系统</translation>
+    </message>
+    <message>
+        <source>AMOLED Black</source>
+        <translation>AMOLED 纯黑</translation>
     </message>
     <message>
         <source>Light</source>

@@ -1,6 +1,7 @@
 #include "brightlesscontroller.h"
 
 #include "model.h"
+#include "themepresets.h"
 
 #include "platform/ddcbackend.h"
 #include "platform/autostart.h"
@@ -244,7 +245,7 @@ void BrightlessController::setHideOnTrayClick(bool value)
 
 void BrightlessController::setThemeMode(const QString &mode)
 {
-    if (themeMode_ == mode || (mode != "auto" && mode != "light" && mode != "dark")) return;
+    if (themeMode_ == mode || !brightless::isThemeMode(mode)) return;
     themeMode_ = mode;
     saveSettings();
     emit themeModeChanged();

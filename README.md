@@ -15,7 +15,7 @@ A Qt DDC/CI application for controlling external monitors on Linux and Windows.
 - **Monitor detection** — Asynchronous discovery, automatic refresh on screen changes, and manual rescanning.
 - **Mouse wheel** — Configurable 1–10% slider steps; Linux also supports tray scrolling.
 - **Global shortcuts and OSD** — Configurable shortcuts with brightness/volume feedback through Plasma's OSD on Linux or Qt's OSD on Windows.
-- **Themes and settings** — Auto, Light, or Dark mode; adaptive monitor cards, scalable fonts, optional control visibility, custom VCP codes, and adjustable DDC delay.
+- **Themes and settings** — System (desktop colors, e.g. Breeze), Light, Dark, AMOLED Black, Light/Dark Green, Light/Dark Blue, Purple, Red, Orange, Grey, Brown, or Yellow mode; adaptive monitor cards, scalable fonts, optional control visibility, custom VCP codes, and adjustable DDC delay.
 - **Tray and autostart** — Optional close-to-tray behavior and per-user login startup, including starting minimized to the tray.
 - **Saved preferences** — Atomic settings and window-size persistence, with frequent slider updates debounced.
 - **Single instance** — Launching Brightless again restores the existing window.

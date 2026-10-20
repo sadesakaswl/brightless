@@ -19,8 +19,7 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    // Fusion honors application palettes on both Linux and Windows, unlike native styles.
-    QApplication::setStyle(QStringLiteral("Fusion"));
+    // Keep the platform's palette (e.g. Breeze), with palette-aware Quick controls.
     QQuickStyle::setStyle(QStringLiteral("Fusion"));
     auto font = QApplication::font();
     font.setPointSizeF(qMax(12.0, QFontInfo(font).pointSizeF()));

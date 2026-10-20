@@ -92,12 +92,56 @@
 <context>
     <name>SettingsWindow</name>
     <message>
+        <source>Yellow</source>
+        <translation>Жёлтая</translation>
+    </message>
+    <message>
+        <source>Light Green</source>
+        <translation>Светло-зелёная</translation>
+    </message>
+    <message>
+        <source>Dark Green</source>
+        <translation>Тёмно-зелёная</translation>
+    </message>
+    <message>
+        <source>Light Blue</source>
+        <translation>Светло-синяя</translation>
+    </message>
+    <message>
+        <source>Dark Blue</source>
+        <translation>Тёмно-синяя</translation>
+    </message>
+    <message>
+        <source>Purple</source>
+        <translation>Фиолетовая</translation>
+    </message>
+    <message>
+        <source>Red</source>
+        <translation>Красная</translation>
+    </message>
+    <message>
+        <source>Orange</source>
+        <translation>Оранжевая</translation>
+    </message>
+    <message>
+        <source>Grey</source>
+        <translation>Серая</translation>
+    </message>
+    <message>
+        <source>Brown</source>
+        <translation>Коричневая</translation>
+    </message>
+    <message>
         <source>Theme</source>
         <translation>Тема</translation>
     </message>
     <message>
-        <source>Auto</source>
-        <translation>Авто</translation>
+        <source>System</source>
+        <translation>Системная</translation>
+    </message>
+    <message>
+        <source>AMOLED Black</source>
+        <translation>Чёрная AMOLED</translation>
     </message>
     <message>
         <source>Light</source>

@@ -92,12 +92,56 @@
 <context>
     <name>SettingsWindow</name>
     <message>
+        <source>Yellow</source>
+        <translation>Yellow</translation>
+    </message>
+    <message>
+        <source>Light Green</source>
+        <translation>Light Green</translation>
+    </message>
+    <message>
+        <source>Dark Green</source>
+        <translation>Dark Green</translation>
+    </message>
+    <message>
+        <source>Light Blue</source>
+        <translation>Light Blue</translation>
+    </message>
+    <message>
+        <source>Dark Blue</source>
+        <translation>Dark Blue</translation>
+    </message>
+    <message>
+        <source>Purple</source>
+        <translation>Purple</translation>
+    </message>
+    <message>
+        <source>Red</source>
+        <translation>Red</translation>
+    </message>
+    <message>
+        <source>Orange</source>
+        <translation>Orange</translation>
+    </message>
+    <message>
+        <source>Grey</source>
+        <translation>Grey</translation>
+    </message>
+    <message>
+        <source>Brown</source>
+        <translation>Brown</translation>
+    </message>
+    <message>
         <source>Theme</source>
         <translation>Theme</translation>
     </message>
     <message>
-        <source>Auto</source>
-        <translation>Auto</translation>
+        <source>System</source>
+        <translation>System</translation>
+    </message>
+    <message>
+        <source>AMOLED Black</source>
+        <translation>AMOLED Black</translation>
     </message>
     <message>
         <source>Light</source>

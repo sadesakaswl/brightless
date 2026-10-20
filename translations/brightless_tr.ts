@@ -92,12 +92,56 @@
 <context>
     <name>SettingsWindow</name>
     <message>
+        <source>Yellow</source>
+        <translation>Sarı</translation>
+    </message>
+    <message>
+        <source>Light Green</source>
+        <translation>Açık Yeşil</translation>
+    </message>
+    <message>
+        <source>Dark Green</source>
+        <translation>Koyu Yeşil</translation>
+    </message>
+    <message>
+        <source>Light Blue</source>
+        <translation>Açık Mavi</translation>
+    </message>
+    <message>
+        <source>Dark Blue</source>
+        <translation>Koyu Mavi</translation>
+    </message>
+    <message>
+        <source>Purple</source>
+        <translation>Mor</translation>
+    </message>
+    <message>
+        <source>Red</source>
+        <translation>Kırmızı</translation>
+    </message>
+    <message>
+        <source>Orange</source>
+        <translation>Turuncu</translation>
+    </message>
+    <message>
+        <source>Grey</source>
+        <translation>Gri</translation>
+    </message>
+    <message>
+        <source>Brown</source>
+        <translation>Kahverengi</translation>
+    </message>
+    <message>
         <source>Theme</source>
         <translation>Tema</translation>
     </message>
     <message>
-        <source>Auto</source>
-        <translation>Otomatik</translation>
+        <source>System</source>
+        <translation>Sistem</translation>
+    </message>
+    <message>
+        <source>AMOLED Black</source>
+        <translation>AMOLED Siyah</translation>
     </message>
     <message>
         <source>Light</source>

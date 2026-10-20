@@ -274,14 +274,15 @@ void testThemeMode(const QString &settingsPath)
     check(controller.themeMode() == "auto", "existing settings must default to auto");
     int changes = 0;
     QObject::connect(&controller, &BrightlessController::themeModeChanged, [&] { ++changes; });
-    for (const auto &mode : {"light", "dark", "auto"}) {
+    for (const auto &mode : {"light", "dark", "amoled", "light_green", "dark_green",
+                             "light_blue", "dark_blue", "purple", "red", "orange", "grey", "brown", "yellow", "auto"}) {
         controller.setThemeMode(QString::fromLatin1(mode));
         check(controller.themeMode() == mode && BrightlessController().themeMode() == mode,
               "theme mode was not persisted");
         controller.setThemeMode(QString::fromLatin1(mode));
     }
     controller.setThemeMode(QStringLiteral("invalid"));
-    check(controller.themeMode() == "auto" && changes == 3, "invalid/redundant change notified");
+    check(controller.themeMode() == "auto" && changes == 14, "invalid/redundant change notified");
     for (const auto &invalid : {QJsonValue("invalid"), QJsonValue(2), QJsonValue(true)}) {
         QFile file(settingsPath);
         check(file.open(QIODevice::ReadOnly), "cannot read settings fixture");

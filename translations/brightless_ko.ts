@@ -92,12 +92,56 @@
 <context>
     <name>SettingsWindow</name>
     <message>
+        <source>Yellow</source>
+        <translation>노란색</translation>
+    </message>
+    <message>
+        <source>Light Green</source>
+        <translation>라이트 그린</translation>
+    </message>
+    <message>
+        <source>Dark Green</source>
+        <translation>다크 그린</translation>
+    </message>
+    <message>
+        <source>Light Blue</source>
+        <translation>라이트 블루</translation>
+    </message>
+    <message>
+        <source>Dark Blue</source>
+        <translation>다크 블루</translation>
+    </message>
+    <message>
+        <source>Purple</source>
+        <translation>보라색</translation>
+    </message>
+    <message>
+        <source>Red</source>
+        <translation>빨간색</translation>
+    </message>
+    <message>
+        <source>Orange</source>
+        <translation>주황색</translation>
+    </message>
+    <message>
+        <source>Grey</source>
+        <translation>회색</translation>
+    </message>
+    <message>
+        <source>Brown</source>
+        <translation>갈색</translation>
+    </message>
+    <message>
         <source>Theme</source>
         <translation>테마</translation>
     </message>
     <message>
-        <source>Auto</source>
-        <translation>자동</translation>
+        <source>System</source>
+        <translation>시스템</translation>
+    </message>
+    <message>
+        <source>AMOLED Black</source>
+        <translation>AMOLED 블랙</translation>
     </message>
     <message>
         <source>Light</source>

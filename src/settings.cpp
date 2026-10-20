@@ -1,6 +1,7 @@
 #include "brightlesscontroller.h"
 #include "model.h"
 #include "configpath.h"
+#include "themepresets.h"
 
 #include <QDir>
 #include <QFile>
@@ -62,7 +63,7 @@ void BrightlessController::loadSettings()
 
     const auto object = document.object();
     const auto theme = object.value(QStringLiteral("theme_mode")).toString();
-    if (theme == "light" || theme == "dark") themeMode_ = theme;
+    if (brightless::isThemeMode(theme)) themeMode_ = theme;
     use12HourTime_ = object.value(QStringLiteral("use_12_hour_time")).toBool(false);
     for (const auto &entry : object.value(QStringLiteral("timings")).toArray()) {
         if (auto timing = parseTiming(entry.toObject())) {

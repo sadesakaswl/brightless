@@ -83,19 +83,23 @@ Item {
             const selector = findChild(loader.item, "themeSelector")
             verify(!!selector)
             compare(selector.currentValue, "auto")
-            for (const index of [1, 2, 0]) {
+            compare(selector.currentText, qsTr("System"))
+            const modes = ["auto", "light", "dark", "amoled", "light_green", "dark_green",
+                           "light_blue", "dark_blue", "purple", "red", "orange", "grey", "brown", "yellow"]
+            compare(selector.count, modes.length)
+            for (const index of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 0]) {
                 while (selector.currentIndex < index) selector.incrementCurrentIndex()
                 while (selector.currentIndex > index) selector.decrementCurrentIndex()
                 selector.activated(index)
-                compare(backend.theme_mode, ["auto", "light", "dark"][index])
+                compare(backend.theme_mode, modes[index])
             }
-            backend.theme_mode = "dark"
-            tryCompare(selector, "currentIndex", 2)
+            backend.theme_mode = "yellow"
+            tryCompare(selector, "currentIndex", 13)
             settings.hide()
             tryCompare(loader, "item", null)
             settings.open()
             tryCompare(loader, "status", Loader.Ready)
-            compare(findChild(loader.item, "themeSelector").currentValue, "dark")
+            compare(findChild(loader.item, "themeSelector").currentValue, "yellow")
         }
 
         function test_wheel_updates_slider_values_without_scrolling_page() {

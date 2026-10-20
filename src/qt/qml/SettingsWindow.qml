@@ -122,9 +122,20 @@ ApplicationWindow {
                         objectName: "themeSelector"
                         Accessible.name: qsTr("Theme")
                         model: [
-                            { text: qsTr("Auto"), mode: "auto" },
+                            { text: qsTr("System"), mode: "auto" },
                             { text: qsTr("Light"), mode: "light" },
-                            { text: qsTr("Dark"), mode: "dark" }
+                            { text: qsTr("Dark"), mode: "dark" },
+                            { text: qsTr("AMOLED Black"), mode: "amoled" },
+                            { text: qsTr("Light Green"), mode: "light_green" },
+                            { text: qsTr("Dark Green"), mode: "dark_green" },
+                            { text: qsTr("Light Blue"), mode: "light_blue" },
+                            { text: qsTr("Dark Blue"), mode: "dark_blue" },
+                            { text: qsTr("Purple"), mode: "purple" },
+                            { text: qsTr("Red"), mode: "red" },
+                            { text: qsTr("Orange"), mode: "orange" },
+                            { text: qsTr("Grey"), mode: "grey" },
+                            { text: qsTr("Brown"), mode: "brown" },
+                            { text: qsTr("Yellow"), mode: "yellow" }
                         ]
                         textRole: "text"
                         valueRole: "mode"

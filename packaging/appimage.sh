@@ -7,13 +7,16 @@ cd /work/tools
 python3 - <<'PY'
 import hashlib
 import json
+import os
 from pathlib import Path
 import urllib.request
 
 for repo, name in [('linuxdeploy/linuxdeploy', 'linuxdeploy'),
                    ('linuxdeploy/linuxdeploy-plugin-qt', 'linuxdeploy-plugin-qt'),
                    ('AppImage/appimagetool', 'appimagetool')]:
-    with urllib.request.urlopen(f'https://api.github.com/repos/{repo}/releases/tags/continuous', timeout=120) as response:
+    headers = {'Authorization': f"Bearer {os.environ['GH_TOKEN']}"} if os.environ.get('GH_TOKEN') else {}
+    request = urllib.request.Request(f'https://api.github.com/repos/{repo}/releases/tags/continuous', headers=headers)
+    with urllib.request.urlopen(request, timeout=120) as response:
         release = json.load(response)
     filename = f'{name}-x86_64.AppImage'
     asset = next(item for item in release['assets'] if item['name'] == filename)

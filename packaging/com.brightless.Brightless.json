@@ -11,12 +11,21 @@
     "--talk-name=org.kde.plasmashell", "--system-talk-name=org.freedesktop.UPower"
   ],
   "build-options": { "env": { "CMAKE_BUILD_PARALLEL_LEVEL": "4" } },
-  "cleanup": ["/include", "/lib/cmake", "/lib/pkgconfig", "/lib/*.a", "/share/man", "/share/doc"],
+  "cleanup": ["/include", "/lib/cmake", "/lib/pkgconfig", "/lib/*.a", "/share/man"],
   "modules": [
+    {
+      "name": "jansson",
+      "buildsystem": "autotools",
+      "config-opts": ["--disable-static"],
+      "sources": [{
+        "type": "archive", "url": "https://github.com/akheron/jansson/releases/download/v2.15.1/jansson-2.15.1.tar.bz2",
+        "sha256": "f9aa4b3ec8496fee69db94f06f3d76fd4a26b012ee9bf1e917078c2cd2841881"
+      }]
+    },
     {
       "name": "ddcutil",
       "buildsystem": "autotools",
-      "config-opts": ["--enable-install-lib-only", "--disable-static", "--disable-doxygen"],
+      "config-opts": ["--disable-static", "--disable-doxygen"],
       "sources": [{
         "type": "archive", "url": "https://github.com/rockowitz/ddcutil/archive/refs/tags/v2.2.0.tar.gz",
         "sha256": "2a9a994b885974423a5b765aaa2c17159f7341881d15f9cb430c0bf1842185ee"
@@ -27,8 +36,8 @@
       "buildsystem": "cmake-ninja",
       "config-opts": ["-DBUILD_TESTING=OFF", "-DCMAKE_BUILD_TYPE=Release"],
       "sources": [{
-        "type": "archive", "url": "https://download.kde.org/stable/plasma/6.3.4/libkscreen-6.3.4.tar.xz",
-        "sha256": "aced15601115acbd4009c2bc6bd445456fc21c1d046dee1641f22520eeb9ec3c"
+        "type": "archive", "url": "https://download.kde.org/stable/plasma/6.7.5/libkscreen-6.7.5.tar.xz",
+        "sha256": "df317e03acfadfcbc68981b78131750103fadf4d5c5df6368c9e91e698677219"
       }]
     },
     {

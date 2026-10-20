@@ -99,13 +99,16 @@ jobs:
       - name: Build, install and smoke test packages
         env:
           FORMAT: ${{ matrix.format }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           options=()
           script="bash /src/packaging/build.sh $FORMAT"
           if [ "$FORMAT" = flatpak ]; then
-            # Bubblewrap needs mount namespaces inside this disposable container.
-            options=(--cap-add SYS_ADMIN --security-opt seccomp=unconfined --security-opt apparmor=unconfined)
+            # Bubblewrap mounts /proc and configures loopback in its nested namespaces.
+            options=(--cap-add SYS_ADMIN --cap-add NET_ADMIN --security-opt seccomp=unconfined --security-opt apparmor=unconfined --security-opt systempaths=unconfined)
             script="bash /src/packaging/flatpak.sh"
+          elif [ "$FORMAT" = debian ]; then
+            options=(--env GH_TOKEN)
           fi
           docker run --rm "${options[@]}" \
             -v "$PWD/build/release/source:/src:ro" \

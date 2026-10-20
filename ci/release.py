@@ -52,7 +52,8 @@ def main():
     existing = subprocess.run(["gh", "release", "view", tag, "--json", "isDraft", "--jq", ".isDraft"], capture_output=True, text=True)
     if existing.returncode == 0:
         if existing.stdout.strip() != "true":
-            raise ValueError(f"Refusing to overwrite published release {tag}")
+            print(f"Release {tag} is already published; leaving it unchanged.")
+            return
         subprocess.run(["gh", "release", "edit", tag, "--target", sha, "--title", f"Brightless {version}", "--notes-file", str(notes)], check=True)
     else:
         subprocess.run(["gh", "release", "create", tag, "--draft", "--target", sha, "--title", f"Brightless {version}", "--notes-file", str(notes)], check=True)

@@ -11,7 +11,7 @@ chmod 700 "$XDG_RUNTIME_DIR"
 flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 flatpak config --user --set languages en
 flatpak install --user -y --noninteractive --no-related flathub org.kde.Platform//6.11 org.kde.Sdk//6.11
-flatpak-builder --user --disable-rofiles-fuse --force-clean --repo=/work/repo /work/app /src/packaging/com.brightless.Brightless.json
+flatpak-builder --user --disable-rofiles-fuse --force-clean --repo=/work/repo /work/app /src/ci/com.brightless.Brightless.json
 bundle="/out/brightless-$version-x86_64.flatpak"
 flatpak build-bundle /work/repo "$bundle" com.brightless.Brightless stable
 flatpak install --user -y --noninteractive --no-deps --no-related "$bundle"

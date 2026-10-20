@@ -30,6 +30,7 @@ jobs:
           cmake --build build --parallel 2
       - name: Test and validate metadata
         run: |
+          python3 tests/release_test.py
           dbus-run-session -- ctest --test-dir build --output-on-failure
           desktop-file-validate resources/com.brightless.Brightless.desktop
           appstreamcli validate --no-net resources/com.brightless.Brightless.metainfo.xml
@@ -95,18 +96,18 @@ jobs:
         run: |
           image=$FORMAT
           if [ "$image" = flatpak ]; then image=fedora; fi
-          docker build -t brightless-package -f "packaging/Dockerfile.$image" packaging
+          docker build -t brightless-package -f "ci/Dockerfile.$image" ci
       - name: Build, install and smoke test packages
         env:
           FORMAT: ${{ matrix.format }}
           GH_TOKEN: ${{ github.token }}
         run: |
           options=()
-          script="bash /src/packaging/build.sh $FORMAT"
+          script="bash /src/ci/build.sh $FORMAT"
           if [ "$FORMAT" = flatpak ]; then
             # Bubblewrap mounts /proc and configures loopback in its nested namespaces.
             options=(--cap-add SYS_ADMIN --cap-add NET_ADMIN --security-opt seccomp=unconfined --security-opt apparmor=unconfined --security-opt systempaths=unconfined)
-            script="bash /src/packaging/flatpak.sh"
+            script="bash /src/ci/flatpak.sh"
           elif [ "$FORMAT" = debian ]; then
             options=(--env GH_TOKEN)
           fi
@@ -136,4 +137,4 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           python3 tests/release_test.py
-          python3 packaging/release.py artifacts
+          python3 ci/release.py artifacts

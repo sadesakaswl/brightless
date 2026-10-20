@@ -4,9 +4,11 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 import zipfile
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "packaging"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "ci"))
+import release
 from release import prepare_assets
 
 
@@ -44,6 +46,20 @@ class ReleaseTest(unittest.TestCase):
         (self.artifacts / "duplicate" / package.name).write_bytes(b"package")
         with self.assertRaises(ValueError):
             prepare_assets(self.artifacts, self.root / "output", "0.5.0")
+
+    def test_published_release_is_not_modified(self):
+        with (
+            patch.object(release, "prepare_assets", return_value=[]),
+            patch.object(release.subprocess, "check_output", return_value="abc123\n"),
+            patch.object(release.subprocess, "run") as run,
+            patch.object(sys, "argv", ["release.py", str(self.artifacts)]),
+            patch.dict("os.environ", {"GITHUB_REF": "refs/heads/main"}),
+        ):
+            run.return_value.returncode = 0
+            run.return_value.stdout = "false\n"
+            release.main()
+            run.assert_called_once()
+            self.assertEqual(run.call_args.args[0][:3], ["gh", "release", "view"])
 
     def test_corrupt_zip_is_rejected(self):
         (self.artifacts / "brightless-0.5.0-win64.zip").write_bytes(b"not a ZIP")

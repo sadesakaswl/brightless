@@ -12,7 +12,7 @@ if [[ $format == arch ]]; then
     cp -a /src/. "archive/brightless-$version/"
     tar -czf source.tar.gz -C archive "brightless-$version"
     checksum=$(sha256sum source.tar.gz | cut -d' ' -f1)
-    sed -e "s/@VERSION@/$version/g" -e "s/@SHA256@/$checksum/g" /src/packaging/PKGBUILD > PKGBUILD
+    sed -e "s/@VERSION@/$version/g" -e "s/@SHA256@/$checksum/g" /src/ci/PKGBUILD > PKGBUILD
     chown -R builder:builder /work
     runuser -u builder -- makepkg --noconfirm
     package="brightless-$version-1-x86_64.pkg.tar.zst"
@@ -47,5 +47,5 @@ fi
 
 dbus-run-session -- python3 /src/tests/app_smoke_test.py /usr/bin/brightless
 if [[ $format == debian ]]; then
-    bash /src/packaging/appimage.sh "$version"
+    bash /src/ci/appimage.sh "$version"
 fi

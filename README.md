@@ -63,9 +63,9 @@ Windows installation deploys Qt libraries and QML plugins; artifacts are unsigne
 
 ## Release packaging
 
-GitHub Actions builds all seven download formats. Linux packages use Docker (`packaging/`); Windows uses MSVC and Qt deployment. Push a `v<version>` tag matching `CMakeLists.txt`, or run **Build and package** manually with **publish_release** enabled. Add `releases/<version>.md` first. Publishing waits for all builds, package installation/smoke checks, and checksum generation; published releases are never overwritten.
+GitHub Actions builds all seven download formats. Linux packages use Docker (`ci/`); Windows uses MSVC and Qt deployment. Push a `v<version>` tag matching `CMakeLists.txt`, or run **Build and package** manually with **publish_release** enabled. Add `releases/<version>.md` first. Publishing waits for all builds, package installation/smoke checks, and checksum generation; published releases are never overwritten.
 
-To build one Linux format locally, archive the source to a directory, mount it read-only at `/src`, mount an output directory at `/out`, and run `bash /src/packaging/build.sh debian` (or `fedora`/`arch`) in its corresponding Docker image. Flatpak uses the Fedora image and `packaging/flatpak.sh`; nested Bubblewrap needs `SYS_ADMIN` for mounts, `NET_ADMIN` for its private loopback interface, and unconfined seccomp/AppArmor/system paths inside the disposable container. Do not mount credentials or host system directories into it.
+To build one Linux format locally, archive the source to a directory, mount it read-only at `/src`, mount an output directory at `/out`, and run `bash /src/ci/build.sh debian` (or `fedora`/`arch`) in its corresponding Docker image. Flatpak uses the Fedora image and `ci/flatpak.sh`; nested Bubblewrap needs `SYS_ADMIN` for mounts, `NET_ADMIN` for its private loopback interface, and unconfined seccomp/AppArmor/system paths inside the disposable container. Do not mount credentials or host system directories into it.
 
 The Flatpak manifest pins Jansson 2.15.1, ddcutil 2.2.0, and libkscreen 6.7.5 for the KDE 6.11 SDK. ddcutil's development headers and pkg-config file must remain installed until Brightless is built. The export sandbox is checked before downloading the SDK, so missing Docker capabilities fail early.
 

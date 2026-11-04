@@ -21,6 +21,7 @@ if(WIN32)
     set(PLATFORM_LIBRARIES dxva2 user32)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     find_package(Qt6 REQUIRED COMPONENTS DBus)
+    find_package(KF6Config REQUIRED)
     find_package(KF6GlobalAccel REQUIRED)
     find_package(KF6StatusNotifierItem REQUIRED)
     find_package(KF6Screen 6.0 REQUIRED)
@@ -32,7 +33,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
         src/platform/linux/battery.cpp
         src/sdrbrightnesscontroller.cpp
     )
-    set(PLATFORM_LIBRARIES Qt6::DBus KF6::GlobalAccel KF6::StatusNotifierItem KF6::Screen PkgConfig::DDCUTIL)
+    set(PLATFORM_LIBRARIES Qt6::DBus KF6::ConfigCore KF6::GlobalAccel KF6::StatusNotifierItem KF6::Screen PkgConfig::DDCUTIL)
 else()
     message(FATAL_ERROR "Brightless currently supports Linux and Windows")
 endif()
@@ -44,6 +45,7 @@ qt_add_executable(brightless
     src/desktopintegration.cpp src/desktopintegration.h
     src/singleinstance.cpp src/singleinstance.h
     src/sdrbrightnesscontroller.h
+    src/nightlightcontroller.cpp src/nightlightcontroller.h
     src/model.h src/theme.h
     ${PLATFORM_SOURCES}
 )
@@ -53,6 +55,7 @@ set(QML_FILES
     src/qt/qml/Main.qml
     src/qt/qml/SettingsWindow.qml
     src/qt/qml/TimingPage.qml
+    src/qt/qml/NightLightSettings.qml
     src/qt/qml/ControlCard.qml
     src/qt/qml/MonitorSlider.qml
     src/qt/qml/MonitorCard.qml
@@ -131,7 +134,7 @@ if(BUILD_TESTING)
             -input ${CMAKE_CURRENT_SOURCE_DIR}/tests/tst_timing_page.qml)
         set_tests_properties(timing-ui PROPERTIES TIMEOUT 30
             ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Fusion;QT_FORCE_STDERR_LOGGING=1")
-        foreach(ui_test IN ITEMS monitor_slider monitor_card settings_window)
+        foreach(ui_test IN ITEMS monitor_slider monitor_card settings_window night_light_settings)
             string(REPLACE "_" "-" test_name "${ui_test}")
             add_test(NAME ${test_name}-ui COMMAND Qt6::qmltestrunner
                 -input ${CMAKE_CURRENT_SOURCE_DIR}/tests/tst_${ui_test}.qml)
@@ -139,7 +142,7 @@ if(BUILD_TESTING)
                 ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Fusion;QT_FORCE_STDERR_LOGGING=1")
         endforeach()
         if(WIN32)
-            set_property(TEST timing-ui monitor-slider-ui monitor-card-ui settings-window-ui
+            set_property(TEST timing-ui monitor-slider-ui monitor-card-ui settings-window-ui night-light-settings-ui
                 APPEND PROPERTY ENVIRONMENT "QT_QPA_FONTDIR=$ENV{WINDIR}/Fonts")
         endif()
     endif()
@@ -193,6 +196,12 @@ if(BUILD_TESTING)
             target_link_libraries(brightless_battery_test PRIVATE Qt6::DBus)
             add_test(NAME battery COMMAND ${DBUS_RUN_SESSION} -- $<TARGET_FILE:brightless_battery_test>)
             set_tests_properties(battery PROPERTIES TIMEOUT 30)
+            qt_add_executable(brightless_night_light_test tests/night_light_test.cpp
+                src/nightlightcontroller.cpp src/nightlightcontroller.h)
+            target_include_directories(brightless_night_light_test PRIVATE src)
+            target_link_libraries(brightless_night_light_test PRIVATE Qt6::Qml Qt6::Network Qt6::DBus KF6::ConfigCore)
+            add_test(NAME night-light COMMAND ${DBUS_RUN_SESSION} -- $<TARGET_FILE:brightless_night_light_test>)
+            set_tests_properties(night-light PROPERTIES TIMEOUT 30)
             add_test(NAME app-smoke COMMAND ${DBUS_RUN_SESSION} -- ${Python3_EXECUTABLE}
                 ${CMAKE_CURRENT_SOURCE_DIR}/tests/app_smoke_test.py $<TARGET_FILE:brightless>)
             set_tests_properties(app-smoke PROPERTIES TIMEOUT 45)

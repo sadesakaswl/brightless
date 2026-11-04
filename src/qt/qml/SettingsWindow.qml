@@ -7,6 +7,7 @@ import QtQuick.Layouts
 ApplicationWindow {
     id: settingsWindow
     required property var controller
+    required property var nightLight
     required property var appWindow
     required property var desktop
     readonly property var window: appWindow
@@ -533,6 +534,7 @@ ApplicationWindow {
         id: timingPage
         TimingPage {
             controller: settingsWindow.controller
+            nightLight: settingsWindow.nightLight
         }
     }
 

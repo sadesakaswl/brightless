@@ -35,10 +35,13 @@ Item {
         }
     }
 
+    FakeNightLight { id: nightLightBackend }
+
     Ui.TimingPage {
         id: page
         anchors.fill: parent
         controller: backend
+        nightLight: nightLightBackend
     }
 
     TestCase {

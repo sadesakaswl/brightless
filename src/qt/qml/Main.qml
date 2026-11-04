@@ -29,6 +29,8 @@ ApplicationWindow {
         Component.onCompleted: initialize()
     }
 
+    NightLightController { id: nightLightController }
+
     readonly property var backend: controller
     readonly property var sdrBackend: sdrController
     property int revision: controller.revision
@@ -94,6 +96,7 @@ ApplicationWindow {
     SettingsWindow {
         id: settingsWindow
         controller: window.backend
+        nightLight: nightLightController
         appWindow: window
         desktop: desktopIntegration
     }

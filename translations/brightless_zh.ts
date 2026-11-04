@@ -741,4 +741,37 @@
         <translation>音量</translation>
     </message>
 </context>
+<context>
+    <name>NightLightSettings</name>
+    <message><source>Detect location via ipwho.is</source><translation>通过 ipwho.is 检测位置</translation></message>
+    <message><source>ipwho.is receives your public IP address to estimate your location. Plasma settings change only when you apply.</source><translation>ipwho.is 会接收您的公网 IP 地址，以估算您的位置。只有应用更改后，Plasma 设置才会改变。</translation></message>
+    <message><source>Use Plasma's automatic location</source><translation>使用 Plasma 自动定位</translation></message>
+    <message><source>Latitude (-90 to 90)</source><translation>纬度（-90 至 90）</translation></message>
+    <message><source>Longitude (-180 to 180)</source><translation>经度（-180 至 180）</translation></message>
+    <message><source>Night Light</source><translation>夜间模式</translation></message>
+    <message><source>Uses Plasma Night Light. Plasma keeps the schedule running after Brightless closes.</source><translation>使用 Plasma 夜间模式。关闭 Brightless 后，Plasma 仍会按计划运行。</translation></message>
+    <message><source>Night Light requires KDE Plasma with a compatible KWin compositor.</source><translation>夜间模式需要 KDE Plasma 和兼容的 KWin 合成器。</translation></message>
+    <message><source>Updating Night Light…</source><translation>正在更新夜间模式…</translation></message>
+    <message><source>Enable Night Light</source><translation>启用夜间模式</translation></message>
+    <message><source>Schedule</source><translation>计划</translation></message>
+    <message><source>Sunset to sunrise</source><translation>日落至日出</translation></message>
+    <message><source>Custom times</source><translation>自定义时间</translation></message>
+    <message><source>Always on</source><translation>始终开启</translation></message>
+    <message><source>Night temperature: %1 K</source><translation>夜间色温：%1 K</translation></message>
+    <message><source>Night temperature</source><translation>夜间色温</translation></message>
+    <message><source>Night starts (24-hour)</source><translation>夜间开始时间（24 小时制）</translation></message>
+    <message><source>Day starts (24-hour)</source><translation>白天开始时间（24 小时制）</translation></message>
+    <message><source>Smooth transition (minutes)</source><translation>平滑过渡（分钟）</translation></message>
+    <message><source>These timings are shared with Plasma's other day/night features.</source><translation>这些时间设置与 Plasma 的其他日间/夜间功能共享。</translation></message>
+    <message><source>Apply Night Light</source><translation>应用夜间模式</translation></message>
+</context>
+<context>
+    <name>NightLightController</name>
+    <message><source>Could not detect location via ipwho.is: %1</source><translation>无法通过 ipwho.is 检测位置：%1</translation></message>
+    <message><source>ipwho.is did not return a valid location.</source><translation>ipwho.is 未返回有效的位置。</translation></message>
+    <message><source>Use a latitude from -90 to 90 and a longitude from -180 to 180.</source><translation>请输入 -90 至 90 之间的纬度和 -180 至 180 之间的经度。</translation></message>
+    <message><source>Use a temperature from 1000–6500 K, valid times, and a transition shorter than both the day and the night.</source><translation>请使用 1000–6500 K 的色温和有效时间，过渡时长必须短于白天和夜间各自的持续时间。</translation></message>
+    <message><source>Could not save Plasma Night Light settings.</source><translation>无法保存 Plasma 夜间模式设置。</translation></message>
+    <message><source>Settings were saved, but Plasma could not reload them: %1</source><translation>设置已保存，但 Plasma 无法重新加载：%1</translation></message>
+</context>
 </TS>

@@ -7,6 +7,7 @@ import QtQuick.Layouts
 ColumnLayout {
     id: page
     required property var controller
+    required property var nightLight
     spacing: 12
     readonly property bool use12HourTime: controller.use_12_hour_time
     readonly property bool compact: width < 480
@@ -69,6 +70,11 @@ ColumnLayout {
         ColumnLayout {
             width: scroll.availableWidth
             spacing: 12
+
+            NightLightSettings {
+                controller: page.nightLight
+                Layout.fillWidth: true
+            }
 
             Label {
                 text: qsTr("Schedules run while Brightless is running. Daily times use local time; missed times are skipped.")

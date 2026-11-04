@@ -741,4 +741,37 @@
         <translation>音量</translation>
     </message>
 </context>
+<context>
+    <name>NightLightSettings</name>
+    <message><source>Detect location via ipwho.is</source><translation>ipwho.is で位置情報を取得</translation></message>
+    <message><source>ipwho.is receives your public IP address to estimate your location. Plasma settings change only when you apply.</source><translation>ipwho.is に公開 IP アドレスを送信して、おおよその位置を取得します。適用するまでは Plasma の設定は変更されません。</translation></message>
+    <message><source>Use Plasma's automatic location</source><translation>Plasma の自動位置情報を使用</translation></message>
+    <message><source>Latitude (-90 to 90)</source><translation>緯度 (-90～90)</translation></message>
+    <message><source>Longitude (-180 to 180)</source><translation>経度 (-180～180)</translation></message>
+    <message><source>Night Light</source><translation>夜間モード</translation></message>
+    <message><source>Uses Plasma Night Light. Plasma keeps the schedule running after Brightless closes.</source><translation>Plasma の夜間モードを使用します。Brightless を終了しても Plasma がスケジュールを実行します。</translation></message>
+    <message><source>Night Light requires KDE Plasma with a compatible KWin compositor.</source><translation>夜間モードには、対応する KWin コンポジターを備えた KDE Plasma が必要です。</translation></message>
+    <message><source>Updating Night Light…</source><translation>夜間モードを更新中…</translation></message>
+    <message><source>Enable Night Light</source><translation>夜間モードを有効にする</translation></message>
+    <message><source>Schedule</source><translation>スケジュール</translation></message>
+    <message><source>Sunset to sunrise</source><translation>日没から日の出まで</translation></message>
+    <message><source>Custom times</source><translation>時刻を指定</translation></message>
+    <message><source>Always on</source><translation>常に有効</translation></message>
+    <message><source>Night temperature: %1 K</source><translation>夜間の色温度: %1 K</translation></message>
+    <message><source>Night temperature</source><translation>夜間の色温度</translation></message>
+    <message><source>Night starts (24-hour)</source><translation>夜の開始時刻 (24時間制)</translation></message>
+    <message><source>Day starts (24-hour)</source><translation>昼の開始時刻 (24時間制)</translation></message>
+    <message><source>Smooth transition (minutes)</source><translation>滑らかな切り替え (分)</translation></message>
+    <message><source>These timings are shared with Plasma's other day/night features.</source><translation>この時刻設定は Plasma の他の昼夜切り替え機能と共有されます。</translation></message>
+    <message><source>Apply Night Light</source><translation>夜間モードを適用</translation></message>
+</context>
+<context>
+    <name>NightLightController</name>
+    <message><source>Could not detect location via ipwho.is: %1</source><translation>ipwho.is で位置情報を取得できませんでした: %1</translation></message>
+    <message><source>ipwho.is did not return a valid location.</source><translation>ipwho.is から有効な位置情報が返されませんでした。</translation></message>
+    <message><source>Use a latitude from -90 to 90 and a longitude from -180 to 180.</source><translation>緯度は -90～90、経度は -180～180 の範囲で指定してください。</translation></message>
+    <message><source>Use a temperature from 1000–6500 K, valid times, and a transition shorter than both the day and the night.</source><translation>色温度は 1000～6500 K、時刻は有効な値にし、切り替え時間は昼と夜のどちらよりも短くしてください。</translation></message>
+    <message><source>Could not save Plasma Night Light settings.</source><translation>Plasma の夜間モード設定を保存できませんでした。</translation></message>
+    <message><source>Settings were saved, but Plasma could not reload them: %1</source><translation>設定は保存されましたが、Plasma が再読み込みできませんでした: %1</translation></message>
+</context>
 </TS>

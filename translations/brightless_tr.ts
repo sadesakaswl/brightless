@@ -741,4 +741,37 @@
         <translation>Ses</translation>
     </message>
 </context>
+<context>
+    <name>NightLightSettings</name>
+    <message><source>Detect location via ipwho.is</source><translation>ipwho.is ile konumu belirle</translation></message>
+    <message><source>ipwho.is receives your public IP address to estimate your location. Plasma settings change only when you apply.</source><translation>ipwho.is, yaklaşık konumunuzu belirlemek için genel IP adresinizi alır. Plasma ayarları yalnızca uyguladığınızda değişir.</translation></message>
+    <message><source>Use Plasma's automatic location</source><translation>Plasma'nın otomatik konumunu kullan</translation></message>
+    <message><source>Latitude (-90 to 90)</source><translation>Enlem (-90 ile 90)</translation></message>
+    <message><source>Longitude (-180 to 180)</source><translation>Boylam (-180 ile 180)</translation></message>
+    <message><source>Night Light</source><translation>Gece Işığı</translation></message>
+    <message><source>Uses Plasma Night Light. Plasma keeps the schedule running after Brightless closes.</source><translation>Plasma Gece Işığı'nı kullanır. Brightless kapatıldıktan sonra da Plasma zamanlamayı sürdürür.</translation></message>
+    <message><source>Night Light requires KDE Plasma with a compatible KWin compositor.</source><translation>Gece Işığı, uyumlu bir KWin bileşik yöneticisine sahip KDE Plasma gerektirir.</translation></message>
+    <message><source>Updating Night Light…</source><translation>Gece Işığı güncelleniyor…</translation></message>
+    <message><source>Enable Night Light</source><translation>Gece Işığı'nı etkinleştir</translation></message>
+    <message><source>Schedule</source><translation>Zamanlama</translation></message>
+    <message><source>Sunset to sunrise</source><translation>Gün batımından gün doğumuna</translation></message>
+    <message><source>Custom times</source><translation>Özel saatler</translation></message>
+    <message><source>Always on</source><translation>Her zaman açık</translation></message>
+    <message><source>Night temperature: %1 K</source><translation>Gece renk sıcaklığı: %1 K</translation></message>
+    <message><source>Night temperature</source><translation>Gece renk sıcaklığı</translation></message>
+    <message><source>Night starts (24-hour)</source><translation>Gece başlangıcı (24 saat)</translation></message>
+    <message><source>Day starts (24-hour)</source><translation>Gündüz başlangıcı (24 saat)</translation></message>
+    <message><source>Smooth transition (minutes)</source><translation>Yumuşak geçiş (dakika)</translation></message>
+    <message><source>These timings are shared with Plasma's other day/night features.</source><translation>Bu zamanlar Plasma'nın diğer gündüz/gece özellikleriyle paylaşılır.</translation></message>
+    <message><source>Apply Night Light</source><translation>Gece Işığı'nı uygula</translation></message>
+</context>
+<context>
+    <name>NightLightController</name>
+    <message><source>Could not detect location via ipwho.is: %1</source><translation>ipwho.is ile konum belirlenemedi: %1</translation></message>
+    <message><source>ipwho.is did not return a valid location.</source><translation>ipwho.is geçerli bir konum döndürmedi.</translation></message>
+    <message><source>Use a latitude from -90 to 90 and a longitude from -180 to 180.</source><translation>-90 ile 90 arasında bir enlem ve -180 ile 180 arasında bir boylam kullanın.</translation></message>
+    <message><source>Use a temperature from 1000–6500 K, valid times, and a transition shorter than both the day and the night.</source><translation>1000–6500 K arasında bir sıcaklık, geçerli saatler ve hem gündüzden hem de geceden kısa bir geçiş kullanın.</translation></message>
+    <message><source>Could not save Plasma Night Light settings.</source><translation>Plasma Gece Işığı ayarları kaydedilemedi.</translation></message>
+    <message><source>Settings were saved, but Plasma could not reload them: %1</source><translation>Ayarlar kaydedildi ancak Plasma bunları yeniden yükleyemedi: %1</translation></message>
+</context>
 </TS>

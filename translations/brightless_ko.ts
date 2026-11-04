@@ -741,4 +741,37 @@
         <translation>음량</translation>
     </message>
 </context>
+<context>
+    <name>NightLightSettings</name>
+    <message><source>Detect location via ipwho.is</source><translation>ipwho.is로 위치 감지</translation></message>
+    <message><source>ipwho.is receives your public IP address to estimate your location. Plasma settings change only when you apply.</source><translation>ipwho.is가 공인 IP 주소를 받아 대략적인 위치를 확인합니다. 적용하기 전에는 Plasma 설정이 변경되지 않습니다.</translation></message>
+    <message><source>Use Plasma's automatic location</source><translation>Plasma 자동 위치 사용</translation></message>
+    <message><source>Latitude (-90 to 90)</source><translation>위도 (-90~90)</translation></message>
+    <message><source>Longitude (-180 to 180)</source><translation>경도 (-180~180)</translation></message>
+    <message><source>Night Light</source><translation>야간 조명</translation></message>
+    <message><source>Uses Plasma Night Light. Plasma keeps the schedule running after Brightless closes.</source><translation>Plasma 야간 조명을 사용합니다. Brightless를 닫아도 Plasma가 일정을 계속 실행합니다.</translation></message>
+    <message><source>Night Light requires KDE Plasma with a compatible KWin compositor.</source><translation>야간 조명에는 호환되는 KWin 컴포지터가 있는 KDE Plasma가 필요합니다.</translation></message>
+    <message><source>Updating Night Light…</source><translation>야간 조명 업데이트 중…</translation></message>
+    <message><source>Enable Night Light</source><translation>야간 조명 사용</translation></message>
+    <message><source>Schedule</source><translation>일정</translation></message>
+    <message><source>Sunset to sunrise</source><translation>일몰부터 일출까지</translation></message>
+    <message><source>Custom times</source><translation>사용자 지정 시간</translation></message>
+    <message><source>Always on</source><translation>항상 켜기</translation></message>
+    <message><source>Night temperature: %1 K</source><translation>야간 색온도: %1 K</translation></message>
+    <message><source>Night temperature</source><translation>야간 색온도</translation></message>
+    <message><source>Night starts (24-hour)</source><translation>야간 시작 (24시간제)</translation></message>
+    <message><source>Day starts (24-hour)</source><translation>주간 시작 (24시간제)</translation></message>
+    <message><source>Smooth transition (minutes)</source><translation>부드러운 전환 (분)</translation></message>
+    <message><source>These timings are shared with Plasma's other day/night features.</source><translation>이 시간 설정은 Plasma의 다른 주간/야간 기능과 공유됩니다.</translation></message>
+    <message><source>Apply Night Light</source><translation>야간 조명 적용</translation></message>
+</context>
+<context>
+    <name>NightLightController</name>
+    <message><source>Could not detect location via ipwho.is: %1</source><translation>ipwho.is로 위치를 감지할 수 없습니다: %1</translation></message>
+    <message><source>ipwho.is did not return a valid location.</source><translation>ipwho.is가 유효한 위치를 반환하지 않았습니다.</translation></message>
+    <message><source>Use a latitude from -90 to 90 and a longitude from -180 to 180.</source><translation>위도는 -90~90, 경도는 -180~180 범위로 입력하세요.</translation></message>
+    <message><source>Use a temperature from 1000–6500 K, valid times, and a transition shorter than both the day and the night.</source><translation>1000–6500 K의 색온도와 올바른 시간을 사용하고, 전환 시간을 주간과 야간 길이보다 짧게 설정하세요.</translation></message>
+    <message><source>Could not save Plasma Night Light settings.</source><translation>Plasma 야간 조명 설정을 저장할 수 없습니다.</translation></message>
+    <message><source>Settings were saved, but Plasma could not reload them: %1</source><translation>설정을 저장했지만 Plasma가 다시 불러올 수 없습니다: %1</translation></message>
+</context>
 </TS>

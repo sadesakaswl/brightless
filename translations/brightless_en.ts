@@ -741,4 +741,37 @@
         <translation>Volume</translation>
     </message>
 </context>
+<context>
+    <name>NightLightSettings</name>
+    <message><source>Detect location via ipwho.is</source><translation>Detect location via ipwho.is</translation></message>
+    <message><source>ipwho.is receives your public IP address to estimate your location. Plasma settings change only when you apply.</source><translation>ipwho.is receives your public IP address to estimate your location. Plasma settings change only when you apply.</translation></message>
+    <message><source>Use Plasma's automatic location</source><translation>Use Plasma's automatic location</translation></message>
+    <message><source>Latitude (-90 to 90)</source><translation>Latitude (-90 to 90)</translation></message>
+    <message><source>Longitude (-180 to 180)</source><translation>Longitude (-180 to 180)</translation></message>
+    <message><source>Night Light</source><translation>Night Light</translation></message>
+    <message><source>Uses Plasma Night Light. Plasma keeps the schedule running after Brightless closes.</source><translation>Uses Plasma Night Light. Plasma keeps the schedule running after Brightless closes.</translation></message>
+    <message><source>Night Light requires KDE Plasma with a compatible KWin compositor.</source><translation>Night Light requires KDE Plasma with a compatible KWin compositor.</translation></message>
+    <message><source>Updating Night Light…</source><translation>Updating Night Light…</translation></message>
+    <message><source>Enable Night Light</source><translation>Enable Night Light</translation></message>
+    <message><source>Schedule</source><translation>Schedule</translation></message>
+    <message><source>Sunset to sunrise</source><translation>Sunset to sunrise</translation></message>
+    <message><source>Custom times</source><translation>Custom times</translation></message>
+    <message><source>Always on</source><translation>Always on</translation></message>
+    <message><source>Night temperature: %1 K</source><translation>Night temperature: %1 K</translation></message>
+    <message><source>Night temperature</source><translation>Night temperature</translation></message>
+    <message><source>Night starts (24-hour)</source><translation>Night starts (24-hour)</translation></message>
+    <message><source>Day starts (24-hour)</source><translation>Day starts (24-hour)</translation></message>
+    <message><source>Smooth transition (minutes)</source><translation>Smooth transition (minutes)</translation></message>
+    <message><source>These timings are shared with Plasma's other day/night features.</source><translation>These timings are shared with Plasma's other day/night features.</translation></message>
+    <message><source>Apply Night Light</source><translation>Apply Night Light</translation></message>
+</context>
+<context>
+    <name>NightLightController</name>
+    <message><source>Could not detect location via ipwho.is: %1</source><translation>Could not detect location via ipwho.is: %1</translation></message>
+    <message><source>ipwho.is did not return a valid location.</source><translation>ipwho.is did not return a valid location.</translation></message>
+    <message><source>Use a latitude from -90 to 90 and a longitude from -180 to 180.</source><translation>Use a latitude from -90 to 90 and a longitude from -180 to 180.</translation></message>
+    <message><source>Use a temperature from 1000–6500 K, valid times, and a transition shorter than both the day and the night.</source><translation>Use a temperature from 1000–6500 K, valid times, and a transition shorter than both the day and the night.</translation></message>
+    <message><source>Could not save Plasma Night Light settings.</source><translation>Could not save Plasma Night Light settings.</translation></message>
+    <message><source>Settings were saved, but Plasma could not reload them: %1</source><translation>Settings were saved, but Plasma could not reload them: %1</translation></message>
+</context>
 </TS>

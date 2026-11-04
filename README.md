@@ -12,6 +12,7 @@ A Qt DDC/CI application for controlling external monitors on Linux and Windows.
 - **SDR brightness in HDR** — Per-screen SDR white-level control on KDE Plasma Wayland, without requiring DDC/CI.
 - **Dynamic contrast** — Link brightness and contrast globally or per monitor, with configurable ratios.
 - **Schedules** — Daily time or battery-percentage triggers for DDC monitor controls, targeting one or all monitors; 12- or 24-hour time display.
+- **Night Light** — Native KDE Plasma color-temperature scheduling, with sunset/sunrise, custom times, always-on mode, and smooth transitions.
 - **Monitor detection** — Asynchronous discovery, automatic refresh on screen changes, and manual rescanning.
 - **Mouse wheel** — Configurable 1–10% slider steps; Linux also supports tray scrolling.
 - **Global shortcuts and OSD** — Configurable shortcuts with brightness/volume feedback through Plasma's OSD on Linux or Qt's OSD on Windows.
@@ -27,8 +28,8 @@ For monitor controls, enable **DDC/CI** in the external monitor's menu. Compatib
 
 To build: **C++23**, **CMake 3.21+**, and **Qt 6.4+** with LinguistTools, Network, Quick, QuickControls2, and Widgets. Tests require Python 3; disable them with `-DBUILD_TESTING=OFF` if needed.
 
-- **Linux:** Qt DBus, KDE Frameworks 6 GlobalAccel and StatusNotifierItem, libkscreen 6.0+, libddcutil 1.2+, pkg-config, and permission to access I²C devices. SDR brightness requires KDE Plasma 6 Wayland with HDR enabled; battery triggers require UPower.
-- **Windows:** Windows 10/11 x64, Visual Studio 2022 C++ tools, Windows SDK, and matching Qt MSVC libraries. No KDE or libddcutil dependencies; SDR brightness controls are Linux-only.
+- **Linux:** Qt DBus, KDE Frameworks 6 Config, GlobalAccel and StatusNotifierItem, libkscreen 6.0+, libddcutil 1.2+, pkg-config, and permission to access I²C devices. SDR brightness requires KDE Plasma 6 Wayland with HDR enabled; battery triggers require UPower.
+- **Windows:** Windows 10/11 x64, Visual Studio 2022 C++ tools, Windows SDK, and matching Qt MSVC libraries. No KDE or libddcutil dependencies; SDR brightness and Plasma Night Light controls are Linux-only.
 
 ## Build and run
 
@@ -78,6 +79,8 @@ The Flatpak manifest pins Jansson 2.15.1, ddcutil 2.2.0, and libkscreen 6.7.5 fo
 - **Refresh:** sliders and OSD show requested values, not hardware readback. Use refresh to reread monitors; errors appear in the main window.
 
 ### Schedules
+
+**Night Light (native Linux builds on KDE Plasma):** configure Plasma's Night Light at the top of **Settings → Schedules**, then select **Apply Night Light**. Choose sunset-to-sunrise, custom times, or always on, and set the night temperature (1000–6500 K). For sunset-to-sunrise, use Plasma's automatic location, enter latitude/longitude in decimal degrees (negative for south/west), or choose **Detect location via ipwho.is**. IP detection sends an explicit HTTPS request to ipwho.is, which sees your public IP; coordinates are approximate and may reflect a VPN or proxy. It fills the manual coordinates without saving them until **Apply Night Light**. No IP lookup runs at startup or in the background; repeat detection when your network/location changes. Custom times use 24-hour local time; **Smooth transition (minutes)** controls the gradual temperature change at both start times and must be shorter than both the day and the night. Plasma runs this schedule even after Brightless closes. These are the same settings used by Plasma System Settings, not a separate Brightless schedule. On Plasma 6.5+, timings are shared with other day/night features. Existing Plasma location settings are loaded for editing; daytime temperature and unused manual coordinates are preserved. Night Light is unavailable outside a compatible Plasma session and in the current Flatpak sandbox.
 
 Add an entry under **Settings → Schedules**, choose its trigger, monitor, control, and value, then enable it. Entries start disabled; brightness follows each monitor's dynamic-contrast settings.
 

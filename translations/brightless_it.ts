@@ -741,4 +741,37 @@
         <translation>Volume</translation>
     </message>
 </context>
+<context>
+    <name>NightLightSettings</name>
+    <message><source>Detect location via ipwho.is</source><translation>Rileva posizione con ipwho.is</translation></message>
+    <message><source>ipwho.is receives your public IP address to estimate your location. Plasma settings change only when you apply.</source><translation>ipwho.is riceve il tuo indirizzo IP pubblico per stimare la posizione. Le impostazioni di Plasma cambiano solo dopo aver applicato le modifiche.</translation></message>
+    <message><source>Use Plasma's automatic location</source><translation>Usa posizione automatica di Plasma</translation></message>
+    <message><source>Latitude (-90 to 90)</source><translation>Latitudine (da -90 a 90)</translation></message>
+    <message><source>Longitude (-180 to 180)</source><translation>Longitudine (da -180 a 180)</translation></message>
+    <message><source>Night Light</source><translation>Luce notturna</translation></message>
+    <message><source>Uses Plasma Night Light. Plasma keeps the schedule running after Brightless closes.</source><translation>Usa la luce notturna di Plasma. Plasma mantiene la pianificazione dopo la chiusura di Brightless.</translation></message>
+    <message><source>Night Light requires KDE Plasma with a compatible KWin compositor.</source><translation>La luce notturna richiede KDE Plasma con un compositore KWin compatibile.</translation></message>
+    <message><source>Updating Night Light…</source><translation>Aggiornamento della luce notturna…</translation></message>
+    <message><source>Enable Night Light</source><translation>Attiva luce notturna</translation></message>
+    <message><source>Schedule</source><translation>Pianificazione</translation></message>
+    <message><source>Sunset to sunrise</source><translation>Dal tramonto all'alba</translation></message>
+    <message><source>Custom times</source><translation>Orari personalizzati</translation></message>
+    <message><source>Always on</source><translation>Sempre attiva</translation></message>
+    <message><source>Night temperature: %1 K</source><translation>Temperatura notturna: %1 K</translation></message>
+    <message><source>Night temperature</source><translation>Temperatura notturna</translation></message>
+    <message><source>Night starts (24-hour)</source><translation>Inizio della notte (24 ore)</translation></message>
+    <message><source>Day starts (24-hour)</source><translation>Inizio del giorno (24 ore)</translation></message>
+    <message><source>Smooth transition (minutes)</source><translation>Transizione graduale (minuti)</translation></message>
+    <message><source>These timings are shared with Plasma's other day/night features.</source><translation>Questi orari sono condivisi con le altre funzioni giorno/notte di Plasma.</translation></message>
+    <message><source>Apply Night Light</source><translation>Applica luce notturna</translation></message>
+</context>
+<context>
+    <name>NightLightController</name>
+    <message><source>Could not detect location via ipwho.is: %1</source><translation>Impossibile rilevare la posizione con ipwho.is: %1</translation></message>
+    <message><source>ipwho.is did not return a valid location.</source><translation>ipwho.is non ha restituito una posizione valida.</translation></message>
+    <message><source>Use a latitude from -90 to 90 and a longitude from -180 to 180.</source><translation>Usa una latitudine da -90 a 90 e una longitudine da -180 a 180.</translation></message>
+    <message><source>Use a temperature from 1000–6500 K, valid times, and a transition shorter than both the day and the night.</source><translation>Usa una temperatura di 1000–6500 K, orari validi e una transizione più breve sia del giorno sia della notte.</translation></message>
+    <message><source>Could not save Plasma Night Light settings.</source><translation>Impossibile salvare le impostazioni della luce notturna di Plasma.</translation></message>
+    <message><source>Settings were saved, but Plasma could not reload them: %1</source><translation>Le impostazioni sono state salvate, ma Plasma non ha potuto ricaricarle: %1</translation></message>
+</context>
 </TS>

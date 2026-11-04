@@ -741,4 +741,37 @@
         <translation>Громкость</translation>
     </message>
 </context>
+<context>
+    <name>NightLightSettings</name>
+    <message><source>Detect location via ipwho.is</source><translation>Определить через ipwho.is</translation></message>
+    <message><source>ipwho.is receives your public IP address to estimate your location. Plasma settings change only when you apply.</source><translation>ipwho.is получает ваш публичный IP-адрес для определения примерного местоположения. Настройки Plasma изменяются только после применения.</translation></message>
+    <message><source>Use Plasma's automatic location</source><translation>Автоопределение Plasma</translation></message>
+    <message><source>Latitude (-90 to 90)</source><translation>Широта (от -90 до 90)</translation></message>
+    <message><source>Longitude (-180 to 180)</source><translation>Долгота (от -180 до 180)</translation></message>
+    <message><source>Night Light</source><translation>Ночной свет</translation></message>
+    <message><source>Uses Plasma Night Light. Plasma keeps the schedule running after Brightless closes.</source><translation>Используется ночной свет Plasma. Plasma выполняет расписание даже после закрытия Brightless.</translation></message>
+    <message><source>Night Light requires KDE Plasma with a compatible KWin compositor.</source><translation>Для ночного света требуется KDE Plasma с совместимым композитором KWin.</translation></message>
+    <message><source>Updating Night Light…</source><translation>Обновление ночного света…</translation></message>
+    <message><source>Enable Night Light</source><translation>Включить ночной свет</translation></message>
+    <message><source>Schedule</source><translation>Расписание</translation></message>
+    <message><source>Sunset to sunrise</source><translation>От заката до рассвета</translation></message>
+    <message><source>Custom times</source><translation>Заданное время</translation></message>
+    <message><source>Always on</source><translation>Всегда включён</translation></message>
+    <message><source>Night temperature: %1 K</source><translation>Ночная цветовая температура: %1 К</translation></message>
+    <message><source>Night temperature</source><translation>Ночная цветовая температура</translation></message>
+    <message><source>Night starts (24-hour)</source><translation>Начало ночи (24 часа)</translation></message>
+    <message><source>Day starts (24-hour)</source><translation>Начало дня (24 часа)</translation></message>
+    <message><source>Smooth transition (minutes)</source><translation>Плавный переход (минуты)</translation></message>
+    <message><source>These timings are shared with Plasma's other day/night features.</source><translation>Это расписание используется и другими функциями дня и ночи Plasma.</translation></message>
+    <message><source>Apply Night Light</source><translation>Применить ночной свет</translation></message>
+</context>
+<context>
+    <name>NightLightController</name>
+    <message><source>Could not detect location via ipwho.is: %1</source><translation>Не удалось определить местоположение через ipwho.is: %1</translation></message>
+    <message><source>ipwho.is did not return a valid location.</source><translation>ipwho.is не вернул допустимое местоположение.</translation></message>
+    <message><source>Use a latitude from -90 to 90 and a longitude from -180 to 180.</source><translation>Укажите широту от -90 до 90 и долготу от -180 до 180.</translation></message>
+    <message><source>Use a temperature from 1000–6500 K, valid times, and a transition shorter than both the day and the night.</source><translation>Укажите температуру 1000–6500 К, допустимое время и переход короче как дня, так и ночи.</translation></message>
+    <message><source>Could not save Plasma Night Light settings.</source><translation>Не удалось сохранить настройки ночного света Plasma.</translation></message>
+    <message><source>Settings were saved, but Plasma could not reload them: %1</source><translation>Настройки сохранены, но Plasma не удалось перезагрузить их: %1</translation></message>
+</context>
 </TS>

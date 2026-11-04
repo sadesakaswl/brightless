@@ -7,6 +7,7 @@ Item {
     height: 640
 
     Component { id: backendComponent; FakeController {} }
+    FakeNightLight { id: nightLightBackend }
     Window {
         id: host
         width: 640
@@ -35,7 +36,7 @@ Item {
             host.backend = backend
             component = Qt.createComponent(Qt.resolvedUrl("../src/qt/qml/SettingsWindow.qml"))
             verify(component.status === Component.Ready, component.errorString())
-            settings = component.createObject(null, { controller: backend, appWindow: host, desktop: desktop })
+            settings = component.createObject(null, { controller: backend, nightLight: nightLightBackend, appWindow: host, desktop: desktop })
             verify(settings !== null)
         }
 

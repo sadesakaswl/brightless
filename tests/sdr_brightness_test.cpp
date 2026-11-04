@@ -5,6 +5,7 @@
 #include <KScreen/SetConfigOperation>
 #include <QDeadlineTimer>
 #include <QGuiApplication>
+#include <QMetaEnum>
 #include <QThread>
 
 #include <functional>
@@ -30,14 +31,18 @@ int main(int argc, char *argv[])
 
     auto config = KScreen::ConfigPtr::create();
     config->setScreen(KScreen::ScreenPtr::create());
+    const int disableCapability = QMetaEnum::fromType<KScreen::Output::Capability>().keyToValue("Disable");
     for (int id = 1; id <= 6; ++id) {
         auto output = KScreen::OutputPtr::create();
         output->setId(id);
         output->setName(QStringLiteral("DP-%1").arg(id));
         output->setConnected(id != 5);
+        // KScreen 6.8+ requires Disable; querying by name also supports older KScreen.
+        auto capabilities = id == 4 ? KScreen::Output::Capabilities()
+                                    : KScreen::Output::Capability::HighDynamicRange;
+        if (disableCapability != -1) capabilities |= KScreen::Output::Capabilities::fromInt(disableCapability);
+        output->setCapabilities(capabilities);
         output->setEnabled(id != 3);
-        output->setCapabilities(id == 4 ? KScreen::Output::Capabilities()
-                                       : KScreen::Output::Capability::HighDynamicRange);
         output->setHdrEnabled(id != 2);
         output->setSdrBrightness(200);
         config->addOutput(output);

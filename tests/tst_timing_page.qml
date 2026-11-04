@@ -57,6 +57,47 @@ Item {
             return null
         }
 
+        function test_help_tooltips() {
+            failOnWarning(/.*/)
+            nightLightBackend.available = false
+            backend.timings = [{ trigger: "time", time: "08:30", monitor_id: "", control: 0x10,
+                                 value: 50, enabled: false, battery_percent: 20, battery_condition: "below" }]
+            verify(waitForRendering(page))
+            const row = findItem(page, item => item.entry !== undefined)
+            const trigger = findChild(row, "triggerSelector")
+            const help = findChild(row, "scheduleTriggerHelp")
+            page.forceActiveFocus()
+            mouseMove(root, root.width - 1, root.height - 1)
+            verify(!help.visible)
+            mouseMove(trigger, trigger.width / 2, trigger.height / 2)
+            tryCompare(trigger, "hovered", true)
+            tryCompare(help, "visible", true, 1500)
+            compare(help.text, page.dailyHelp)
+            compare(trigger.Accessible.description, help.text)
+            verify(help.width <= 320 && help.width <= page.width)
+            mouseMove(root, root.width - 1, root.height - 1)
+            tryCompare(help, "visible", false)
+            trigger.forceActiveFocus()
+            tryCompare(help, "visible", true, 1500)
+            row.update({ trigger: "battery" })
+            compare(help.text, page.batteryHelp)
+
+            const control = findChild(row, "controlSelector")
+            const brightnessHelp = findChild(row, "scheduleBrightnessHelp")
+            control.forceActiveFocus()
+            tryCompare(brightnessHelp, "visible", true, 1500)
+            verify(brightnessHelp.text.includes("dynamic contrast"))
+            row.update({ control: 0x12 })
+            tryCompare(brightnessHelp, "visible", false)
+            const schedules = JSON.stringify(backend.timings)
+            const add = findChild(page, "addScheduleEntry")
+            const addHelp = findChild(page, "scheduleAddHelp")
+            add.forceActiveFocus()
+            tryCompare(addHelp, "visible", true, 1500)
+            verify(addHelp.text.includes(page.dailyHelp) && addHelp.text.includes(page.batteryHelp))
+            compare(JSON.stringify(backend.timings), schedules)
+        }
+
         function test_edit_remove_and_add() {
             failOnWarning(/.*/)
             const firstRow = findItem(page, item => item.entry !== undefined)

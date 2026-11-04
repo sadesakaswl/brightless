@@ -17,8 +17,7 @@ build() {
 }
 
 check() {
-    # Arch's KScreen Fake test backend fails the SDR test; Fedora CI covers it.
-    dbus-run-session -- ctest --test-dir build -E '^sdr-brightness$' --output-on-failure
+    dbus-run-session -- ctest --test-dir build --output-on-failure
 }
 
 package() {

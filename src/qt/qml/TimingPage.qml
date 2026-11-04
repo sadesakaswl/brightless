@@ -11,6 +11,8 @@ ColumnLayout {
     spacing: 12
     readonly property bool use12HourTime: controller.use_12_hour_time
     readonly property bool compact: width < 480
+    readonly property string dailyHelp: qsTr("Schedules run while Brightless is running. Daily times use local time; missed times are skipped.")
+    readonly property string batteryHelp: qsTr("Battery entries run once when the condition becomes true, including at startup, and re-arm when it becomes false.")
 
     function formattedTime(time) {
         if (!use12HourTime) return time
@@ -77,21 +79,6 @@ ColumnLayout {
             }
 
             Label {
-                text: qsTr("Schedules run while Brightless is running. Daily times use local time; missed times are skipped.")
-                wrapMode: Text.WordWrap
-                Layout.fillWidth: true
-            }
-            Label {
-                text: qsTr("Brightness uses dynamic contrast on monitors where it is enabled.")
-                wrapMode: Text.WordWrap
-                Layout.fillWidth: true
-            }
-            Label {
-                text: qsTr("Battery entries run once when the condition becomes true, including at startup, and re-arm when it becomes false.")
-                wrapMode: Text.WordWrap
-                Layout.fillWidth: true
-            }
-            Label {
                 text: page.controller.battery_percent >= 0
                     ? qsTr("Current battery: %1%").arg(page.controller.battery_percent)
                     : qsTr("Battery percentage unavailable. Battery entries will not run.")
@@ -154,10 +141,13 @@ ColumnLayout {
                                 Layout.columnSpan: page.compact ? 2 : 1
                             }
                             ComboBox {
+                                id: triggerSelector
                                 objectName: "triggerSelector"
+                                hoverEnabled: true
                                 Layout.columnSpan: page.compact ? 2 : 1
                                 Layout.fillWidth: true
                                 Accessible.name: qsTr("Trigger")
+                                Accessible.description: triggerHelp.text
                                 model: page.triggers
                                 textRole: "text"
                                 valueRole: "key"
@@ -165,6 +155,14 @@ ColumnLayout {
                                 onActivated: row.update({ trigger: currentValue,
                                     battery_percent: row.entry.battery_percent ?? 20,
                                     battery_condition: row.entry.battery_condition ?? "below" })
+                                ToolTip {
+                                    id: triggerHelp
+                                    objectName: "scheduleTriggerHelp"
+                                    visible: triggerSelector.visible && (triggerSelector.hovered || triggerSelector.activeFocus)
+                                    delay: 500
+                                    implicitWidth: Math.min(320, page.width)
+                                    text: row.entry.trigger === "battery" ? page.batteryHelp : page.dailyHelp
+                                }
                             }
                             Switch {
                                 text: qsTr("Enabled")
@@ -199,14 +197,27 @@ ColumnLayout {
                         RowLayout {
                             Layout.fillWidth: true
                             ComboBox {
+                                id: controlSelector
+                                objectName: "controlSelector"
+                                hoverEnabled: true
                                 Layout.fillWidth: true
                                 Accessible.name: qsTr("Control")
+                                Accessible.description: brightnessHelp.text
                                 model: page.controls
                                 textRole: "text"
                                 valueRole: "code"
                                 currentIndex: page.controls.findIndex(control => control.code === row.entry.control)
                                 onActivated: row.update({ control: currentValue,
                                     value: currentValue === 0xd6 || currentValue === 0x60 ? 1 : 50 })
+                                ToolTip {
+                                    id: brightnessHelp
+                                    objectName: "scheduleBrightnessHelp"
+                                    visible: text.length > 0 && controlSelector.visible && (controlSelector.hovered || controlSelector.activeFocus)
+                                    delay: 500
+                                    implicitWidth: Math.min(320, page.width)
+                                    text: row.entry.control === 0x10
+                                        ? qsTr("Brightness uses dynamic contrast on monitors where it is enabled.") : ""
+                                }
                             }
                             SpinBox {
                                 visible: row.entry.control !== 0xd6 && row.entry.control !== 0x60
@@ -299,7 +310,19 @@ ColumnLayout {
     }
 
     Button {
+        id: addEntry
+        objectName: "addScheduleEntry"
+        hoverEnabled: true
         text: qsTr("Add entry")
+        Accessible.description: addHelp.text
         onClicked: page.controller.add_timing()
+        ToolTip {
+            id: addHelp
+            objectName: "scheduleAddHelp"
+            visible: addEntry.visible && (addEntry.hovered || addEntry.activeFocus)
+            delay: 500
+            implicitWidth: Math.min(320, page.width)
+            text: page.dailyHelp + "\n\n" + page.batteryHelp
+        }
     }
 }

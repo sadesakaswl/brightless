@@ -25,13 +25,14 @@ GroupBox {
         spacing: 8
 
         Label {
-            text: panel.controller.available
-                ? qsTr("Uses Plasma Night Light. Plasma keeps the schedule running after Brightless closes.")
-                : qsTr("Night Light requires KDE Plasma with a compatible KWin compositor.")
+            objectName: "nightLightUnavailable"
+            visible: !panel.controller.available && !panel.controller.busy
+            text: qsTr("Night Light requires KDE Plasma with a compatible KWin compositor.")
             wrapMode: Text.WordWrap
             Layout.fillWidth: true
         }
         Label {
+            objectName: "nightLightBusy"
             visible: panel.controller.busy
             text: qsTr("Updating Night Light…")
             wrapMode: Text.WordWrap
@@ -46,17 +47,38 @@ GroupBox {
             Switch {
                 id: active
                 objectName: "nightLightEnabled"
+                hoverEnabled: true
                 text: qsTr("Enable Night Light")
                 checked: panel.saved.enabled
+                Accessible.description: nightLightHelp.text
+                ToolTip {
+                    id: nightLightHelp
+                    objectName: "nightLightHelp"
+                    visible: active.visible && (active.hovered || active.activeFocus)
+                    delay: 500
+                    implicitWidth: Math.min(320, panel.width)
+                    text: qsTr("Uses Plasma Night Light. Plasma keeps the schedule running after Brightless closes.")
+                }
             }
             Label { text: qsTr("Schedule") }
             ComboBox {
                 id: mode
                 objectName: "nightLightMode"
+                hoverEnabled: true
                 Layout.fillWidth: true
                 Accessible.name: qsTr("Schedule")
+                Accessible.description: modeHelp.text
                 model: [qsTr("Sunset to sunrise"), qsTr("Custom times"), qsTr("Always on")]
                 currentIndex: panel.saved.mode
+                ToolTip {
+                    id: modeHelp
+                    objectName: "nightLightScheduleHelp"
+                    visible: text.length > 0 && mode.visible && (mode.hovered || mode.activeFocus)
+                    delay: 500
+                    implicitWidth: Math.min(320, panel.width)
+                    text: panel.controller.sharedSchedule && mode.currentIndex !== 2
+                        ? qsTr("These timings are shared with Plasma's other day/night features.") : ""
+                }
             }
             ColumnLayout {
                 visible: mode.currentIndex === 0
@@ -69,14 +91,20 @@ GroupBox {
                     checked: panel.saved.automaticLocation
                 }
                 Button {
+                    id: detectLocation
                     objectName: "detectNightLightLocation"
+                    hoverEnabled: true
                     text: qsTr("Detect location via ipwho.is")
+                    Accessible.description: locationHelp.text
                     onClicked: panel.controller.detectLocation()
-                }
-                Label {
-                    text: qsTr("ipwho.is receives your public IP address to estimate your location. Plasma settings change only when you apply.")
-                    wrapMode: Text.WordWrap
-                    Layout.fillWidth: true
+                    ToolTip {
+                        id: locationHelp
+                        objectName: "nightLightLocationHelp"
+                        visible: detectLocation.visible && (detectLocation.hovered || detectLocation.activeFocus)
+                        delay: 500
+                        implicitWidth: Math.min(320, panel.width)
+                        text: qsTr("ipwho.is receives your public IP address to estimate your location. Plasma settings change only when you apply.")
+                    }
                 }
                 GridLayout {
                     enabled: !automaticLocation.checked
@@ -179,12 +207,6 @@ GroupBox {
                     editable: true
                     value: panel.saved.transition
                 }
-            }
-            Label {
-                visible: panel.controller.sharedSchedule && mode.currentIndex !== 2
-                text: qsTr("These timings are shared with Plasma's other day/night features.")
-                wrapMode: Text.WordWrap
-                Layout.fillWidth: true
             }
             Button {
                 objectName: "applyNightLight"

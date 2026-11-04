@@ -73,6 +73,50 @@ Item {
             compare(findChild(panel, "nightLightError").textFormat, Text.PlainText)
         }
 
+        function test_help_tooltips() {
+            const state = JSON.stringify(backend.settings)
+            const active = findChild(panel, "nightLightEnabled")
+            const help = findChild(panel, "nightLightHelp")
+            panel.forceActiveFocus()
+            mouseMove(root, root.width - 1, root.height - 1)
+            verify(!help.visible)
+            mouseMove(active, active.width / 2, active.height / 2)
+            tryCompare(active, "hovered", true)
+            tryCompare(help, "visible", true, 1500)
+            verify(help.width <= 320 && help.width <= panel.width)
+            compare(active.Accessible.description, help.text)
+            mouseMove(root, root.width - 1, root.height - 1)
+            tryCompare(help, "visible", false)
+
+            backend.sharedSchedule = true
+            const mode = findChild(panel, "nightLightMode")
+            const modeHelp = findChild(panel, "nightLightScheduleHelp")
+            mode.forceActiveFocus()
+            tryCompare(modeHelp, "visible", true, 1500)
+            verify(modeHelp.text.length > 0)
+            compare(mode.Accessible.description, modeHelp.text)
+            mode.currentIndex = 2
+            tryCompare(modeHelp, "visible", false)
+            mode.currentIndex = 0
+            const detect = findChild(panel, "detectNightLightLocation")
+            const locationHelp = findChild(panel, "nightLightLocationHelp")
+            detect.forceActiveFocus()
+            tryCompare(locationHelp, "visible", true, 1500)
+            verify(locationHelp.text.includes("public IP"))
+            compare(detect.Accessible.description, locationHelp.text)
+            compare(backend.locationRequests, 0)
+            compare(JSON.stringify(backend.settings), state)
+
+            backend.available = false
+            tryCompare(locationHelp, "visible", false)
+            verify(findChild(panel, "nightLightUnavailable").visible)
+            backend.busy = true
+            verify(findChild(panel, "nightLightBusy").visible)
+            verify(!findChild(panel, "nightLightUnavailable").visible)
+            backend.error = "Unavailable"
+            verify(findChild(panel, "nightLightError").visible)
+        }
+
         function test_ip_location_detection() {
             findChild(panel, "nightLightMode").currentIndex = 0
             const detect = findChild(panel, "detectNightLightLocation")

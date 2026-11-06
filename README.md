@@ -12,7 +12,7 @@ A Qt DDC/CI application for controlling external monitors on Linux and Windows.
 - **SDR brightness in HDR** — Per-screen SDR white-level control on KDE Plasma Wayland, without requiring DDC/CI.
 - **Dynamic contrast** — Link brightness and contrast globally or per monitor, with configurable ratios.
 - **Schedules** — Daily time or battery-percentage triggers for DDC monitor controls, targeting one or all monitors; 12- or 24-hour time display.
-- **Night Light** — Native KDE Plasma color-temperature scheduling, with sunset/sunrise, custom times, always-on mode, and smooth transitions.
+- **Night Light** — Native KDE Plasma scheduling on Linux and full-desktop color filtering on Windows, with sunset/sunrise, custom times, always-on mode, day/night temperatures, and smooth transitions.
 - **Monitor detection** — Asynchronous discovery, automatic refresh on screen changes, and manual rescanning.
 - **Mouse wheel** — Configurable 1–10% slider steps; Linux also supports tray scrolling.
 - **Global shortcuts and OSD** — Configurable shortcuts with brightness/volume feedback through Plasma's OSD on Linux or Qt's OSD on Windows.
@@ -29,7 +29,7 @@ For monitor controls, enable **DDC/CI** in the external monitor's menu. Compatib
 To build: **C++23**, **CMake 3.21+**, and **Qt 6.4+** with LinguistTools, Network, Quick, QuickControls2, and Widgets. Tests require Python 3; disable them with `-DBUILD_TESTING=OFF` if needed.
 
 - **Linux:** Qt DBus, KDE Frameworks 6 Config, GlobalAccel and StatusNotifierItem, libkscreen 6.0+, libddcutil 1.2+, pkg-config, and permission to access I²C devices. SDR brightness requires KDE Plasma 6 Wayland with HDR enabled; battery triggers require UPower.
-- **Windows:** Windows 10/11 x64, Visual Studio 2022 C++ tools, Windows SDK, and matching Qt MSVC libraries. No KDE or libddcutil dependencies; SDR brightness and Plasma Night Light controls are Linux-only.
+- **Windows:** Windows 10/11 x64, Visual Studio 2022 C++ tools, Windows SDK, and matching Qt MSVC libraries. No KDE or libddcutil dependencies; SDR brightness remains Linux-only. Night Light uses the Windows SDK's Magnification API (`Magnification.lib`), not Windows' built-in Night light settings.
 
 ## Build and run
 
@@ -82,6 +82,10 @@ The Flatpak manifest pins Jansson 2.15.1, ddcutil 2.2.0, and libkscreen 6.7.5 fo
 
 **Night Light (native Linux builds on KDE Plasma):** configure Plasma's Night Light at the top of **Settings → Schedules**, then select **Apply Night Light**. Choose sunset-to-sunrise, custom times, or always on, and set the night temperature (1000–6500 K). Sunset-to-sunrise and custom schedules also have a **Morning temperature** slider (1000–6500 K, normally 6500 K) for the daytime color temperature. Both temperatures are saved only when you select **Apply Night Light**. For sunset-to-sunrise, use Plasma's automatic location, uncheck it to choose an approximate location on the offline world map, enter latitude/longitude in decimal degrees (negative for south/west), or choose **Detect location via ipwho.is**. Clicking the map fills the manual coordinates; arrow keys adjust the selected point by one degree. The marker also follows coordinate edits, and nothing is saved until **Apply Night Light**. The map requires no network connection. IP detection sends an explicit HTTPS request to ipwho.is, which sees your public IP; coordinates are approximate and may reflect a VPN or proxy. It fills the manual coordinates without saving them until **Apply Night Light**. No IP lookup runs at startup or in the background; repeat detection when your network/location changes. Custom times use 24-hour local time; **Smooth transition (minutes)** controls the gradual temperature change at both start times and must be shorter than both the day and the night. Plasma runs this schedule even after Brightless closes. These are the same settings used by Plasma System Settings, not a separate Brightless schedule. On Plasma 6.5+, timings are shared with other day/night features. Existing Plasma temperatures and location settings are loaded for editing; unused manual coordinates are preserved. Night Light is unavailable outside a compatible Plasma session and in the current Flatpak sandbox.
 
+**Night Light on Windows:** use the same **Settings → Schedules → Night Light** controls and select **Apply Night Light**. Brightless uses [`MagSetFullscreenColorEffect`](https://learn.microsoft.com/en-us/windows/win32/api/magnification/nf-magnification-magsetfullscreencoloreffect) to apply an approximate color-temperature matrix to the entire desktop; it does not change monitor hardware settings, magnification/zoom, or Windows' native Night light schedule. Both morning/day and night temperatures are supported. Custom schedules use local time; sunset-to-sunrise uses the manually chosen map/coordinates or the explicit **Detect location via ipwho.is** button, with the same IP privacy considerations described above. No automatic location lookup runs. Solar times are approximate (flat horizon); polar day/night are handled, and long solar transitions are capped to avoid overlap.
+
+Brightless must remain running on Windows, including when hidden in the tray. Saved Night Light preferences resume at application startup without opening Settings. Disabling the feature or exiting normally restores the previous fullscreen color effect, unless another application has replaced Brightless's effect in the meantime. An external filter change pauses Brightless's updates and shows an error rather than repeatedly overriding it. Disable Windows Night light, Magnifier color effects, and third-party filters while using this feature; HDR, remote sessions, protected content, and display/driver configurations may affect the result. API/save failures are shown in Schedules. If preferences save successfully but the Windows API subsequently fails, the saved settings remain available for retry. A forced termination may bypass restoration.
+
 Add an entry under **Settings → Schedules**, choose its trigger, monitor, control, and value, then enable it. Entries start disabled; brightness follows each monitor's dynamic-contrast settings.
 
 - **Daily time:** repeats at the chosen local time. Missed times while asleep or closed are skipped.
@@ -92,7 +96,7 @@ Brightless must remain running, but its window can be hidden. Unsupported contro
 ### Preferences
 
 - **Linux:** `$XDG_CONFIG_HOME/brightless/settings.json`, normally `~/.config/brightless/settings.json`.
-- **Windows:** `%LOCALAPPDATA%/brightless/settings.json`; shortcut assignments are stored separately in the per-user Qt settings registry.
+- **Windows:** `%LOCALAPPDATA%/brightless/settings.json`; Night Light uses a separate atomically saved `%LOCALAPPDATA%/brightless/night-light.json`. Shortcut assignments are stored separately in the per-user Qt settings registry.
 
 Linux monitor IDs include the I²C bus, so moving a monitor between connectors may require reapplying per-monitor settings.
 

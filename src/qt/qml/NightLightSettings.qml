@@ -27,7 +27,9 @@ GroupBox {
         Label {
             objectName: "nightLightUnavailable"
             visible: !panel.controller.available && !panel.controller.busy
-            text: qsTr("Night Light requires KDE Plasma with a compatible KWin compositor.")
+            text: panel.controller.runsLocally
+                ? qsTr("Night Light is unavailable on this system.")
+                : qsTr("Night Light requires KDE Plasma with a compatible KWin compositor.")
             wrapMode: Text.WordWrap
             Layout.fillWidth: true
         }
@@ -57,7 +59,9 @@ GroupBox {
                     visible: active.visible && (active.hovered || active.activeFocus)
                     delay: 500
                     implicitWidth: Math.min(320, panel.width)
-                    text: qsTr("Uses Plasma Night Light. Plasma keeps the schedule running after Brightless closes.")
+                    text: panel.controller.runsLocally
+                        ? qsTr("Uses a Windows color filter. Brightless must remain running. Disable Windows Night light and other color filters to avoid conflicts.")
+                        : qsTr("Uses Plasma Night Light. Plasma keeps the schedule running after Brightless closes.")
                 }
             }
             Label { text: qsTr("Schedule") }
@@ -87,8 +91,9 @@ GroupBox {
                 CheckBox {
                     id: automaticLocation
                     objectName: "nightLightAutomaticLocation"
+                    visible: !panel.controller.runsLocally
                     text: qsTr("Use Plasma's automatic location")
-                    checked: panel.saved.automaticLocation
+                    checked: !panel.controller.runsLocally && panel.saved.automaticLocation
                 }
                 Button {
                     id: detectLocation
@@ -103,7 +108,9 @@ GroupBox {
                         visible: detectLocation.visible && (detectLocation.hovered || detectLocation.activeFocus)
                         delay: 500
                         implicitWidth: Math.min(320, panel.width)
-                        text: qsTr("ipwho.is receives your public IP address to estimate your location. Plasma settings change only when you apply.")
+                        text: panel.controller.runsLocally
+                            ? qsTr("ipwho.is receives your public IP address to estimate your location. Settings change only when you apply.")
+                            : qsTr("ipwho.is receives your public IP address to estimate your location. Plasma settings change only when you apply.")
                     }
                 }
                 LocationMap {

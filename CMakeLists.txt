@@ -16,9 +16,11 @@ if(WIN32)
         src/platform/windows/autostart.cpp
         src/platform/windows/battery.cpp
         src/platform/windows/sdrbrightnesscontroller.cpp
+        src/platform/windows/nightlight.cpp
+        src/windowsnightlight.cpp
         ${CMAKE_CURRENT_BINARY_DIR}/brightless.rc
     )
-    set(PLATFORM_LIBRARIES dxva2 user32)
+    set(PLATFORM_LIBRARIES dxva2 user32 Magnification)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     find_package(Qt6 REQUIRED COMPONENTS DBus)
     find_package(KF6Config REQUIRED)
@@ -86,7 +88,7 @@ qt_add_translations(brightless TS_FILES
 target_include_directories(brightless PRIVATE src)
 target_compile_definitions(brightless PRIVATE BRIGHTLESS_VERSION="${PROJECT_VERSION}")
 if(WIN32)
-    target_compile_definitions(brightless PRIVATE NOMINMAX WIN32_LEAN_AND_MEAN _WIN32_WINNT=0x0601)
+    target_compile_definitions(brightless PRIVATE NOMINMAX WIN32_LEAN_AND_MEAN _WIN32_WINNT=0x0A00 BRIGHTLESS_WINDOWS_NIGHT_LIGHT)
 endif()
 target_link_libraries(brightless PRIVATE
     Qt6::Network Qt6::Quick Qt6::QuickControls2 Qt6::Widgets ${PLATFORM_LIBRARIES})
@@ -157,6 +159,20 @@ if(BUILD_TESTING)
     if(WIN32)
         set_property(TEST theme APPEND PROPERTY ENVIRONMENT "QT_QPA_FONTDIR=$ENV{WINDIR}/Fonts")
     endif()
+
+    qt_add_executable(brightless_night_light_schedule_test tests/night_light_schedule_test.cpp)
+    target_include_directories(brightless_night_light_schedule_test PRIVATE src)
+    target_link_libraries(brightless_night_light_schedule_test PRIVATE Qt6::Core)
+    add_test(NAME night-light-schedule COMMAND brightless_night_light_schedule_test)
+
+    # Fake Magnification transport also exercises the Windows controller path on Linux.
+    qt_add_executable(brightless_windows_night_light_test tests/windows_night_light_test.cpp
+        src/nightlightcontroller.cpp src/nightlightcontroller.h src/windowsnightlight.cpp)
+    target_include_directories(brightless_windows_night_light_test PRIVATE src)
+    target_link_libraries(brightless_windows_night_light_test PRIVATE Qt6::Qml Qt6::Network)
+    target_compile_definitions(brightless_windows_night_light_test PRIVATE BRIGHTLESS_WINDOWS_NIGHT_LIGHT BRIGHTLESS_TESTING)
+    add_test(NAME windows-night-light COMMAND brightless_windows_night_light_test)
+    set_tests_properties(night-light-schedule windows-night-light PROPERTIES TIMEOUT 30)
 
     add_executable(brightless_model_test tests/model_test.cpp)
     target_include_directories(brightless_model_test PRIVATE src)

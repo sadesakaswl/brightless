@@ -294,6 +294,92 @@ Item {
             compare(backend.locationRequests, 0)
         }
 
+        function test_windows_local_backend_data() {
+            return [{ tag: "solar", mode: 0 }, { tag: "custom", mode: 1 }, { tag: "always", mode: 2 }]
+        }
+
+        function test_windows_local_backend(data) {
+            backend.runsLocally = true
+            const mode = findChild(panel, "nightLightMode")
+            verify(!!mode, "Object exists")
+            const automatic = findChild(panel, "nightLightAutomaticLocation")
+            verify(!!automatic, "Object exists")
+            const map = findChild(panel, "nightLightLocationMap")
+            verify(!!map, "Object exists")
+            const image = findChild(map, "locationMapImage")
+            verify(!!image, "Object exists")
+            const latitude = findChild(panel, "nightLightLatitude")
+            verify(!!latitude, "Object exists")
+            const longitude = findChild(panel, "nightLightLongitude")
+            verify(!!longitude, "Object exists")
+            const help = findChild(panel, "nightLightHelp")
+            verify(!!help, "Object exists")
+            const locationHelp = findChild(panel, "nightLightLocationHelp")
+            verify(!!locationHelp, "Object exists")
+            const unavailable = findChild(panel, "nightLightUnavailable")
+            verify(!!unavailable, "Object exists")
+            const dayTemperature = findChild(panel, "nightLightDayTemperature")
+            verify(!!dayTemperature, "Object exists")
+            const temperature = findChild(panel, "nightLightTemperature")
+            verify(!!temperature, "Object exists")
+            const evening = findChild(panel, "nightLightEvening")
+            verify(!!evening, "Object exists")
+            const morning = findChild(panel, "nightLightMorning")
+            verify(!!morning, "Object exists")
+            const transition = findChild(panel, "nightLightTransition")
+            verify(!!transition, "Object exists")
+            const apply = findChild(panel, "applyNightLight")
+            verify(!!apply, "Object exists")
+            mode.currentIndex = data.mode
+            verify(backend.settings.automaticLocation)
+            verify(!automatic.visible && !automatic.checked)
+            compare(map.visible, data.mode === 0)
+            compare(dayTemperature.visible, data.mode !== 2)
+            compare(transition.visible, data.mode === 1)
+            compare(help.text, qsTr("Uses a Windows color filter. Brightless must remain running. Disable Windows Night light and other color filters to avoid conflicts."))
+            compare(locationHelp.text, qsTr("ipwho.is receives your public IP address to estimate your location. Settings change only when you apply."))
+            compare(unavailable.text, qsTr("Night Light is unavailable on this system."))
+            const before = JSON.stringify(backend.settings)
+            if (data.mode === 0) {
+                verify(latitude.enabled && longitude.enabled)
+                tryCompare(image, "status", Image.Ready)
+                verify(waitForRendering(panel))
+                image.forceActiveFocus()
+                keyClick(Qt.Key_Right)
+                compare(map.selectedLatitude, 0)
+                compare(map.selectedLongitude, 1)
+                latitude.text = "-"
+                verify(!apply.enabled)
+            }
+            latitude.text = (51.5).toLocaleString(Qt.locale(), 'f', 6)
+            longitude.text = (-0.125).toLocaleString(Qt.locale(), 'f', 6)
+            dayTemperature.value = 5500
+            temperature.value = 3500
+            evening.text = "21:30"
+            morning.text = "07:15"
+            transition.value = 45
+            verify(apply.enabled)
+            compare(JSON.stringify(backend.settings), before)
+            compare(backend.lastApplied, null)
+            mouseClick(apply)
+            tryVerify(() => backend.lastApplied !== null)
+            tryCompare(backend.lastApplied, "mode", data.mode)
+            tryCompare(backend.lastApplied, "automaticLocation", false)
+            tryCompare(backend.lastApplied, "latitude", 51.5)
+            tryCompare(backend.lastApplied, "longitude", -0.125)
+            tryCompare(backend.lastApplied, "dayTemperature", 5500)
+            tryCompare(backend.lastApplied, "temperature", 3500)
+            tryCompare(backend.lastApplied, "evening", "21:30")
+            tryCompare(backend.lastApplied, "morning", "07:15")
+            tryCompare(backend.lastApplied, "transition", 45)
+            backend.busy = true
+            verify(!apply.enabled)
+            backend.busy = false
+            backend.available = false
+            verify(!map.visible && unavailable.visible)
+            compare(unavailable.text, qsTr("Night Light is unavailable on this system."))
+        }
+
         function test_load_plasma_settings() {
             backend.settings = { enabled: true, mode: 0, temperature: 3000, dayTemperature: 6100,
                                  evening: "22:00", morning: "05:30", transition: 60,

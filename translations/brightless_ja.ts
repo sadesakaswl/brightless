@@ -743,6 +743,9 @@
 </context>
 <context>
     <name>NightLightSettings</name>
+    <message><source>Uses a Windows color filter. Brightless must remain running. Disable Windows Night light and other color filters to avoid conflicts.</source><translation>Windows のカラーフィルターを使用します。Brightless を起動したままにする必要があります。競合を避けるため、Windows の夜間モードと他のカラーフィルターを無効にしてください。</translation></message>
+    <message><source>Night Light is unavailable on this system.</source><translation>このシステムでは夜間モードを利用できません。</translation></message>
+    <message><source>ipwho.is receives your public IP address to estimate your location. Settings change only when you apply.</source><translation>ipwho.is に公開 IP アドレスを送信して、おおよその位置を取得します。適用するまでは設定は変更されません。</translation></message>
     <message><source>Detect location via ipwho.is</source><translation>ipwho.is で位置情報を取得</translation></message>
     <message><source>ipwho.is receives your public IP address to estimate your location. Plasma settings change only when you apply.</source><translation>ipwho.is に公開 IP アドレスを送信して、おおよその位置を取得します。適用するまでは Plasma の設定は変更されません。</translation></message>
     <message><source>Use Plasma's automatic location</source><translation>Plasma の自動位置情報を使用</translation></message>
@@ -769,6 +772,15 @@
 </context>
 <context>
     <name>NightLightController</name>
+    <message><source>Could not initialize Windows Night Light (error %1).</source><translation>Windows の夜間モードを初期化できませんでした (エラー %1)。</translation></message>
+    <message><source>Could not read the Windows screen color filter (error %1).</source><translation>Windows の画面カラーフィルターを読み取れませんでした (エラー %1)。</translation></message>
+    <message><source>Could not load Windows Night Light settings.</source><translation>Windows の夜間モード設定を読み込めませんでした。</translation></message>
+    <message><source>Could not save Windows Night Light settings.</source><translation>Windows の夜間モード設定を保存できませんでした。</translation></message>
+    <message><source>Windows Night Light could not update the screen color filter (error %1).</source><translation>Windows の夜間モードが画面カラーフィルターを更新できませんでした (エラー %1)。</translation></message>
+    <message><source>Could not restore the previous Windows screen color filter (error %1).</source><translation>Windows の画面カラーフィルターを以前の状態に復元できませんでした (エラー %1)。</translation></message>
+    <message><source>Another application changed the screen color filter. Apply Night Light again to resume.</source><translation>他のアプリケーションが画面カラーフィルターを変更しました。再開するには夜間モードをもう一度適用してください。</translation></message>
+    <message><source>Invalid Night Light settings.</source><translation>夜間モードの設定が無効です。</translation></message>
+    <message><source>Choose a location on the map or detect it via ipwho.is.</source><translation>地図上で位置を選択するか、ipwho.is で位置情報を取得してください。</translation></message>
     <message><source>Could not detect location via ipwho.is: %1</source><translation>ipwho.is で位置情報を取得できませんでした: %1</translation></message>
     <message><source>ipwho.is did not return a valid location.</source><translation>ipwho.is から有効な位置情報が返されませんでした。</translation></message>
     <message><source>Use a latitude from -90 to 90 and a longitude from -180 to 180.</source><translation>緯度は -90～90、経度は -180～180 の範囲で指定してください。</translation></message>

@@ -743,6 +743,9 @@
 </context>
 <context>
     <name>NightLightSettings</name>
+    <message><source>Uses a Windows color filter. Brightless must remain running. Disable Windows Night light and other color filters to avoid conflicts.</source><translation>Usa un filtro de color de Windows. Brightless debe seguir ejecutándose. Desactiva la luz nocturna de Windows y otros filtros de color para evitar conflictos.</translation></message>
+    <message><source>Night Light is unavailable on this system.</source><translation>La luz nocturna no está disponible en este sistema.</translation></message>
+    <message><source>ipwho.is receives your public IP address to estimate your location. Settings change only when you apply.</source><translation>ipwho.is recibe su dirección IP pública para estimar su ubicación. Los ajustes solo cambian al aplicar.</translation></message>
     <message><source>Detect location via ipwho.is</source><translation>Detectar ubicación con ipwho.is</translation></message>
     <message><source>ipwho.is receives your public IP address to estimate your location. Plasma settings change only when you apply.</source><translation>ipwho.is recibe su dirección IP pública para estimar su ubicación. Los ajustes de Plasma solo cambian al aplicar.</translation></message>
     <message><source>Use Plasma's automatic location</source><translation>Usar ubicación automática de Plasma</translation></message>
@@ -769,6 +772,15 @@
 </context>
 <context>
     <name>NightLightController</name>
+    <message><source>Could not initialize Windows Night Light (error %1).</source><translation>No se pudo inicializar la luz nocturna de Windows (error %1).</translation></message>
+    <message><source>Could not read the Windows screen color filter (error %1).</source><translation>No se pudo leer el filtro de color de la pantalla de Windows (error %1).</translation></message>
+    <message><source>Could not load Windows Night Light settings.</source><translation>No se pudieron cargar los ajustes de luz nocturna de Windows.</translation></message>
+    <message><source>Could not save Windows Night Light settings.</source><translation>No se pudieron guardar los ajustes de luz nocturna de Windows.</translation></message>
+    <message><source>Windows Night Light could not update the screen color filter (error %1).</source><translation>La luz nocturna de Windows no pudo actualizar el filtro de color de la pantalla (error %1).</translation></message>
+    <message><source>Could not restore the previous Windows screen color filter (error %1).</source><translation>No se pudo restaurar el filtro de color anterior de la pantalla de Windows (error %1).</translation></message>
+    <message><source>Another application changed the screen color filter. Apply Night Light again to resume.</source><translation>Otra aplicación cambió el filtro de color de la pantalla. Vuelve a aplicar la luz nocturna para reanudarla.</translation></message>
+    <message><source>Invalid Night Light settings.</source><translation>Ajustes de luz nocturna no válidos.</translation></message>
+    <message><source>Choose a location on the map or detect it via ipwho.is.</source><translation>Elige una ubicación en el mapa o detéctala con ipwho.is.</translation></message>
     <message><source>Could not detect location via ipwho.is: %1</source><translation>No se pudo detectar la ubicación con ipwho.is: %1</translation></message>
     <message><source>ipwho.is did not return a valid location.</source><translation>ipwho.is no devolvió una ubicación válida.</translation></message>
     <message><source>Use a latitude from -90 to 90 and a longitude from -180 to 180.</source><translation>Use una latitud de -90 a 90 y una longitud de -180 a 180.</translation></message>

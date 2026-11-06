@@ -1,5 +1,6 @@
 #include "nightlightcontroller.h"
 
+#include <QCoreApplication>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QNetworkAccessManager>
@@ -11,7 +12,7 @@
 #include <cmath>
 #include <cstdlib>
 
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX) && !defined(BRIGHTLESS_WINDOWS_NIGHT_LIGHT)
 #include <KConfigGroup>
 #include <KSharedConfig>
 #include <QDBusConnection>
@@ -29,11 +30,28 @@ NightLightController::NightLightController(QObject *parent, QNetworkAccessManage
                 {"evening", "18:00"}, {"morning", "06:00"}, {"transition", 30},
                 {"automaticLocation", true}, {"latitude", 0.0}, {"longitude", 0.0}}
 {
+#ifdef BRIGHTLESS_WINDOWS_NIGHT_LIGHT
+    settings_["mode"] = 1;
+    settings_["automaticLocation"] = false;
+    QTimer::singleShot(0, this, &NightLightController::initialize);
+    if (auto *app = QCoreApplication::instance()) {
+        connect(app, &QCoreApplication::aboutToQuit, this, &NightLightController::shutdownWindows);
+    }
+#endif
+}
+
+NightLightController::~NightLightController()
+{
+#ifdef BRIGHTLESS_WINDOWS_NIGHT_LIGHT
+    shutdownWindows();
+#endif
 }
 
 void NightLightController::initialize()
 {
-#ifdef Q_OS_LINUX
+#ifdef BRIGHTLESS_WINDOWS_NIGHT_LIGHT
+    initializeWindows();
+#elif defined(Q_OS_LINUX)
     if (busy_) return;
     busy_ = true;
     error_.clear();
@@ -118,7 +136,7 @@ void NightLightController::detectLocation()
 
 void NightLightController::readSettings()
 {
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX) && !defined(BRIGHTLESS_WINDOWS_NIGHT_LIGHT)
     const auto config = KSharedConfig::openConfig(QStringLiteral("kwinrc"), KConfig::NoGlobals);
     config->reparseConfiguration();
     const KConfigGroup night(config, QStringLiteral("NightColor"));
@@ -159,9 +177,8 @@ void NightLightController::readSettings()
 #endif
 }
 
-bool NightLightController::apply(const QVariantMap &settings)
+bool NightLightController::validateSettings(const QVariantMap &settings)
 {
-    if (busy_ || !available_) return false;
     bool modeOk = false, temperatureOk = false, dayTemperatureOk = false, transitionOk = false;
     const int mode = settings.value("mode").toInt(&modeOk);
     const int temperature = settings.value("temperature").toInt(&temperatureOk);
@@ -183,6 +200,19 @@ bool NightLightController::apply(const QVariantMap &settings)
         return false;
     }
     const bool automaticLocation = settings.value("automaticLocation").toBool();
+#ifdef BRIGHTLESS_WINDOWS_NIGHT_LIGHT
+    if (settings.value("enabled").metaType().id() != QMetaType::Bool
+        || settings.value("automaticLocation").metaType().id() != QMetaType::Bool) {
+        error_ = tr("Invalid Night Light settings.");
+        emit stateChanged();
+        return false;
+    }
+    if (mode == 0 && automaticLocation) {
+        error_ = tr("Choose a location on the map or detect it via ipwho.is.");
+        emit stateChanged();
+        return false;
+    }
+#endif
     bool latitudeOk = false, longitudeOk = false;
     const double latitude = settings.value("latitude").toDouble(&latitudeOk);
     const double longitude = settings.value("longitude").toDouble(&longitudeOk);
@@ -193,7 +223,24 @@ bool NightLightController::apply(const QVariantMap &settings)
         emit stateChanged();
         return false;
     }
-#ifdef Q_OS_LINUX
+    return true;
+}
+
+bool NightLightController::apply(const QVariantMap &settings)
+{
+    if (busy_ || !available_ || !validateSettings(settings)) return false;
+#ifdef BRIGHTLESS_WINDOWS_NIGHT_LIGHT
+    return applyWindows(settings);
+#elif defined(Q_OS_LINUX)
+    const int mode = settings.value("mode").toInt();
+    const int temperature = settings.value("temperature").toInt();
+    const int dayTemperature = settings.value("dayTemperature").toInt();
+    const int transition = settings.value("transition").toInt();
+    const auto morning = QTime::fromString(settings.value("morning").toString(), "HH:mm");
+    const auto evening = QTime::fromString(settings.value("evening").toString(), "HH:mm");
+    const bool automaticLocation = settings.value("automaticLocation").toBool();
+    const double latitude = settings.value("latitude").toDouble();
+    const double longitude = settings.value("longitude").toDouble();
     const auto config = KSharedConfig::openConfig(QStringLiteral("kwinrc"), KConfig::NoGlobals);
     config->reparseConfiguration();
     KConfigGroup night(config, "NightColor");

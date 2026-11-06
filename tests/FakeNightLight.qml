@@ -4,6 +4,7 @@ QtObject {
     property bool available: true
     property bool busy: false
     property bool sharedSchedule: false
+    property bool runsLocally: false
     property string error: ""
     property var settings: ({ enabled: false, mode: 1, temperature: 4500, dayTemperature: 6500,
                               evening: "18:00", morning: "06:00", transition: 30,

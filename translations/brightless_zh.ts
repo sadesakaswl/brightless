@@ -743,6 +743,9 @@
 </context>
 <context>
     <name>NightLightSettings</name>
+    <message><source>Uses a Windows color filter. Brightless must remain running. Disable Windows Night light and other color filters to avoid conflicts.</source><translation>使用 Windows 颜色筛选器。Brightless 必须保持运行。请禁用 Windows 夜间模式和其他颜色筛选器，以避免冲突。</translation></message>
+    <message><source>Night Light is unavailable on this system.</source><translation>此系统无法使用夜间模式。</translation></message>
+    <message><source>ipwho.is receives your public IP address to estimate your location. Settings change only when you apply.</source><translation>ipwho.is 会接收您的公网 IP 地址，以估算您的位置。只有应用更改后，设置才会改变。</translation></message>
     <message><source>Detect location via ipwho.is</source><translation>通过 ipwho.is 检测位置</translation></message>
     <message><source>ipwho.is receives your public IP address to estimate your location. Plasma settings change only when you apply.</source><translation>ipwho.is 会接收您的公网 IP 地址，以估算您的位置。只有应用更改后，Plasma 设置才会改变。</translation></message>
     <message><source>Use Plasma's automatic location</source><translation>使用 Plasma 自动定位</translation></message>
@@ -769,6 +772,15 @@
 </context>
 <context>
     <name>NightLightController</name>
+    <message><source>Could not initialize Windows Night Light (error %1).</source><translation>无法初始化 Windows 夜间模式（错误 %1）。</translation></message>
+    <message><source>Could not read the Windows screen color filter (error %1).</source><translation>无法读取 Windows 屏幕颜色筛选器（错误 %1）。</translation></message>
+    <message><source>Could not load Windows Night Light settings.</source><translation>无法加载 Windows 夜间模式设置。</translation></message>
+    <message><source>Could not save Windows Night Light settings.</source><translation>无法保存 Windows 夜间模式设置。</translation></message>
+    <message><source>Windows Night Light could not update the screen color filter (error %1).</source><translation>Windows 夜间模式无法更新屏幕颜色筛选器（错误 %1）。</translation></message>
+    <message><source>Could not restore the previous Windows screen color filter (error %1).</source><translation>无法恢复先前的 Windows 屏幕颜色筛选器（错误 %1）。</translation></message>
+    <message><source>Another application changed the screen color filter. Apply Night Light again to resume.</source><translation>其他应用程序更改了屏幕颜色筛选器。请重新应用夜间模式以恢复运行。</translation></message>
+    <message><source>Invalid Night Light settings.</source><translation>夜间模式设置无效。</translation></message>
+    <message><source>Choose a location on the map or detect it via ipwho.is.</source><translation>请在地图上选择位置，或通过 ipwho.is 检测位置。</translation></message>
     <message><source>Could not detect location via ipwho.is: %1</source><translation>无法通过 ipwho.is 检测位置：%1</translation></message>
     <message><source>ipwho.is did not return a valid location.</source><translation>ipwho.is 未返回有效的位置。</translation></message>
     <message><source>Use a latitude from -90 to 90 and a longitude from -180 to 180.</source><translation>请输入 -90 至 90 之间的纬度和 -180 至 180 之间的经度。</translation></message>

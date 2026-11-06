@@ -27,6 +27,30 @@
 <context>
     <name>GlobalShortcuts</name>
     <message>
+        <source>Enable global shortcuts</source>
+        <translation>Activer les raccourcis globaux</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Supprimer</translation>
+    </message>
+    <message>
+        <source>Add shortcut</source>
+        <translation>Ajouter un raccourci</translation>
+    </message>
+    <message>
+        <source>Set shortcut</source>
+        <translation>Définir le raccourci</translation>
+    </message>
+    <message>
+        <source>Press a key combination. Escape cancels.</source>
+        <translation>Appuyez sur une combinaison de touches. Échap annule.</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuler</translation>
+    </message>
+    <message>
         <location filename="../src/main.cpp" line="+151"/>
         <source>Increase brightness/dynamic contrast</source>
         <translation>Augmenter la luminosité/le contraste dynamique</translation>

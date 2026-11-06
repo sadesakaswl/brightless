@@ -27,6 +27,30 @@
 <context>
     <name>GlobalShortcuts</name>
     <message>
+        <source>Enable global shortcuts</source>
+        <translation>启用全局快捷键</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>移除</translation>
+    </message>
+    <message>
+        <source>Add shortcut</source>
+        <translation>添加快捷键</translation>
+    </message>
+    <message>
+        <source>Set shortcut</source>
+        <translation>设置快捷键</translation>
+    </message>
+    <message>
+        <source>Press a key combination. Escape cancels.</source>
+        <translation>请按下组合键。按 Escape 取消。</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>取消</translation>
+    </message>
+    <message>
         <location filename="../src/main.cpp" line="+151"/>
         <source>Increase brightness/dynamic contrast</source>
         <translation>提高亮度/动态对比度</translation>

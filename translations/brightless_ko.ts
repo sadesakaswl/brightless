@@ -27,6 +27,30 @@
 <context>
     <name>GlobalShortcuts</name>
     <message>
+        <source>Enable global shortcuts</source>
+        <translation>전역 단축키 활성화</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>제거</translation>
+    </message>
+    <message>
+        <source>Add shortcut</source>
+        <translation>단축키 추가</translation>
+    </message>
+    <message>
+        <source>Set shortcut</source>
+        <translation>단축키 설정</translation>
+    </message>
+    <message>
+        <source>Press a key combination. Escape cancels.</source>
+        <translation>키 조합을 누르세요. Escape 키로 취소합니다.</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>취소</translation>
+    </message>
+    <message>
         <location filename="../src/main.cpp" line="+151"/>
         <source>Increase brightness/dynamic contrast</source>
         <translation>밝기/동적 명암비 높이기</translation>

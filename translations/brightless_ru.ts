@@ -27,6 +27,30 @@
 <context>
     <name>GlobalShortcuts</name>
     <message>
+        <source>Enable global shortcuts</source>
+        <translation>Включить глобальные сочетания клавиш</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Удалить</translation>
+    </message>
+    <message>
+        <source>Add shortcut</source>
+        <translation>Добавить сочетание клавиш</translation>
+    </message>
+    <message>
+        <source>Set shortcut</source>
+        <translation>Назначить сочетание клавиш</translation>
+    </message>
+    <message>
+        <source>Press a key combination. Escape cancels.</source>
+        <translation>Нажмите сочетание клавиш. Escape отменяет ввод.</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Отмена</translation>
+    </message>
+    <message>
         <location filename="../src/main.cpp" line="+151"/>
         <source>Increase brightness/dynamic contrast</source>
         <translation>Увеличить яркость/динамическую контрастность</translation>

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(brightless VERSION 0.5.0 LANGUAGES CXX)
+project(brightless VERSION 0.5.5 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -65,6 +65,7 @@ set(QML_FILES
     src/qt/qml/MonitorCard.qml
     src/qt/qml/SdrBrightnessCard.qml
     src/qt/qml/Osd.qml
+    src/qt/qml/GlobalShortcuts.qml
 )
 foreach(file IN LISTS QML_FILES)
     get_filename_component(name "${file}" NAME)
@@ -121,7 +122,7 @@ else()
     install(FILES resources/app-icon.png DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/256x256/apps
         RENAME com.brightless.Brightless.png)
 endif()
-install(FILES LICENSE README.md DESTINATION ${CMAKE_INSTALL_DATADIR}/doc/brightless)
+install(FILES LICENSE README.md BUILD.md DESTINATION ${CMAKE_INSTALL_DATADIR}/doc/brightless)
 set(CPACK_PACKAGE_VENDOR "Brightless")
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
 set(CPACK_GENERATOR "ZIP")
@@ -139,7 +140,7 @@ if(BUILD_TESTING)
             -input ${CMAKE_CURRENT_SOURCE_DIR}/tests/tst_timing_page.qml)
         set_tests_properties(timing-ui PROPERTIES TIMEOUT 30
             ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Fusion;QT_FORCE_STDERR_LOGGING=1")
-        foreach(ui_test IN ITEMS monitor_slider monitor_card settings_window night_light_settings location_map sdr_brightness_card)
+        foreach(ui_test IN ITEMS monitor_slider monitor_card settings_window global_shortcuts night_light_settings location_map sdr_brightness_card)
             string(REPLACE "_" "-" test_name "${ui_test}")
             add_test(NAME ${test_name}-ui COMMAND Qt6::qmltestrunner
                 -input ${CMAKE_CURRENT_SOURCE_DIR}/tests/tst_${ui_test}.qml)
@@ -147,7 +148,7 @@ if(BUILD_TESTING)
                 ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Fusion;QT_FORCE_STDERR_LOGGING=1")
         endforeach()
         if(WIN32)
-            set_property(TEST timing-ui monitor-slider-ui monitor-card-ui settings-window-ui night-light-settings-ui location-map-ui sdr-brightness-card-ui
+            set_property(TEST timing-ui monitor-slider-ui monitor-card-ui settings-window-ui global-shortcuts-ui night-light-settings-ui location-map-ui sdr-brightness-card-ui
                 APPEND PROPERTY ENVIRONMENT "QT_QPA_FONTDIR=$ENV{WINDIR}/Fonts")
         endif()
     endif()
@@ -203,18 +204,19 @@ if(BUILD_TESTING)
     # Fake DDC transport; file-based autostart avoids touching the Windows Run registry in tests.
     add_executable(brightless_controller_test tests/controller_test.cpp
         src/brightlesscontroller.cpp src/brightlesscontroller.h src/settings.cpp
-        src/platform/linux/autostart.cpp)
+        src/desktopintegration.cpp src/desktopintegration.h src/platform/linux/autostart.cpp)
     target_include_directories(brightless_controller_test PRIVATE src)
-    target_link_libraries(brightless_controller_test PRIVATE Qt6::Qml)
+    target_link_libraries(brightless_controller_test PRIVATE Qt6::Qml Qt6::Widgets)
     target_compile_definitions(brightless_controller_test PRIVATE BRIGHTLESS_TESTING)
     add_test(NAME controller COMMAND brightless_controller_test)
     set_tests_properties(controller PROPERTIES TIMEOUT 30)
     if(WIN32)
-        target_sources(brightless_controller_test PRIVATE src/desktopintegration.cpp src/desktopintegration.h)
-        target_link_libraries(brightless_controller_test PRIVATE Qt6::Widgets user32)
+        target_link_libraries(brightless_controller_test PRIVATE user32)
         target_compile_definitions(brightless_controller_test PRIVATE NOMINMAX WIN32_LEAN_AND_MEAN _WIN32_WINNT=0x0601)
-        add_test(NAME windows-shortcuts COMMAND brightless_controller_test --windows-shortcuts)
+        add_test(NAME windows-shortcuts COMMAND brightless_controller_test --shortcuts)
         set_tests_properties(windows-shortcuts PROPERTIES TIMEOUT 30)
+    else()
+        target_link_libraries(brightless_controller_test PRIVATE Qt6::DBus KF6::GlobalAccel KF6::StatusNotifierItem)
     endif()
 
     add_executable(brightless_instance_test tests/single_instance_test.cpp
@@ -231,6 +233,9 @@ if(BUILD_TESTING)
     if(NOT WIN32)
         find_program(DBUS_RUN_SESSION dbus-run-session)
         if(DBUS_RUN_SESSION)
+            add_test(NAME shortcut-validation COMMAND ${DBUS_RUN_SESSION} -- $<TARGET_FILE:brightless_controller_test> --shortcuts)
+            set_tests_properties(shortcut-validation PROPERTIES TIMEOUT 30
+                ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_FORCE_STDERR_LOGGING=1")
             qt_add_executable(brightless_battery_test tests/battery_test.cpp src/platform/linux/battery.cpp)
             target_include_directories(brightless_battery_test PRIVATE src)
             target_link_libraries(brightless_battery_test PRIVATE Qt6::DBus)

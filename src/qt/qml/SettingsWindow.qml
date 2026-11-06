@@ -588,26 +588,9 @@ ApplicationWindow {
                     }
                 }
 
-                Button {
-                    text: qsTr("Configure global shortcuts")
-                    visible: settingsWindow.desktop.shortcutEditorAvailable
-                    onClicked: settingsWindow.desktop.configureShortcuts()
-                }
-                RowLayout {
+                GlobalShortcuts {
                     Layout.fillWidth: true
-                    visible: settingsWindow.desktop.plasmaShortcutsAvailable
-                    Label {
-                        text: qsTr("Enable Plasma global shortcut")
-                        wrapMode: Text.WordWrap
-                        Layout.fillWidth: true
-                    }
-                    Switch {
-                        Accessible.name: qsTr("Enable Plasma global shortcut")
-                        ToolTip.visible: hovered
-                        ToolTip.text: qsTr("Add configurable monitor controls to Plasma's Global Shortcuts settings.")
-                        checked: controller.plasma_global_shortcuts
-                        onToggled: controller.plasma_global_shortcuts = checked
-                    }
+                    desktop: settingsWindow.desktop
                 }
 
                 RowLayout {

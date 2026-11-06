@@ -27,6 +27,30 @@
 <context>
     <name>GlobalShortcuts</name>
     <message>
+        <source>Enable global shortcuts</source>
+        <translation>Genel kısayolları etkinleştir</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Kaldır</translation>
+    </message>
+    <message>
+        <source>Add shortcut</source>
+        <translation>Kısayol ekle</translation>
+    </message>
+    <message>
+        <source>Set shortcut</source>
+        <translation>Kısayol ata</translation>
+    </message>
+    <message>
+        <source>Press a key combination. Escape cancels.</source>
+        <translation>Bir tuş birleşimine basın. Escape iptal eder.</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>İptal</translation>
+    </message>
+    <message>
         <location filename="../src/main.cpp" line="+151"/>
         <source>Increase brightness/dynamic contrast</source>
         <translation>Parlaklığı/dinamik kontrastı artır</translation>

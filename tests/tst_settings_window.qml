@@ -17,10 +17,10 @@ Item {
     }
     QtObject {
         id: desktop
-        property bool shortcutEditorAvailable: true
-        property bool plasmaShortcutsAvailable: true
+        property bool shortcutsEnabled: false
+        property var shortcutActions: []
+        property string shortcutError: ""
         property bool trayAvailable: true
-        function configureShortcuts() {}
     }
 
     TestCase {

@@ -27,6 +27,30 @@
 <context>
     <name>GlobalShortcuts</name>
     <message>
+        <source>Enable global shortcuts</source>
+        <translation>グローバルショートカットを有効にする</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>削除</translation>
+    </message>
+    <message>
+        <source>Add shortcut</source>
+        <translation>ショートカットを追加</translation>
+    </message>
+    <message>
+        <source>Set shortcut</source>
+        <translation>ショートカットを設定</translation>
+    </message>
+    <message>
+        <source>Press a key combination. Escape cancels.</source>
+        <translation>キーの組み合わせを押してください。Escape でキャンセルします。</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>キャンセル</translation>
+    </message>
+    <message>
         <location filename="../src/main.cpp" line="+151"/>
         <source>Increase brightness/dynamic contrast</source>
         <translation>明るさ/ダイナミックコントラストを上げる</translation>

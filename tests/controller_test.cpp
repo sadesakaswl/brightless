@@ -19,12 +19,14 @@
 #include <cstring>
 #include <map>
 
-#ifdef Q_OS_WIN
 #include "desktopintegration.h"
-#include <QAbstractEventDispatcher>
 #include <QApplication>
 #include <QSettings>
+#ifdef Q_OS_WIN
+#include <QAbstractEventDispatcher>
 #include <qt_windows.h>
+#else
+#include "global_shortcuts_service.h"
 #endif
 
 namespace {
@@ -435,30 +437,73 @@ void testBatteryTimings()
     while (!controller.timings().isEmpty()) controller.remove_timing(0);
 }
 
-#ifdef Q_OS_WIN
-int runWindowsShortcutTests(int argc, char *argv[])
+int runShortcutTests(int argc, char *argv[])
 {
     QTemporaryDir config;
     if (!config.isValid()) return 1;
     qputenv("BRIGHTLESS_TEST_CONFIG", config.path().toUtf8());
     QApplication app(argc, argv);
     app.setOrganizationName(QStringLiteral("BrightlessTests"));
-    app.setApplicationName(QStringLiteral("WindowsShortcuts"));
+    app.setApplicationName(QStringLiteral("ShortcutTests"));
     QSettings::setDefaultFormat(QSettings::IniFormat);
     QSettings::setPath(QSettings::IniFormat, QSettings::UserScope, config.path());
     const auto check = [](bool condition, const char *message) {
         if (!condition) {
-            std::cerr << "Windows shortcut check failed: " << message << '\n';
+            std::cerr << "Shortcut check failed: " << message << '\n';
             std::exit(1);
         }
     };
 
+#ifndef Q_OS_WIN
+    auto bus = QDBusConnection::sessionBus();
+    GlobalShortcutsService plasma;
+    check(bus.registerService(QStringLiteral("org.kde.kglobalaccel")), "cannot register fake Plasma service");
+    check(bus.registerVirtualObject(QStringLiteral("/"), &plasma, QDBusConnection::SubPath),
+          "cannot register fake Plasma registry");
+#endif
     BrightlessController controller;
     controller.setHideTrayIcon(true);
     initialize(controller);
     check(controller.monitorCount() == 2, "fake monitors not discovered");
+    const auto first = QStringLiteral("increase_brightness_dynamic_contrast");
+    const auto second = QStringLiteral("decrease_brightness_dynamic_contrast");
+    const auto binding = QStringLiteral("Ctrl+Alt+Shift+F11");
+    QSettings settings;
+    settings.setValue(QStringLiteral("shortcuts/") + first, binding);
+    settings.setValue(QStringLiteral("shortcuts/enabled"), false);
     DesktopIntegration desktop;
     desktop.attach(&controller);
+    check(!desktop.shortcutsEnabled() && desktop.shortcutActions().size() == 7, "disabled initial state");
+    check(!desktop.setShortcut(first, binding), "editing while disabled must be rejected");
+    desktop.setShortcutsEnabled(true);
+    check(desktop.shortcutsEnabled(), "enable switch failed");
+#ifndef Q_OS_WIN
+    check(desktop.shortcutError().isEmpty() && plasma.queries > 0, "Plasma registration or conflict check failed");
+#endif
+    check(desktop.keySequence(Qt::Key_F11, Qt::ControlModifier | Qt::AltModifier | Qt::ShiftModifier) == binding,
+          "key recorder did not produce a portable combination");
+    for (const auto &invalid : {QStringLiteral("Ctrl+K, Ctrl+C"), QStringLiteral("not-a-key"),
+                               QStringLiteral("Ctrl+Shift")}) {
+        check(!desktop.setShortcut(first, invalid) && !desktop.shortcutError().isEmpty(),
+              "invalid combination was accepted");
+    }
+    check(!desktop.setShortcut(QStringLiteral("missing"), binding), "unknown action was accepted");
+    check(!desktop.setShortcut(second, binding) && !desktop.shortcutError().isEmpty(),
+          "duplicate assignment was accepted");
+    check(settings.value(QStringLiteral("shortcuts/") + first).toString() == binding,
+          "rejected edit overwrote the saved binding");
+    check(desktop.shortcutActions().first().toMap().value(QStringLiteral("sequence")).toString() == binding,
+          "rejected edit overwrote the action binding");
+#ifdef Q_OS_WIN
+    check(desktop.setShortcut(first, binding), "could not register initial Windows shortcut");
+    constexpr int conflictId = 0x6ffd;
+    check(RegisterHotKey(nullptr, conflictId, MOD_CONTROL | MOD_ALT | MOD_SHIFT, VK_F10),
+          "could not reserve conflict-test shortcut");
+    check(!desktop.setShortcut(first, QStringLiteral("Ctrl+Alt+Shift+F10")),
+          "occupied Windows shortcut was accepted");
+    UnregisterHotKey(nullptr, conflictId);
+    check(settings.value(QStringLiteral("shortcuts/") + first).toString() == binding,
+          "system conflict overwrote saved binding");
     auto *dispatcher = QAbstractEventDispatcher::instance();
     const auto eventType = QByteArrayLiteral("windows_generic_MSG");
     MSG message{};
@@ -492,9 +537,124 @@ int runWindowsShortcutTests(int argc, char *argv[])
     }
     check(controller.brightness(0) == 56 && controller.brightness(1) == 56,
           "posted hotkey did not trigger exactly once for all monitors");
+    check(desktop.setShortcut(first, QStringLiteral("Ctrl+Alt+Shift+F10")), "shortcut replacement failed");
+    check(desktop.setShortcut(first, QString()), "shortcut removal failed");
+    message.message = WM_HOTKEY;
+    check(!dispatcher->filterNativeEvent(eventType, &message, nullptr), "removed hotkey remained active");
+    check(desktop.setShortcut(first, binding), "shortcut reassignment failed");
+#endif
+    desktop.setShortcutsEnabled(false);
+    check(!desktop.shortcutsEnabled(), "disable switch failed");
+    check(desktop.shortcutActions().first().toMap().value(QStringLiteral("sequence")).toString() == binding,
+          "disabling forgot the assignment");
+#ifdef Q_OS_WIN
+    check(!dispatcher->filterNativeEvent(eventType, &message, nullptr), "disabled hotkey remained active");
+#endif
+    desktop.setShortcutsEnabled(true);
+    check(desktop.shortcutActions().first().toMap().value(QStringLiteral("sequence")).toString() == binding,
+          "re-enabling forgot the assignment");
+    desktop.setShortcutsEnabled(false);
+    DesktopIntegration restored;
+    restored.attach(&controller);
+    check(!restored.shortcutsEnabled()
+          && restored.shortcutActions().first().toMap().value(QStringLiteral("sequence")).toString() == binding,
+          "restored integration did not retain the disabled assignment");
+#ifndef Q_OS_WIN
+    BrightlessController startupController;
+    startupController.setHideTrayIcon(true);
+    startupController.setPlasmaGlobalShortcuts(true);
+    const auto component = app.applicationName();
+    const auto name = component + '/' + first;
+    const auto appKey = QStringLiteral("shortcuts/") + first;
+    const auto otherBinding = QStringLiteral("Ctrl+Alt+Shift+F10");
+    const auto reset = [&] {
+        settings.remove(QStringLiteral("shortcuts"));
+        plasma.shortcuts.clear();
+        plasma.registrations.clear();
+    };
+
+    for (const auto &nativeBinding : {binding, otherBinding}) {
+        reset();
+        settings.setValue(appKey, binding);
+        plasma.add(component, first, nativeBinding);
+        DesktopIntegration startup;
+        startup.attach(&startupController);
+        check(settings.value(appKey).toString() == binding, "Plasma silently overwrote saved app settings");
+        if (nativeBinding == binding) {
+            check(startup.shortcutError().isEmpty(), "same-action Plasma binding reported as a conflict");
+            check(plasma.registrations.count(name) == 1, "matching shortcut registered more than once at startup");
+        } else {
+            check(startup.shortcutError().contains(nativeBinding) && !plasma.registrations.contains(name),
+                  "mismatched application and Plasma bindings were not reported and skipped");
+            check(plasma.shortcuts.value(name).keys == QList<QKeySequence>{QKeySequence(nativeBinding)},
+                  "startup silently overwrote the mismatched Plasma binding");
+            plasma.failNextRegistration = true;
+            check(!startup.setShortcut(first, binding)
+                  && plasma.shortcuts.value(name).keys == QList<QKeySequence>{QKeySequence(nativeBinding)}
+                  && settings.value(appKey).toString() == binding,
+                  "failed mismatch resolution discarded the previous Plasma binding");
+            check(startup.setShortcut(first, binding) && startup.shortcutError().isEmpty(),
+                  "explicit shortcut assignment did not resolve the mismatch");
+        }
+        check(plasma.shortcuts.value(name).keys == QList<QKeySequence>{QKeySequence(binding)},
+              "resolved binding does not match application settings");
+    }
+
+    for (const auto &conflictingComponent : {QStringLiteral("kwin"), component}) {
+        reset();
+        settings.setValue(appKey, binding);
+        plasma.add(component, first, otherBinding);
+        plasma.add(conflictingComponent, second, binding);
+        if (conflictingComponent == component)
+            settings.setValue(QStringLiteral("shortcuts/") + second, otherBinding);
+        DesktopIntegration startup;
+        startup.attach(&startupController);
+        check(startup.shortcutError().contains(binding) && startup.shortcutError().contains(second),
+              "startup did not report the conflicting Plasma key and action");
+        check(!plasma.registrations.contains(name) && settings.value(appKey).toString() == binding,
+              "startup activated or discarded a conflicted app shortcut");
+        if (conflictingComponent != component)
+            check(plasma.shortcuts.value(conflictingComponent + '/' + second).keys == QList<QKeySequence>{QKeySequence(binding)},
+                  "startup changed another application's Plasma shortcut");
+    }
+
+    for (const bool removed : {false, true}) {
+        reset();
+        if (removed) settings.setValue(appKey, QString());
+        plasma.add(component, first, binding);
+        DesktopIntegration startup;
+        startup.attach(&startupController);
+        const auto expected = removed ? QString() : binding;
+        check(startup.shortcutError().isEmpty() == !removed && settings.value(appKey).toString() == expected
+              && startup.shortcutActions().first().toMap().value(QStringLiteral("sequence")).toString() == expected,
+              "startup failed to import Plasma settings or resurrected a removed app binding");
+        check(plasma.shortcuts.value(name).keys == QList<QKeySequence>{QKeySequence(binding)},
+              "startup overwrote a Plasma binding while resolving an empty app setting");
+    }
+
+    reset();
+    settings.setValue(appKey, binding);
+    settings.setValue(QStringLiteral("shortcuts/") + second, binding);
+    {
+        DesktopIntegration startup;
+        startup.attach(&startupController);
+        check(startup.shortcutError().contains(binding) && !plasma.registrations.contains(name)
+              && !plasma.registrations.contains(component + '/' + second),
+              "duplicate app shortcuts were activated at startup");
+    }
+
+    reset();
+    settings.setValue(appKey, binding + "; " + otherBinding);
+    plasma.add(component, first, otherBinding + "; " + binding);
+    {
+        DesktopIntegration startup;
+        startup.attach(&startupController);
+        check(startup.shortcutError().isEmpty() && plasma.registrations.count(name) == 1,
+              "same Plasma key set in a different order was rejected");
+    }
+#endif
     return 0;
 }
-#endif
 
 int runTests(int argc, char *argv[])
 {
@@ -871,10 +1031,8 @@ int runTests(int argc, char *argv[])
 
 int main(int argc, char *argv[])
 {
-#ifdef Q_OS_WIN
-    if (argc == 2 && std::strcmp(argv[1], "--windows-shortcuts") == 0)
-        return runWindowsShortcutTests(argc, argv);
-#endif
+    if (argc == 2 && std::strcmp(argv[1], "--shortcuts") == 0)
+        return runShortcutTests(argc, argv);
     const auto result = runTests(argc, argv);
     if (result) std::cerr << "Controller check failed: " << result << '\n';
     return result;

@@ -57,6 +57,38 @@ Item {
             return null
         }
 
+        function test_manual_location_map_scrolls() {
+            failOnWarning(/.*/)
+            root.width = 360
+            root.height = 560
+            nightLightBackend.available = true
+            nightLightBackend.settings = { enabled: false, mode: 0, temperature: 4500,
+                evening: "18:00", morning: "06:00", transition: 30,
+                automaticLocation: false, latitude: 51.5, longitude: -0.125 }
+            verify(waitForRendering(page))
+            const map = findChild(page, "locationMapImage")
+            verify(!!map, "Object exists")
+            tryCompare(map, "status", Image.Ready)
+            verify(map.width > 0 && map.width <= root.width)
+            const apply = findChild(page, "applyNightLight")
+            verify(!!apply, "Object exists")
+            const scroll = findChild(page, "scheduleScroll")
+            verify(!!scroll, "Object exists")
+            const flick = scroll.contentItem
+            const position = apply.mapToItem(flick.contentItem, 0, 0)
+            flick.contentY = Math.min(position.y, flick.contentHeight - flick.height)
+            verify(waitForRendering(page))
+            const visiblePosition = apply.mapToItem(scroll, 0, 0)
+            verify(visiblePosition.y >= 0 && visiblePosition.y + apply.height <= scroll.height)
+            mouseClick(apply)
+            tryVerify(() => nightLightBackend.lastApplied !== null)
+            compare(nightLightBackend.lastApplied.latitude, 51.5)
+            compare(nightLightBackend.lastApplied.longitude, -0.125)
+            root.width = 536
+            root.height = 560
+            flick.contentY = 0
+        }
+
         function test_help_tooltips() {
             failOnWarning(/.*/)
             nightLightBackend.available = false

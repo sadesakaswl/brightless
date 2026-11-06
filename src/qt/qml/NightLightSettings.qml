@@ -106,6 +106,17 @@ GroupBox {
                         text: qsTr("ipwho.is receives your public IP address to estimate your location. Plasma settings change only when you apply.")
                     }
                 }
+                LocationMap {
+                    objectName: "nightLightLocationMap"
+                    visible: !automaticLocation.checked
+                    Layout.fillWidth: true
+                    selectedLatitude: latitude.acceptableInput ? Number.fromLocaleString(Qt.locale(), latitude.text) : NaN
+                    selectedLongitude: longitude.acceptableInput ? Number.fromLocaleString(Qt.locale(), longitude.text) : NaN
+                    onLocationSelected: (lat, lon) => {
+                        latitude.text = lat.toLocaleString(Qt.locale(), 'f', 6)
+                        longitude.text = lon.toLocaleString(Qt.locale(), 'f', 6)
+                    }
+                }
                 GridLayout {
                     enabled: !automaticLocation.checked
                     columns: 2

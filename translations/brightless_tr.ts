@@ -774,4 +774,10 @@
     <message><source>Could not save Plasma Night Light settings.</source><translation>Plasma Gece Işığı ayarları kaydedilemedi.</translation></message>
     <message><source>Settings were saved, but Plasma could not reload them: %1</source><translation>Ayarlar kaydedildi ancak Plasma bunları yeniden yükleyemedi: %1</translation></message>
 </context>
+<context>
+    <name>LocationMap</name>
+    <message><source>Location map</source><translation>Konum haritası</translation></message>
+    <message><source>Click the map to choose a location, or use the arrow keys.</source><translation>Bir konum seçmek için haritaya tıklayın veya ok tuşlarını kullanın.</translation></message>
+    <message><source>Map unavailable. Enter coordinates below.</source><translation>Harita kullanılamıyor. Koordinatları aşağıya girin.</translation></message>
+</context>
 </TS>

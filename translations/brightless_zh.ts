@@ -774,4 +774,10 @@
     <message><source>Could not save Plasma Night Light settings.</source><translation>无法保存 Plasma 夜间模式设置。</translation></message>
     <message><source>Settings were saved, but Plasma could not reload them: %1</source><translation>设置已保存，但 Plasma 无法重新加载：%1</translation></message>
 </context>
+<context>
+    <name>LocationMap</name>
+    <message><source>Location map</source><translation>位置地图</translation></message>
+    <message><source>Click the map to choose a location, or use the arrow keys.</source><translation>点击地图选择位置，或使用方向键。</translation></message>
+    <message><source>Map unavailable. Enter coordinates below.</source><translation>地图不可用。请在下方输入坐标。</translation></message>
+</context>
 </TS>

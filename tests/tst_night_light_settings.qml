@@ -5,7 +5,7 @@ import "../src/qt/qml" as Ui
 Item {
     id: root
     width: 360
-    height: 640
+    height: 900
 
     Component { id: backendComponent; FakeNightLight {} }
     Component {
@@ -45,7 +45,7 @@ Item {
             compare(backend.lastApplied.evening, "21:30")
             compare(backend.lastApplied.morning, "07:15")
             compare(backend.lastApplied.transition, 45)
-            verify(panel.implicitHeight <= root.height)
+            verify(panel.implicitHeight <= 640)
             verify(transition.width > 0 && transition.x + transition.width <= panel.width)
         }
 
@@ -179,6 +179,76 @@ Item {
             compare(backend.lastApplied.longitude, 151.2093)
             mode.currentIndex = 2
             verify(!automatic.visible)
+        }
+
+        function test_map_selection_is_a_manual_draft() {
+            const map = findChild(panel, "nightLightLocationMap")
+            verify(!!map, "Object exists")
+            const image = findChild(map, "locationMapImage")
+            verify(!!image, "Object exists")
+            const marker = findChild(map, "locationMapMarker")
+            verify(!!marker, "Object exists")
+            const automatic = findChild(panel, "nightLightAutomaticLocation")
+            verify(!!automatic, "Object exists")
+            const mode = findChild(panel, "nightLightMode")
+            verify(!!mode, "Object exists")
+            const latitude = findChild(panel, "nightLightLatitude")
+            verify(!!latitude, "Object exists")
+            const longitude = findChild(panel, "nightLightLongitude")
+            verify(!!longitude, "Object exists")
+            const apply = findChild(panel, "applyNightLight")
+            verify(!!apply, "Object exists")
+            const before = JSON.stringify(backend.settings)
+            verify(!map.visible)
+            mode.currentIndex = 0
+            verify(!map.visible)
+            mouseClick(automatic)
+            tryCompare(map, "visible", true)
+            tryCompare(image, "status", Image.Ready)
+            verify(waitForRendering(panel))
+            verify(image.width > 0 && image.height > 0 && image.width <= panel.width)
+            const x = Math.floor(image.width * 0.75)
+            const y = Math.floor(image.height * 0.75)
+            const lat = Number((90 - y / image.height * 180).toFixed(6))
+            const lon = Number((x / image.width * 360 - 180).toFixed(6))
+            mouseClick(image, x, y)
+            tryCompare(map, "selectedLatitude", lat)
+            tryCompare(map, "selectedLongitude", lon)
+            compare(Number.fromLocaleString(Qt.locale(), latitude.text), lat)
+            compare(Number.fromLocaleString(Qt.locale(), longitude.text), lon)
+            compare(JSON.stringify(backend.settings), before)
+            compare(backend.lastApplied, null)
+            compare(backend.locationRequests, 0)
+            mouseClick(apply)
+            tryVerify(() => backend.lastApplied !== null)
+            compare(backend.lastApplied.latitude, lat)
+            compare(backend.lastApplied.longitude, lon)
+            compare(backend.lastApplied.automaticLocation, false)
+
+            latitude.text = "-"
+            verify(!marker.visible && !apply.enabled)
+            latitude.text = (51.5).toLocaleString(Qt.locale(), 'f', 6)
+            longitude.text = (-0.125).toLocaleString(Qt.locale(), 'f', 6)
+            verify(marker.visible)
+            compare(map.selectedLatitude, 51.5)
+            compare(map.selectedLongitude, -0.125)
+            backend.locationDetected(-33.8688, 151.2093)
+            compare(map.selectedLatitude, -33.8688)
+            compare(map.selectedLongitude, 151.2093)
+            backend.busy = true
+            verify(!map.enabled)
+            backend.busy = false
+            automatic.checked = true
+            verify(!map.visible)
+            automatic.checked = false
+            mode.currentIndex = 1
+            verify(!map.visible)
+            mode.currentIndex = 2
+            verify(!map.visible)
+            mode.currentIndex = 0
+            backend.available = false
+            verify(!map.visible)
+            compare(backend.locationRequests, 0)
         }
 
         function test_load_plasma_settings() {

@@ -56,6 +56,7 @@ set(QML_FILES
     src/qt/qml/SettingsWindow.qml
     src/qt/qml/TimingPage.qml
     src/qt/qml/NightLightSettings.qml
+    src/qt/qml/LocationMap.qml
     src/qt/qml/ControlCard.qml
     src/qt/qml/MonitorSlider.qml
     src/qt/qml/MonitorCard.qml
@@ -67,10 +68,11 @@ foreach(file IN LISTS QML_FILES)
     set_source_files_properties("${file}" PROPERTIES QT_RESOURCE_ALIAS "${name}")
 endforeach()
 set_source_files_properties(resources/app-icon.png PROPERTIES QT_RESOURCE_ALIAS icon.png)
+set_source_files_properties(src/qt/qml/world-map.png PROPERTIES QT_RESOURCE_ALIAS world-map.png)
 qt_add_qml_module(brightless
     URI com.brightless VERSION 1.0 RESOURCE_PREFIX /qt/qml
     QML_FILES ${QML_FILES}
-    RESOURCES resources/app-icon.png
+    RESOURCES resources/app-icon.png src/qt/qml/world-map.png
 )
 
 qt_add_translations(brightless TS_FILES
@@ -134,7 +136,7 @@ if(BUILD_TESTING)
             -input ${CMAKE_CURRENT_SOURCE_DIR}/tests/tst_timing_page.qml)
         set_tests_properties(timing-ui PROPERTIES TIMEOUT 30
             ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Fusion;QT_FORCE_STDERR_LOGGING=1")
-        foreach(ui_test IN ITEMS monitor_slider monitor_card settings_window night_light_settings)
+        foreach(ui_test IN ITEMS monitor_slider monitor_card settings_window night_light_settings location_map)
             string(REPLACE "_" "-" test_name "${ui_test}")
             add_test(NAME ${test_name}-ui COMMAND Qt6::qmltestrunner
                 -input ${CMAKE_CURRENT_SOURCE_DIR}/tests/tst_${ui_test}.qml)
@@ -142,7 +144,7 @@ if(BUILD_TESTING)
                 ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Fusion;QT_FORCE_STDERR_LOGGING=1")
         endforeach()
         if(WIN32)
-            set_property(TEST timing-ui monitor-slider-ui monitor-card-ui settings-window-ui night-light-settings-ui
+            set_property(TEST timing-ui monitor-slider-ui monitor-card-ui settings-window-ui night-light-settings-ui location-map-ui
                 APPEND PROPERTY ENVIRONMENT "QT_QPA_FONTDIR=$ENV{WINDIR}/Fonts")
         endif()
     endif()

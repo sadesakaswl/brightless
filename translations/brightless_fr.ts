@@ -774,4 +774,10 @@
     <message><source>Could not save Plasma Night Light settings.</source><translation>Impossible d'enregistrer les paramètres d'éclairage nocturne de Plasma.</translation></message>
     <message><source>Settings were saved, but Plasma could not reload them: %1</source><translation>Les paramètres ont été enregistrés, mais Plasma n'a pas pu les recharger : %1</translation></message>
 </context>
+<context>
+    <name>LocationMap</name>
+    <message><source>Location map</source><translation>Carte de localisation</translation></message>
+    <message><source>Click the map to choose a location, or use the arrow keys.</source><translation>Cliquez sur la carte pour choisir une position, ou utilisez les touches fléchées.</translation></message>
+    <message><source>Map unavailable. Enter coordinates below.</source><translation>Carte indisponible. Saisissez les coordonnées ci-dessous.</translation></message>
+</context>
 </TS>

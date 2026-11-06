@@ -249,7 +249,8 @@ Item {
             tryCompare(map, "visible", true)
             tryCompare(image, "status", Image.Ready)
             verify(waitForRendering(panel))
-            verify(image.width > 0 && image.height > 0 && image.width <= panel.width)
+            verify(image.width > 0 && image.height > 0 && image.width <= panel.width,
+                   "Map size: " + image.width + "x" + image.height + ", panel width: " + panel.width)
             const x = Math.floor(image.width * 0.75)
             const y = Math.floor(image.height * 0.75)
             const lat = Number((90 - y / image.height * 180).toFixed(6))

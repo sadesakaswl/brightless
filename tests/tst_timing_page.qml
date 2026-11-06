@@ -69,7 +69,8 @@ Item {
             const map = findChild(page, "locationMapImage")
             verify(!!map, "Object exists")
             tryCompare(map, "status", Image.Ready)
-            verify(map.width > 0 && map.width <= root.width)
+            verify(map.width > 0 && map.width <= root.width,
+                   "Map width: " + map.width + ", viewport width: " + root.width)
             const apply = findChild(page, "applyNightLight")
             verify(!!apply, "Object exists")
             const scroll = findChild(page, "scheduleScroll")

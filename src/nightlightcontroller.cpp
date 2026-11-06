@@ -157,8 +157,8 @@ void NightLightController::readSettings()
         latitude = location.readEntry("Latitude", 0.0);
         longitude = location.readEntry("Longitude", 0.0);
         const KConfigGroup times(schedule, "Times");
-        morning = times.readEntry("SunriseStart", QTime(6, 0));
-        evening = times.readEntry("SunsetStart", QTime(18, 0));
+        morning = QTime::fromString(times.readEntry("SunriseStart", QStringLiteral("06:00:00")));
+        evening = QTime::fromString(times.readEntry("SunsetStart", QStringLiteral("18:00:00")));
         transition = times.readEntry("TransitionDuration", 1800) / 60;
     } else {
         if (nativeMode == 2) mode = 1;
@@ -259,8 +259,8 @@ bool NightLightController::apply(const QVariantMap &settings)
         }
         if (mode == 1) {
             KConfigGroup times(schedule, "Times");
-            times.writeEntry("SunriseStart", morning, flags);
-            times.writeEntry("SunsetStart", evening, flags);
+            times.writeEntry("SunriseStart", morning.toString(), flags);
+            times.writeEntry("SunsetStart", evening.toString(), flags);
             times.writeEntry("TransitionDuration", transition * 60, flags);
         }
         if (!schedule->sync()) {

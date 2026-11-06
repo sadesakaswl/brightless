@@ -7,7 +7,7 @@ url='https://github.com/sadesakaswl/brightless'
 license=('GPL-3.0-only')
 depends=('qt6-base' 'qt6-declarative' 'kconfig' 'kglobalaccel' 'kstatusnotifieritem' 'libkscreen' 'ddcutil')
 makedepends=('cmake' 'ninja' 'qt6-tools')
-checkdepends=('python' 'dbus')
+checkdepends=('python' 'dbus' 'ttf-dejavu')
 source=('source.tar.gz')
 sha256sums=('@SHA256@')
 

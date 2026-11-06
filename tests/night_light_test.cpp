@@ -296,8 +296,8 @@ int main(int argc, char *argv[])
           && night.readEntry("NightTemperature", 0) == 3500
           && KConfigGroup(schedule, "General").readEntry("Source", -1) == 1,
           "shared custom mode or temperatures incorrect");
-    check(times.readEntry("SunriseStart", QTime()) == QTime(7, 15)
-          && times.readEntry("SunsetStart", QTime()) == QTime(21, 30)
+    check(times.readEntry("SunriseStart", QString()) == "07:15:00"
+          && times.readEntry("SunsetStart", QString()) == "21:30:00"
           && times.readEntry("TransitionDuration", 0) == 2700, "shared time/transition units incorrect");
     controller.initialize();
     waitForIdle(controller);

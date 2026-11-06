@@ -794,4 +794,10 @@
     <message><source>Click the map to choose a location, or use the arrow keys.</source><translation>지도를 클릭하여 위치를 선택하거나 화살표 키를 사용하세요.</translation></message>
     <message><source>Map unavailable. Enter coordinates below.</source><translation>지도를 사용할 수 없습니다. 아래에 좌표를 입력하세요.</translation></message>
 </context>
+<context>
+    <name>SdrBrightnessController</name>
+    <message><source>Windows display error %1: %2</source><translation>Windows 디스플레이 오류 %1: %2</translation></message>
+    <message><source>The display configuration kept changing. Try again.</source><translation>디스플레이 구성이 계속 변경되었습니다. 다시 시도하세요.</translation></message>
+    <message><source>The HDR display is no longer available. Refresh the display list.</source><translation>HDR 디스플레이를 더 이상 사용할 수 없습니다. 디스플레이 목록을 새로 고치세요.</translation></message>
+</context>
 </TS>

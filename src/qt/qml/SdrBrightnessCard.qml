@@ -7,6 +7,7 @@ ControlCard {
     required property int modelData
     required property var sdrController
     required property var controller
+    readonly property int currentBrightness: sdrController.brightness[hdrCard.modelData] ?? 200
     Layout.fillWidth: true
     visible: !controller.hide_brightness
 
@@ -28,10 +29,11 @@ ControlCard {
             Layout.fillWidth: true
             Slider {
                 id: sdrSlider
-                from: 50
-                to: Math.max(1000, sdrValue.value)
+                objectName: "sdrBrightnessSlider"
+                from: hdrCard.sdrController.minimumBrightness
+                to: Math.min(hdrCard.sdrController.maximumBrightness, Math.max(1000, sdrValue.value))
                 stepSize: 1
-                value: sdrController.brightness[hdrCard.modelData] ?? 200
+                value: hdrCard.currentBrightness
                 Layout.fillWidth: true
                 Layout.minimumHeight: 40
                 Accessible.name: sdrLabel.text
@@ -47,20 +49,26 @@ ControlCard {
                             event.accepted = false
                             return
                         }
-                        sdrController.setBrightness(hdrCard.modelData,
-                            sdrValue.value + Math.sign(delta) * controller.scroll_step())
+                        const next = Math.max(hdrCard.sdrController.minimumBrightness,
+                            Math.min(hdrCard.sdrController.maximumBrightness,
+                                sdrValue.value + Math.sign(delta) * controller.scroll_step()))
+                        if (next !== sdrValue.value)
+                            sdrController.setBrightness(hdrCard.modelData, next)
                         event.accepted = true
                     }
                 }
             }
             SpinBox {
                 id: sdrValue
-                from: 50
-                to: 10000
+                objectName: "sdrBrightnessValue"
+                from: Math.min(hdrCard.sdrController.minimumBrightness, hdrCard.currentBrightness)
+                to: Math.max(hdrCard.sdrController.maximumBrightness, hdrCard.currentBrightness)
                 editable: true
-                value: sdrController.brightness[hdrCard.modelData] ?? 200
+                value: hdrCard.currentBrightness
                 Accessible.name: sdrLabel.text
-                onValueModified: sdrController.setBrightness(hdrCard.modelData, value)
+                onValueModified: sdrController.setBrightness(hdrCard.modelData,
+                    Math.max(hdrCard.sdrController.minimumBrightness,
+                        Math.min(hdrCard.sdrController.maximumBrightness, value)))
             }
         }
     }

@@ -794,4 +794,10 @@
     <message><source>Click the map to choose a location, or use the arrow keys.</source><translation>点击地图选择位置，或使用方向键。</translation></message>
     <message><source>Map unavailable. Enter coordinates below.</source><translation>地图不可用。请在下方输入坐标。</translation></message>
 </context>
+<context>
+    <name>SdrBrightnessController</name>
+    <message><source>Windows display error %1: %2</source><translation>Windows 显示错误 %1：%2</translation></message>
+    <message><source>The display configuration kept changing. Try again.</source><translation>显示配置一直在变化。请重试。</translation></message>
+    <message><source>The HDR display is no longer available. Refresh the display list.</source><translation>HDR 显示器已不可用。请刷新显示器列表。</translation></message>
+</context>
 </TS>

@@ -794,4 +794,10 @@
     <message><source>Click the map to choose a location, or use the arrow keys.</source><translation>Haz clic en el mapa para elegir una ubicación o usa las teclas de flecha.</translation></message>
     <message><source>Map unavailable. Enter coordinates below.</source><translation>Mapa no disponible. Introduce las coordenadas a continuación.</translation></message>
 </context>
+<context>
+    <name>SdrBrightnessController</name>
+    <message><source>Windows display error %1: %2</source><translation>Error de pantalla de Windows %1: %2</translation></message>
+    <message><source>The display configuration kept changing. Try again.</source><translation>La configuración de pantalla siguió cambiando. Inténtalo de nuevo.</translation></message>
+    <message><source>The HDR display is no longer available. Refresh the display list.</source><translation>La pantalla HDR ya no está disponible. Actualiza la lista de pantallas.</translation></message>
+</context>
 </TS>

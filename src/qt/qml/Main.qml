@@ -61,7 +61,10 @@ ApplicationWindow {
                 ToolTip.visible: hovered || activeFocus
                 ToolTip.text: qsTr("Refresh monitors")
                 enabled: !controller.loading
-                onClicked: controller.initialize()
+                onClicked: {
+                    controller.initialize()
+                    sdrController.initialize()
+                }
             }
             ToolButton {
                 text: "⚙"

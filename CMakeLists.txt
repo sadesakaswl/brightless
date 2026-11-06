@@ -16,11 +16,12 @@ if(WIN32)
         src/platform/windows/autostart.cpp
         src/platform/windows/battery.cpp
         src/platform/windows/sdrbrightnesscontroller.cpp
+        src/platform/windows/sdrbrightness.cpp
         src/platform/windows/nightlight.cpp
         src/windowsnightlight.cpp
         ${CMAKE_CURRENT_BINARY_DIR}/brightless.rc
     )
-    set(PLATFORM_LIBRARIES dxva2 user32 Magnification)
+    set(PLATFORM_LIBRARIES dxva2 user32 Magnification dxgi)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     find_package(Qt6 REQUIRED COMPONENTS DBus)
     find_package(KF6Config REQUIRED)
@@ -88,7 +89,7 @@ qt_add_translations(brightless TS_FILES
 target_include_directories(brightless PRIVATE src)
 target_compile_definitions(brightless PRIVATE BRIGHTLESS_VERSION="${PROJECT_VERSION}")
 if(WIN32)
-    target_compile_definitions(brightless PRIVATE NOMINMAX WIN32_LEAN_AND_MEAN _WIN32_WINNT=0x0A00 BRIGHTLESS_WINDOWS_NIGHT_LIGHT)
+    target_compile_definitions(brightless PRIVATE NOMINMAX WIN32_LEAN_AND_MEAN _WIN32_WINNT=0x0A00 BRIGHTLESS_WINDOWS_NIGHT_LIGHT BRIGHTLESS_WINDOWS_SDR_BRIGHTNESS)
 endif()
 target_link_libraries(brightless PRIVATE
     Qt6::Network Qt6::Quick Qt6::QuickControls2 Qt6::Widgets ${PLATFORM_LIBRARIES})
@@ -138,7 +139,7 @@ if(BUILD_TESTING)
             -input ${CMAKE_CURRENT_SOURCE_DIR}/tests/tst_timing_page.qml)
         set_tests_properties(timing-ui PROPERTIES TIMEOUT 30
             ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Fusion;QT_FORCE_STDERR_LOGGING=1")
-        foreach(ui_test IN ITEMS monitor_slider monitor_card settings_window night_light_settings location_map)
+        foreach(ui_test IN ITEMS monitor_slider monitor_card settings_window night_light_settings location_map sdr_brightness_card)
             string(REPLACE "_" "-" test_name "${ui_test}")
             add_test(NAME ${test_name}-ui COMMAND Qt6::qmltestrunner
                 -input ${CMAKE_CURRENT_SOURCE_DIR}/tests/tst_${ui_test}.qml)
@@ -146,7 +147,7 @@ if(BUILD_TESTING)
                 ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Fusion;QT_FORCE_STDERR_LOGGING=1")
         endforeach()
         if(WIN32)
-            set_property(TEST timing-ui monitor-slider-ui monitor-card-ui settings-window-ui night-light-settings-ui location-map-ui
+            set_property(TEST timing-ui monitor-slider-ui monitor-card-ui settings-window-ui night-light-settings-ui location-map-ui sdr-brightness-card-ui
                 APPEND PROPERTY ENVIRONMENT "QT_QPA_FONTDIR=$ENV{WINDIR}/Fonts")
         endif()
     endif()
@@ -173,6 +174,27 @@ if(BUILD_TESTING)
     target_compile_definitions(brightless_windows_night_light_test PRIVATE BRIGHTLESS_WINDOWS_NIGHT_LIGHT BRIGHTLESS_TESTING)
     add_test(NAME windows-night-light COMMAND brightless_windows_night_light_test)
     set_tests_properties(night-light-schedule windows-night-light PROPERTIES TIMEOUT 30)
+
+    # Fake DisplayConfig transport exercises the Windows SDR controller path on any host.
+    qt_add_executable(brightless_windows_sdr_brightness_test tests/windows_sdr_brightness_test.cpp
+        src/platform/windows/sdrbrightnesscontroller.cpp src/sdrbrightnesscontroller.h)
+    target_include_directories(brightless_windows_sdr_brightness_test PRIVATE src)
+    target_link_libraries(brightless_windows_sdr_brightness_test PRIVATE Qt6::Qml Qt6::Network)
+    target_compile_definitions(brightless_windows_sdr_brightness_test PRIVATE BRIGHTLESS_WINDOWS_SDR_BRIGHTNESS BRIGHTLESS_TESTING)
+    add_test(NAME windows-sdr-brightness COMMAND brightless_windows_sdr_brightness_test)
+    set_tests_properties(windows-sdr-brightness PROPERTIES TIMEOUT 30)
+
+    # Exercise the actual transport with native API calls intercepted, using SDK types on Windows.
+    qt_add_executable(brightless_windows_sdr_transport_test tests/windows_sdr_transport_test.cpp
+        src/platform/windows/sdrbrightness.cpp)
+    target_include_directories(brightless_windows_sdr_transport_test PRIVATE src tests)
+    target_link_libraries(brightless_windows_sdr_transport_test PRIVATE Qt6::Core)
+    target_compile_definitions(brightless_windows_sdr_transport_test PRIVATE BRIGHTLESS_SDR_TRANSPORT_TEST)
+    if(WIN32)
+        target_compile_definitions(brightless_windows_sdr_transport_test PRIVATE NOMINMAX WIN32_LEAN_AND_MEAN _WIN32_WINNT=0x0A00)
+    endif()
+    add_test(NAME windows-sdr-transport COMMAND brightless_windows_sdr_transport_test)
+    set_tests_properties(windows-sdr-transport PROPERTIES TIMEOUT 30)
 
     add_executable(brightless_model_test tests/model_test.cpp)
     target_include_directories(brightless_model_test PRIVATE src)

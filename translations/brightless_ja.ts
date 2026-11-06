@@ -794,4 +794,10 @@
     <message><source>Click the map to choose a location, or use the arrow keys.</source><translation>地図をクリックして位置を選択するか、矢印キーを使用してください。</translation></message>
     <message><source>Map unavailable. Enter coordinates below.</source><translation>地図を利用できません。下に座標を入力してください。</translation></message>
 </context>
+<context>
+    <name>SdrBrightnessController</name>
+    <message><source>Windows display error %1: %2</source><translation>Windows のディスプレイ エラー %1: %2</translation></message>
+    <message><source>The display configuration kept changing. Try again.</source><translation>ディスプレイ構成が繰り返し変更されました。もう一度お試しください。</translation></message>
+    <message><source>The HDR display is no longer available. Refresh the display list.</source><translation>HDR ディスプレイは利用できなくなりました。ディスプレイ一覧を更新してください。</translation></message>
+</context>
 </TS>

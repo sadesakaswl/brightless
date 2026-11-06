@@ -794,4 +794,10 @@
     <message><source>Click the map to choose a location, or use the arrow keys.</source><translation>Bir konum seçmek için haritaya tıklayın veya ok tuşlarını kullanın.</translation></message>
     <message><source>Map unavailable. Enter coordinates below.</source><translation>Harita kullanılamıyor. Koordinatları aşağıya girin.</translation></message>
 </context>
+<context>
+    <name>SdrBrightnessController</name>
+    <message><source>Windows display error %1: %2</source><translation>Windows ekran hatası %1: %2</translation></message>
+    <message><source>The display configuration kept changing. Try again.</source><translation>Ekran yapılandırması sürekli değişti. Tekrar deneyin.</translation></message>
+    <message><source>The HDR display is no longer available. Refresh the display list.</source><translation>HDR ekran artık kullanılamıyor. Ekran listesini yenileyin.</translation></message>
+</context>
 </TS>

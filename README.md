@@ -9,7 +9,7 @@ A Qt DDC/CI application for controlling external monitors on Linux and Windows.
 ## Features
 
 - **Monitor controls** — Brightness, contrast, monitor-speaker volume, input selection (HDMI, DisplayPort, VGA, DVI, USB-C), and power modes (on, off, standby, suspend).
-- **SDR brightness in HDR** — Per-screen SDR white-level control on KDE Plasma Wayland, without requiring DDC/CI.
+- **SDR brightness in HDR** — Per-screen SDR white-level control on KDE Plasma Wayland and on Windows 10/11 HDR displays, without requiring DDC/CI.
 - **Dynamic contrast** — Link brightness and contrast globally or per monitor, with configurable ratios.
 - **Schedules** — Daily time or battery-percentage triggers for DDC monitor controls, targeting one or all monitors; 12- or 24-hour time display.
 - **Night Light** — Native KDE Plasma scheduling on Linux and full-desktop color filtering on Windows, with sunset/sunrise, custom times, always-on mode, day/night temperatures, and smooth transitions.
@@ -29,7 +29,7 @@ For monitor controls, enable **DDC/CI** in the external monitor's menu. Compatib
 To build: **C++23**, **CMake 3.21+**, and **Qt 6.4+** with LinguistTools, Network, Quick, QuickControls2, and Widgets. Tests require Python 3; disable them with `-DBUILD_TESTING=OFF` if needed.
 
 - **Linux:** Qt DBus, KDE Frameworks 6 Config, GlobalAccel and StatusNotifierItem, libkscreen 6.0+, libddcutil 1.2+, pkg-config, and permission to access I²C devices. SDR brightness requires KDE Plasma 6 Wayland with HDR enabled; battery triggers require UPower.
-- **Windows:** Windows 10/11 x64, Visual Studio 2022 C++ tools, Windows SDK, and matching Qt MSVC libraries. No KDE or libddcutil dependencies; SDR brightness remains Linux-only. Night Light uses the Windows SDK's Magnification API (`Magnification.lib`), not Windows' built-in Night light settings.
+- **Windows:** Windows 10/11 x64, Visual Studio 2022 C++ tools, Windows SDK, and matching Qt MSVC libraries. No KDE or libddcutil dependencies. SDR white level requires HDR to be enabled in Windows display settings; Brightless writes the per-display SDR white level with an undocumented `DisplayConfig` API. Night Light uses the Windows SDK's Magnification API (`Magnification.lib`), not Windows' built-in Night light settings.
 
 ## Build and run
 
@@ -60,7 +60,7 @@ cmake --install build --config Release --prefix stage
 ./stage/bin/brightless.exe
 ```
 
-Windows installation deploys Qt libraries and QML plugins; artifacts are unsigned. Linux installations require the distribution's Qt/KDE/libddcutil runtime packages.
+Windows installation deploys Qt libraries and QML plugins; artifacts are unsigned. The SDR transport test intercepts native API calls while compiling the real transport; Windows builds use the real SDK structures for its packet-layout checks. Hardware validation is separate: enable HDR, compare 80/280/480-nit settings with Windows' SDR-content brightness slider, verify refresh and HDR toggling, and quit immediately after a change to check shutdown flushing. Linux installations require the distribution's Qt/KDE/libddcutil runtime packages.
 
 ## Release packaging
 
@@ -72,11 +72,13 @@ The Flatpak manifest pins Jansson 2.15.1, ddcutil 2.2.0, and libkscreen 6.7.5 fo
 
 ## Usage
 
-- **Monitor cards:** drag sliders or use the mouse wheel; dropdowns select input and power modes. HDR cards accept SDR brightness from 50–10,000 nits. Tray scrolling and shortcuts still control DDC brightness.
+- **Monitor cards:** drag sliders or use the mouse wheel; dropdowns select input and power modes. HDR cards accept SDR brightness from 50–10,000 nits on Linux and the Windows SDR slider range of 80–480 nits on Windows. Tray scrolling and shortcuts still control DDC brightness.
 - **Settings:** open the gear button to configure appearance, monitor controls, schedules, and system integration. **Appearance → Theme** switches System, Light/Dark, AMOLED Black, and colored palettes immediately and saves the choice. System follows desktop colors; Fusion styling keeps colors consistent across platforms.
 - **Shortcuts:** unassigned by default. Enable Plasma shortcuts and assign keys in Plasma settings on Linux; use **System → Configure global shortcuts** on Windows.
 - **Tray:** enable **Close to tray icon** to keep running after closing the window. Click the tray icon or select **Show Brightless** to restore it.
 - **Refresh:** sliders and OSD show requested values, not hardware readback. Use refresh to reread monitors; errors appear in the main window.
+
+**SDR brightness on Windows:** Windows exposes one SDR white level for all SDR content shown on an HDR display. Brightless lists only displays with HDR currently enabled and adjusts that level from 80 to 480 nits, matching the range of Windows' own SDR content brightness slider. Slider moves are debounced, and normal shutdown flushes the newest pending changes. Refresh rereads the current values, including changes made from Windows settings. Failed writes stay reported until the same display is successfully changed again; refreshing or changing another display does not dismiss them. This control is separate from DDC brightness and from Night Light. It uses the undocumented `DisplayConfigSetDeviceInfo` packet type `-18`, which may change in a Windows update; if that happens, Brightless reports the failure in the main window rather than writing. Brightless does not restore the previous white level on exit. Remote sessions, some mixed-HDR/multi-monitor arrangements, and other color-management tools may prevent a display from appearing or may override its value.
 
 ### Schedules
 

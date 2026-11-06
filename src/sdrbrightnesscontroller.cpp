@@ -22,6 +22,10 @@ SdrBrightnessController::SdrBrightnessController(QObject *parent)
             this, &SdrBrightnessController::updateOutputs);
 }
 
+SdrBrightnessController::~SdrBrightnessController() = default;
+int SdrBrightnessController::minimumBrightness() const { return 50; }
+int SdrBrightnessController::maximumBrightness() const { return 10000; }
+
 void SdrBrightnessController::initialize()
 {
     auto *operation = new KScreen::GetConfigOperation(KScreen::ConfigOperation::NoEDID, this);

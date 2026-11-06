@@ -25,7 +25,7 @@
 NightLightController::NightLightController(QObject *parent, QNetworkAccessManager *network)
     : QObject(parent)
     , network_(network ? network : new QNetworkAccessManager(this))
-    , settings_{{"enabled", false}, {"mode", 0}, {"temperature", 4500},
+    , settings_{{"enabled", false}, {"mode", 0}, {"temperature", 4500}, {"dayTemperature", 6500},
                 {"evening", "18:00"}, {"morning", "06:00"}, {"transition", 30},
                 {"automaticLocation", true}, {"latitude", 0.0}, {"longitude", 0.0}}
 {
@@ -150,6 +150,7 @@ void NightLightController::readSettings()
     }
     settings_ = {{"enabled", night.readEntry("Active", false)}, {"mode", mode},
                  {"temperature", night.readEntry("NightTemperature", 4500)},
+                 {"dayTemperature", night.readEntry("DayTemperature", 6500)},
                  {"morning", morning.isValid() ? morning.toString("HH:mm") : QStringLiteral("06:00")},
                  {"evening", evening.isValid() ? evening.toString("HH:mm") : QStringLiteral("18:00")},
                  {"transition", transition}, {"automaticLocation", automaticLocation},
@@ -161,9 +162,10 @@ void NightLightController::readSettings()
 bool NightLightController::apply(const QVariantMap &settings)
 {
     if (busy_ || !available_) return false;
-    bool modeOk = false, temperatureOk = false, transitionOk = false;
+    bool modeOk = false, temperatureOk = false, dayTemperatureOk = false, transitionOk = false;
     const int mode = settings.value("mode").toInt(&modeOk);
     const int temperature = settings.value("temperature").toInt(&temperatureOk);
+    const int dayTemperature = settings.value("dayTemperature").toInt(&dayTemperatureOk);
     const int transition = settings.value("transition").toInt(&transitionOk);
     const auto morningText = settings.value("morning").toString();
     const auto eveningText = settings.value("evening").toString();
@@ -171,6 +173,7 @@ bool NightLightController::apply(const QVariantMap &settings)
     const auto evening = QTime::fromString(eveningText, "HH:mm");
     const int gap = std::abs(morning.secsTo(evening));
     if (!modeOk || mode < 0 || mode > 2 || !temperatureOk || temperature < 1000 || temperature > 6500
+        || !dayTemperatureOk || dayTemperature < 1000 || dayTemperature > 6500
         || !transitionOk || transition < 1 || transition > 720
         || !morning.isValid() || morning.toString("HH:mm") != morningText
         || !evening.isValid() || evening.toString("HH:mm") != eveningText
@@ -224,6 +227,7 @@ bool NightLightController::apply(const QVariantMap &settings)
     night.writeEntry("Active", settings.value("enabled").toBool(), flags);
     night.writeEntry("Mode", nativeMode, flags);
     night.writeEntry("NightTemperature", temperature, flags);
+    night.writeEntry("DayTemperature", dayTemperature, flags);
     if (!sharedSchedule_ && mode == 0 && !automaticLocation) {
         night.writeEntry("LatitudeFixed", latitude, flags);
         night.writeEntry("LongitudeFixed", longitude, flags);

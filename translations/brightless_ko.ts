@@ -759,6 +759,8 @@
     <message><source>Always on</source><translation>항상 켜기</translation></message>
     <message><source>Night temperature: %1 K</source><translation>야간 색온도: %1 K</translation></message>
     <message><source>Night temperature</source><translation>야간 색온도</translation></message>
+    <message><source>Morning temperature: %1 K</source><translation>아침 색온도: %1 K</translation></message>
+    <message><source>Morning temperature</source><translation>아침 색온도</translation></message>
     <message><source>Night starts (24-hour)</source><translation>야간 시작 (24시간제)</translation></message>
     <message><source>Day starts (24-hour)</source><translation>주간 시작 (24시간제)</translation></message>
     <message><source>Smooth transition (minutes)</source><translation>부드러운 전환 (분)</translation></message>

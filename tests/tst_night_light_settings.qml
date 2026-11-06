@@ -29,11 +29,14 @@ Item {
         function test_apply_custom_schedule() {
             const active = findChild(panel, "nightLightEnabled")
             const temperature = findChild(panel, "nightLightTemperature")
+            const dayTemperature = findChild(panel, "nightLightDayTemperature")
+            verify(!!dayTemperature, "Object exists")
             const evening = findChild(panel, "nightLightEvening")
             const morning = findChild(panel, "nightLightMorning")
             const transition = findChild(panel, "nightLightTransition")
             mouseClick(active)
             temperature.value = 3500
+            dayTemperature.value = 5500
             evening.text = "21:30"
             morning.text = "07:15"
             transition.value = 45
@@ -42,11 +45,51 @@ Item {
             compare(backend.lastApplied.enabled, true)
             compare(backend.lastApplied.mode, 1)
             compare(backend.lastApplied.temperature, 3500)
+            compare(backend.lastApplied.dayTemperature, 5500)
             compare(backend.lastApplied.evening, "21:30")
             compare(backend.lastApplied.morning, "07:15")
             compare(backend.lastApplied.transition, 45)
             verify(panel.implicitHeight <= 640)
             verify(transition.width > 0 && transition.x + transition.width <= panel.width)
+        }
+
+        function test_morning_temperature_draft_and_modes() {
+            const temperature = findChild(panel, "nightLightDayTemperature")
+            verify(!!temperature, "Object exists")
+            const mode = findChild(panel, "nightLightMode")
+            verify(!!mode, "Object exists")
+            const apply = findChild(panel, "applyNightLight")
+            verify(!!apply, "Object exists")
+            const before = JSON.stringify(backend.settings)
+            compare(temperature.from, 1000)
+            compare(temperature.to, 6500)
+            compare(temperature.stepSize, 100)
+            compare(temperature.value, 6500)
+            verify(temperature.visible)
+            temperature.forceActiveFocus()
+            keyClick(Qt.Key_Left)
+            compare(temperature.value, 6400)
+            compare(JSON.stringify(backend.settings), before)
+            compare(backend.lastApplied, null)
+            mouseClick(apply)
+            tryVerify(() => backend.lastApplied !== null)
+            compare(backend.lastApplied.dayTemperature, 6400)
+            compare(backend.lastApplied.temperature, 4500)
+            mode.currentIndex = 0
+            verify(temperature.visible)
+            mode.currentIndex = 2
+            verify(!temperature.visible)
+            mouseClick(apply)
+            tryCompare(backend.lastApplied, "mode", 2)
+            compare(backend.lastApplied.dayTemperature, 6400)
+            mode.currentIndex = 1
+            verify(temperature.visible)
+            backend.busy = true
+            verify(!temperature.enabled)
+            backend.busy = false
+            backend.available = false
+            verify(!temperature.visible)
+            compare(backend.lastApplied.dayTemperature, 6400)
         }
 
         function test_modes_validation_and_availability() {
@@ -252,11 +295,12 @@ Item {
         }
 
         function test_load_plasma_settings() {
-            backend.settings = { enabled: true, mode: 0, temperature: 3000,
+            backend.settings = { enabled: true, mode: 0, temperature: 3000, dayTemperature: 6100,
                                  evening: "22:00", morning: "05:30", transition: 60,
                                  automaticLocation: false, latitude: 51.5, longitude: -0.125 }
             compare(findChild(panel, "nightLightEnabled").checked, true)
             compare(findChild(panel, "nightLightTemperature").value, 3000)
+            compare(findChild(panel, "nightLightDayTemperature").value, 6100)
             compare(findChild(panel, "nightLightEvening").text, "22:00")
             compare(findChild(panel, "nightLightMorning").text, "05:30")
             compare(findChild(panel, "nightLightTransition").value, 60)

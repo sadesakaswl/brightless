@@ -5,7 +5,7 @@ QtObject {
     property bool busy: false
     property bool sharedSchedule: false
     property string error: ""
-    property var settings: ({ enabled: false, mode: 1, temperature: 4500,
+    property var settings: ({ enabled: false, mode: 1, temperature: 4500, dayTemperature: 6500,
                               evening: "18:00", morning: "06:00", transition: 30,
                               automaticLocation: true, latitude: 0, longitude: 0 })
     property var lastApplied: null

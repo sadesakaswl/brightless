@@ -759,6 +759,8 @@
     <message><source>Always on</source><translation>Immer eingeschaltet</translation></message>
     <message><source>Night temperature: %1 K</source><translation>Nachttemperatur: %1 K</translation></message>
     <message><source>Night temperature</source><translation>Nachttemperatur</translation></message>
+    <message><source>Morning temperature: %1 K</source><translation>Morgentemperatur: %1 K</translation></message>
+    <message><source>Morning temperature</source><translation>Morgentemperatur</translation></message>
     <message><source>Night starts (24-hour)</source><translation>Nachtbeginn (24 Stunden)</translation></message>
     <message><source>Day starts (24-hour)</source><translation>Tagesbeginn (24 Stunden)</translation></message>
     <message><source>Smooth transition (minutes)</source><translation>Sanfter Übergang (Minuten)</translation></message>

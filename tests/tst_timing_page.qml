@@ -62,7 +62,7 @@ Item {
             root.width = 360
             root.height = 560
             nightLightBackend.available = true
-            nightLightBackend.settings = { enabled: false, mode: 0, temperature: 4500,
+            nightLightBackend.settings = { enabled: false, mode: 0, temperature: 4500, dayTemperature: 6500,
                 evening: "18:00", morning: "06:00", transition: 30,
                 automaticLocation: false, latitude: 51.5, longitude: -0.125 }
             verify(waitForRendering(page))

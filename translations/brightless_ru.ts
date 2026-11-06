@@ -759,6 +759,8 @@
     <message><source>Always on</source><translation>Всегда включён</translation></message>
     <message><source>Night temperature: %1 K</source><translation>Ночная цветовая температура: %1 К</translation></message>
     <message><source>Night temperature</source><translation>Ночная цветовая температура</translation></message>
+    <message><source>Morning temperature: %1 K</source><translation>Утренняя цветовая температура: %1 К</translation></message>
+    <message><source>Morning temperature</source><translation>Утренняя цветовая температура</translation></message>
     <message><source>Night starts (24-hour)</source><translation>Начало ночи (24 часа)</translation></message>
     <message><source>Day starts (24-hour)</source><translation>Начало дня (24 часа)</translation></message>
     <message><source>Smooth transition (minutes)</source><translation>Плавный переход (минуты)</translation></message>

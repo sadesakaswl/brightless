@@ -176,11 +176,13 @@ int main(int argc, char *argv[])
 
     LocationNetwork network;
     NightLightController controller(nullptr, &network);
+    check(controller.settings().value("dayTemperature").toInt() == 6500, "default day temperature is incorrect");
     controller.initialize();
     waitForIdle(controller);
     check(controller.available() && !controller.sharedSchedule(), "legacy Plasma detection failed");
     check(controller.settings().value("enabled").toBool()
-          && controller.settings().value("temperature").toInt() == 4200, "existing settings were not loaded");
+          && controller.settings().value("temperature").toInt() == 4200
+          && controller.settings().value("dayTemperature").toInt() == 6200, "existing temperatures were not loaded");
     check(!controller.settings().value("automaticLocation").toBool()
           && controller.settings().value("latitude").toDouble() == 51.5
           && controller.settings().value("longitude").toDouble() == -0.125, "existing legacy location was not loaded");
@@ -188,29 +190,33 @@ int main(int argc, char *argv[])
     auto settings = controller.settings();
     check(controller.apply(settings), "cannot preserve location schedule");
     waitForIdle(controller);
-    check(night.readEntry("Mode", -1) == 1 && night.readEntry("LatitudeFixed", 0.0) == 51.5,
-          "manual location was overwritten");
+    check(night.readEntry("Mode", -1) == 1 && night.readEntry("LatitudeFixed", 0.0) == 51.5
+          && night.readEntry("DayTemperature", 0) == 6200, "manual location or day temperature was overwritten");
 
     settings["mode"] = 1;
     settings["temperature"] = 3500;
+    settings["dayTemperature"] = 5600;
     settings["evening"] = "21:30";
     settings["morning"] = "07:15";
     settings["transition"] = 45;
     check(controller.apply(settings), "valid custom schedule rejected");
     waitForIdle(controller);
     check(controller.error().isEmpty() && plasma.reloads == 2, "KWin was not reconfigured");
-    check(night.readEntry("Mode", -1) == 2 && night.readEntry("NightTemperature", 0) == 3500,
-          "legacy mode or temperature was not saved");
+    check(night.readEntry("Mode", -1) == 2 && night.readEntry("NightTemperature", 0) == 3500
+          && night.readEntry("DayTemperature", 0) == 5600
+          && controller.settings().value("dayTemperature").toInt() == 5600,
+          "legacy mode or temperatures were not saved");
     check(night.readEntry("MorningBeginFixed", QString()) == "0715"
           && night.readEntry("EveningBeginFixed", QString()) == "2130"
           && night.readEntry("TransitionTime", 0) == 45, "legacy transition/time units are incorrect");
-    check(night.readEntry("DayTemperature", 0) == 6200
-          && KConfigGroup(config, "Unrelated").readEntry("Keep", QString()) == "untouched",
+    check(KConfigGroup(config, "Unrelated").readEntry("Keep", QString()) == "untouched",
           "unrelated Plasma settings were lost");
 
     for (const auto &change : {QVariantMap{{"morning", "25:00"}}, QVariantMap{{"evening", "7:00"}},
                               QVariantMap{{"morning", "21:30"}}, QVariantMap{{"transition", 600}},
                               QVariantMap{{"temperature", 999}}, QVariantMap{{"mode", 3}},
+                              QVariantMap{{"dayTemperature", 999}}, QVariantMap{{"dayTemperature", 6501}},
+                              QVariantMap{{"dayTemperature", "not a number"}}, QVariantMap{{"dayTemperature", QVariant()}},
                               QVariantMap{{"transition", 0}}}) {
         auto invalid = settings;
         for (auto it = change.begin(); it != change.end(); ++it) invalid[it.key()] = it.value();
@@ -227,13 +233,16 @@ int main(int argc, char *argv[])
         for (auto it = change.begin(); it != change.end(); ++it) invalid[it.key()] = it.value();
         check(!controller.apply(invalid) && !controller.error().isEmpty(), "invalid coordinates were accepted");
     }
-    check(plasma.reloads == 2, "invalid settings reached KWin");
+    check(plasma.reloads == 2 && night.readEntry("DayTemperature", 0) == 5600,
+          "invalid settings changed Plasma temperatures or reached KWin");
     settings["mode"] = 2;
     settings["enabled"] = false;
+    settings["dayTemperature"] = 1000;
     check(controller.apply(settings), "cannot disable Night Light");
     waitForIdle(controller);
-    check(!night.readEntry("Active", true) && night.readEntry("Mode", -1) == 3,
-          "legacy constant mode or disable was not saved");
+    check(!night.readEntry("Active", true) && night.readEntry("Mode", -1) == 3
+          && night.readEntry("DayTemperature", 0) == 1000,
+          "legacy constant mode, disable, or minimum day temperature was not saved");
 
     settings["mode"] = 0;
     settings["automaticLocation"] = false;
@@ -272,6 +281,8 @@ int main(int argc, char *argv[])
           && controller.settings().value("latitude").toDouble() == 40.7128
           && controller.settings().value("longitude").toDouble() == -74.0060, "existing shared location was not loaded");
     settings = controller.settings();
+    check(settings.value("dayTemperature").toInt() == 1000, "shared scheduler did not load existing day temperature");
+    settings["dayTemperature"] = 6500;
     settings["enabled"] = true;
     settings["mode"] = 1;
     settings["morning"] = "07:15";
@@ -281,7 +292,10 @@ int main(int argc, char *argv[])
     waitForIdle(controller);
     KConfigGroup times(schedule, "Times");
     check(night.readEntry("Mode", -1) == 1
-          && KConfigGroup(schedule, "General").readEntry("Source", -1) == 1, "shared custom mode incorrect");
+          && night.readEntry("DayTemperature", 0) == 6500
+          && night.readEntry("NightTemperature", 0) == 3500
+          && KConfigGroup(schedule, "General").readEntry("Source", -1) == 1,
+          "shared custom mode or temperatures incorrect");
     check(times.readEntry("SunriseStart", QTime()) == QTime(7, 15)
           && times.readEntry("SunsetStart", QTime()) == QTime(21, 30)
           && times.readEntry("TransitionDuration", 0) == 2700, "shared time/transition units incorrect");
@@ -357,6 +371,13 @@ int main(int argc, char *argv[])
     check(detections == 3 && latitude == -90 && longitude == 180, "boundary coordinates were not returned");
     check(controller.settings() == beforeLookup && plasma.reloads == reloadsBeforeLookup,
           "location lookup saved or changed Plasma settings without applying");
+
+    night.deleteEntry("DayTemperature");
+    check(config->sync(), "cannot remove day temperature for default check");
+    controller.initialize();
+    waitForIdle(controller);
+    check(controller.settings().value("dayTemperature").toInt() == 6500,
+          "missing Plasma day temperature did not default to 6500 K");
 
     plasma.failProbe = true;
     controller.initialize();

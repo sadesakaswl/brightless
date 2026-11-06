@@ -759,6 +759,8 @@
     <message><source>Always on</source><translation>始终开启</translation></message>
     <message><source>Night temperature: %1 K</source><translation>夜间色温：%1 K</translation></message>
     <message><source>Night temperature</source><translation>夜间色温</translation></message>
+    <message><source>Morning temperature: %1 K</source><translation>早晨色温：%1 K</translation></message>
+    <message><source>Morning temperature</source><translation>早晨色温</translation></message>
     <message><source>Night starts (24-hour)</source><translation>夜间开始时间（24 小时制）</translation></message>
     <message><source>Day starts (24-hour)</source><translation>白天开始时间（24 小时制）</translation></message>
     <message><source>Smooth transition (minutes)</source><translation>平滑过渡（分钟）</translation></message>

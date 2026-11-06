@@ -759,6 +759,8 @@
     <message><source>Always on</source><translation>Her zaman açık</translation></message>
     <message><source>Night temperature: %1 K</source><translation>Gece renk sıcaklığı: %1 K</translation></message>
     <message><source>Night temperature</source><translation>Gece renk sıcaklığı</translation></message>
+    <message><source>Morning temperature: %1 K</source><translation>Sabah renk sıcaklığı: %1 K</translation></message>
+    <message><source>Morning temperature</source><translation>Sabah renk sıcaklığı</translation></message>
     <message><source>Night starts (24-hour)</source><translation>Gece başlangıcı (24 saat)</translation></message>
     <message><source>Day starts (24-hour)</source><translation>Gündüz başlangıcı (24 saat)</translation></message>
     <message><source>Smooth transition (minutes)</source><translation>Yumuşak geçiş (dakika)</translation></message>

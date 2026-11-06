@@ -161,6 +161,23 @@ GroupBox {
                     }
                 }
             }
+            Label {
+                visible: mode.currentIndex !== 2
+                Layout.fillWidth: true
+                wrapMode: Text.WordWrap
+                text: qsTr("Morning temperature: %1 K").arg(Math.round(dayTemperature.value))
+            }
+            Slider {
+                id: dayTemperature
+                objectName: "nightLightDayTemperature"
+                visible: mode.currentIndex !== 2
+                Layout.fillWidth: true
+                Accessible.name: qsTr("Morning temperature")
+                from: 1000
+                to: 6500
+                stepSize: 100
+                value: panel.saved.dayTemperature
+            }
             Label { text: qsTr("Night temperature: %1 K").arg(Math.round(temperature.value)) }
             Slider {
                 id: temperature
@@ -227,7 +244,7 @@ GroupBox {
                         || (latitude.acceptableInput && longitude.acceptableInput))
                 onClicked: panel.controller.apply({
                     enabled: active.checked, mode: mode.currentIndex,
-                    temperature: Math.round(temperature.value),
+                    temperature: Math.round(temperature.value), dayTemperature: Math.round(dayTemperature.value),
                     evening: evening.text, morning: morning.text, transition: transition.value,
                     automaticLocation: automaticLocation.checked,
                     latitude: latitude.acceptableInput ? Number.fromLocaleString(Qt.locale(), latitude.text) : panel.saved.latitude,

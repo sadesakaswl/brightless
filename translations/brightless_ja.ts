@@ -759,6 +759,8 @@
     <message><source>Always on</source><translation>常に有効</translation></message>
     <message><source>Night temperature: %1 K</source><translation>夜間の色温度: %1 K</translation></message>
     <message><source>Night temperature</source><translation>夜間の色温度</translation></message>
+    <message><source>Morning temperature: %1 K</source><translation>朝の色温度: %1 K</translation></message>
+    <message><source>Morning temperature</source><translation>朝の色温度</translation></message>
     <message><source>Night starts (24-hour)</source><translation>夜の開始時刻 (24時間制)</translation></message>
     <message><source>Day starts (24-hour)</source><translation>昼の開始時刻 (24時間制)</translation></message>
     <message><source>Smooth transition (minutes)</source><translation>滑らかな切り替え (分)</translation></message>

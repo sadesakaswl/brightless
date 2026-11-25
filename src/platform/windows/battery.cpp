@@ -2,6 +2,11 @@
 
 #include <windows.h>
 
+#ifdef BRIGHTLESS_TESTING
+BOOL getSystemPowerStatusForTest(LPSYSTEM_POWER_STATUS);
+#define GetSystemPowerStatus getSystemPowerStatusForTest
+#endif
+
 namespace brightless::battery {
 void readPercentage(QObject *, std::function<void(std::optional<int>)> completion)
 {

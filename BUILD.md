@@ -40,6 +40,12 @@ cmake --install build --config Release --prefix stage
 
 Windows installation deploys Qt libraries and QML plugins; artifacts are unsigned. The SDR transport test intercepts native API calls while compiling the real transport; Windows builds use the real SDK structures for its packet-layout checks. Hardware validation is separate: enable HDR, compare 80/280/480-nit settings with Windows' SDR-content brightness slider, verify refresh and HDR toggling, and quit immediately after a change to check shutdown flushing. Linux installations require the distribution's Qt/KDE/libddcutil runtime packages.
 
+### Platform behavior tests
+
+- `monitor-discovery` checks disconnect, pending writes, and reconnect with fake DDC devices on both platforms.
+- `single-instance-parallel` checks concurrent launches over the native local IPC transport. Manual launches must each activate once; autostart launches must not activate.
+- `battery` checks that both native readers report valid percentages and ignore unavailable readings, without a physical battery.
+
 ### Global shortcut parity
 
 `shortcut-validation` (Plasma) and `windows-shortcuts` check tap and repeat behavior with fake monitors. For a real keyboard check on either platform, assign a brightness shortcut, focus another application, then tap and hold the shortcut with brightness away from its limit. A tap should move one step, a hold should keep moving, and releasing should stop it.

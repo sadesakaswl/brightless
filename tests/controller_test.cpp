@@ -45,14 +45,14 @@ int monitorIds[]{0, 1};
 std::array<std::map<int, int>, 2> reads, writes;
 // Optional maximum/current responses; a negative current simulates an unsupported VCP.
 std::array<std::map<int, std::pair<int, int>>, 2> responses;
+std::array<bool, 2> connectedMonitors{true, true};
 bool reverseMonitors = false;
 bool failReads = false;
 bool failWrites = false;
 int scanDelay = 0;
 
-void initialize(BrightlessController &controller)
+void waitForDiscovery(BrightlessController &controller)
 {
-    controller.initialize();
     QElapsedTimer timer;
     timer.start();
     while (controller.loading() && timer.elapsed() < 5000) {
@@ -64,6 +64,12 @@ void initialize(BrightlessController &controller)
         std::exit(99);
     }
 }
+
+void initialize(BrightlessController &controller)
+{
+    controller.initialize();
+    waitForDiscovery(controller);
+}
 }
 
 namespace brightless::ddc {
@@ -73,6 +79,7 @@ std::vector<Device> enumerate(QString &)
     std::vector<Device> devices;
     for (int i = 0; i < 2; ++i) {
         const int index = reverseMonitors ? 1 - i : i;
+        if (!connectedMonitors[index]) continue;
         devices.push_back({QStringLiteral("monitor-%1").arg(index), QStringLiteral("Same model"),
                            {&monitorIds[index], [](void *) {}}});
     }
@@ -714,6 +721,51 @@ int runShortcutTests(int argc, char *argv[])
     return 0;
 }
 
+int testMonitorDiscovery()
+{
+    const auto check = [](bool condition, const char *message) {
+        if (!condition) qCritical().noquote() << "Monitor discovery check failed:" << message;
+        return condition;
+    };
+    BrightlessController controller;
+    initialize(controller);
+    if (!check(controller.monitorCount() == 2, "expected two monitors before disconnect")) return 1;
+
+    controller.set_ddc_delay(1500);
+    controller.set_brightness(1, 73);
+    controller.set_volume(1, 23);
+    if (!check(writes[0].empty() && writes[1].empty(), "expected queued DDC writes")) return 1;
+    connectedMonitors[0] = false;
+    controller.initialize();
+    if (!check(controller.loading() && controller.monitorCount() == 0
+               && controller.adjustAllBrightness(1) == -1 && controller.adjustAllVolume(1) == -1,
+               "old monitor indices must not accept adjustments during discovery")) return 1;
+    controller.set_brightness(0, 99);
+    waitForDiscovery(controller);
+    if (!check(controller.monitorCount() == 1 && controller.ddcMonitors().size() == 1
+               && controller.ddcMonitors().first().toMap().value("id").toString() == QStringLiteral("monitor-1"),
+               "disconnected monitor remained listed")) return 1;
+    if (!check(writes[0].empty() && writes[1] == std::map<int, int>{{0x10, 73}, {0x62, 23}},
+               "pending writes were lost or applied to the wrong monitor")) return 1;
+
+    writes = {};
+    controller.set_brightness(0, 42);
+    initialize(controller);
+    if (!check(writes[0].empty() && writes[1] == std::map<int, int>{{0x10, 42}},
+               "the surviving monitor did not take over index zero")) return 1;
+
+    connectedMonitors[1] = false;
+    initialize(controller);
+    if (!check(controller.monitorCount() == 0 && controller.ddcMonitors().isEmpty()
+               && !controller.startupError().isEmpty(), "empty discovery was not reported")) return 1;
+
+    connectedMonitors[1] = true;
+    responses[1][0x10] = {200, 130};
+    initialize(controller);
+    return check(controller.monitorCount() == 1 && controller.startupError().isEmpty()
+                 && controller.brightness(0) == 65, "reconnecting did not restore hardware readback") ? 0 : 1;
+}
+
 int runTests(int argc, char *argv[])
 {
     QTemporaryDir config;
@@ -722,6 +774,7 @@ int runTests(int argc, char *argv[])
     }
     qputenv("BRIGHTLESS_TEST_CONFIG", config.path().toUtf8());
     QCoreApplication app(argc, argv);
+    if (app.arguments().contains(QStringLiteral("--monitor-discovery"))) return testMonitorDiscovery();
 
     BrightlessController controller;
     if (controller.ddc_delay() != 0) {

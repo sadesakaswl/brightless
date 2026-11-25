@@ -13,6 +13,10 @@
 #ifdef Q_OS_WIN
 #include <QAbstractNativeEventFilter>
 #include <qt_windows.h>
+#ifdef BRIGHTLESS_TESTING
+BOOL registerHotKeyForTest(HWND, int, UINT, UINT);
+#define RegisterHotKey registerHotKeyForTest
+#endif
 #else
 #include <KGlobalAccel>
 #include <KStatusNotifierItem>
@@ -92,7 +96,7 @@ struct DesktopIntegration::Impl
             }
         }
         return vk && !(modifiers & (Qt::KeypadModifier | Qt::GroupSwitchModifier))
-            && RegisterHotKey(nullptr, id, nativeModifiers | MOD_NOREPEAT, vk);
+            && RegisterHotKey(nullptr, id, nativeModifiers, vk);
     }
 #else
     std::unique_ptr<KStatusNotifierItem> tray;

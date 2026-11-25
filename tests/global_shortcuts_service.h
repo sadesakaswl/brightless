@@ -8,6 +8,7 @@
 #include <QDBusVirtualObject>
 #include <QMap>
 #include <algorithm>
+#include <kglobalaccel_version.h>
 
 // An isolated Plasma shortcut registry; no host shortcuts are read or changed.
 class GlobalShortcutsService : public QDBusVirtualObject
@@ -26,6 +27,18 @@ public:
     {
         shortcuts[component + '/' + action] = {{component, action, component, action},
             QKeySequence::listFromString(sequence, QKeySequence::PortableText)};
+    }
+
+    bool activate(const QDBusConnection &connection, const QString &component, const QString &action, bool repeat) const
+    {
+        if (shortcuts.value(component + '/' + action).keys.isEmpty()) return false;
+        // Older KDE Frameworks receive repeats as ordinary presses.
+        const auto signal = repeat && KGLOBALACCEL_VERSION >= QT_VERSION_CHECK(6, 17, 0)
+            ? QStringLiteral("globalShortcutRepeated") : QStringLiteral("globalShortcutPressed");
+        auto message = QDBusMessage::createSignal(QStringLiteral("/component/ShortcutTests"),
+            QStringLiteral("org.kde.kglobalaccel.Component"), signal);
+        message << component << action << qlonglong(0);
+        return connection.send(message);
     }
 
     QString introspect(const QString &) const override { return {}; }

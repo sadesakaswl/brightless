@@ -21,10 +21,21 @@
 
 #include "desktopintegration.h"
 #include <QApplication>
+#include <QDebug>
 #include <QSettings>
 #ifdef Q_OS_WIN
 #include <QAbstractEventDispatcher>
 #include <qt_windows.h>
+
+BOOL registerHotKeyForTest(HWND window, int id, UINT modifiers, UINT key)
+{
+    // Queued WM_HOTKEY messages bypass the OS's repeat filter.
+    if (modifiers & MOD_NOREPEAT) {
+        std::cerr << "Shortcut registration suppressed key repeat for ID " << id << '\n';
+        std::exit(1);
+    }
+    return RegisterHotKey(window, id, modifiers, key);
+}
 #else
 #include "global_shortcuts_service.h"
 #endif
@@ -447,11 +458,20 @@ int runShortcutTests(int argc, char *argv[])
     app.setApplicationName(QStringLiteral("ShortcutTests"));
     QSettings::setDefaultFormat(QSettings::IniFormat);
     QSettings::setPath(QSettings::IniFormat, QSettings::UserScope, config.path());
-    const auto check = [](bool condition, const char *message) {
+    const auto check = [](bool condition, const auto &message) {
         if (!condition) {
-            std::cerr << "Shortcut check failed: " << message << '\n';
+            qCritical().noquote() << "Shortcut check failed:" << message;
             std::exit(1);
         }
+    };
+    const auto waitFor = [&](auto ready) {
+        QElapsedTimer timer;
+        timer.start();
+        while (!ready() && timer.elapsed() < 5000) {
+            app.processEvents();
+            QThread::msleep(1);
+        }
+        return ready();
     };
 
 #ifndef Q_OS_WIN
@@ -461,6 +481,7 @@ int runShortcutTests(int argc, char *argv[])
     check(bus.registerVirtualObject(QStringLiteral("/"), &plasma, QDBusConnection::SubPath),
           "cannot register fake Plasma registry");
 #endif
+    for (auto &monitor : responses) monitor[0x60] = {0, 27};
     BrightlessController controller;
     controller.setHideTrayIcon(true);
     initialize(controller);
@@ -471,6 +492,7 @@ int runShortcutTests(int argc, char *argv[])
     QSettings settings;
     settings.setValue(QStringLiteral("shortcuts/") + first, binding);
     settings.setValue(QStringLiteral("shortcuts/enabled"), false);
+    QList<QPair<QString, int>> osdEvents;
     DesktopIntegration desktop;
     desktop.attach(&controller);
     check(!desktop.shortcutsEnabled() && desktop.shortcutActions().size() == 7, "disabled initial state");
@@ -494,8 +516,53 @@ int runShortcutTests(int argc, char *argv[])
           "rejected edit overwrote the saved binding");
     check(desktop.shortcutActions().first().toMap().value(QStringLiteral("sequence")).toString() == binding,
           "rejected edit overwrote the action binding");
+
+    QObject::connect(&desktop, &DesktopIntegration::osdRequested, &desktop,
+        [&](const QString &kind, int percent) { osdEvents.append({kind, percent}); });
+    const struct {
+        const char *id;
+        int (BrightlessController::*value)(int) const;
+        int tap, hold;
+        const char *osdKind = nullptr;
+    } actions[] = {
+        {"increase_brightness_dynamic_contrast", &BrightlessController::brightness, 52, 56, "brightness"},
+        {"decrease_brightness_dynamic_contrast", &BrightlessController::brightness, 54, 50, "brightness"},
+        {"increase_contrast", &BrightlessController::contrast, 52, 56},
+        {"decrease_contrast", &BrightlessController::contrast, 54, 50},
+        {"increase_volume", &BrightlessController::volume, 52, 56, "volume"},
+        {"decrease_volume", &BrightlessController::volume, 54, 50, "volume"},
+        {"change_input_device", &BrightlessController::input_source_code, 1, 15},
+    };
+    for (int i = 0; const auto &action : actions) {
+        const auto id = QString::fromLatin1(action.id);
+        const auto key = i == 0 ? binding : QStringLiteral("Ctrl+Alt+Shift+F%1").arg(12 + i);
+        check(desktop.setShortcut(id, key), id + ": could not register shortcut");
+        const auto post = [&](bool repeat) {
 #ifdef Q_OS_WIN
-    check(desktop.setShortcut(first, binding), "could not register initial Windows shortcut");
+            Q_UNUSED(repeat);
+            return PostThreadMessageW(GetCurrentThreadId(), WM_HOTKEY, WPARAM(i + 1), 0) != FALSE;
+#else
+            return plasma.activate(bus, app.applicationName(), id, repeat);
+#endif
+        };
+        osdEvents.clear();
+        for (const bool held : {false, true}) {
+            const auto context = id + (held ? " (hold): " : " (tap): ");
+            check(post(held) && (!held || post(true)), context + "could not send activation");
+            const int expected = held ? action.hold : action.tap;
+            check(waitFor([&] { return (controller.*action.value)(0) == expected
+                                   && (controller.*action.value)(1) == expected; }),
+                  context + "incorrect value on one or both monitors");
+            const int expectedOsds = action.osdKind ? (held ? 3 : 1) : 0;
+            check(osdEvents.size() == expectedOsds, context + "incorrect number of OSD events");
+            if (expectedOsds) {
+                check(osdEvents.last() == qMakePair(QString::fromLatin1(action.osdKind), expected),
+                      context + "incorrect OSD kind or value");
+            }
+        }
+        ++i;
+    }
+#ifdef Q_OS_WIN
     constexpr int conflictId = 0x6ffd;
     check(RegisterHotKey(nullptr, conflictId, MOD_CONTROL | MOD_ALT | MOD_SHIFT, VK_F10),
           "could not reserve conflict-test shortcut");
@@ -528,15 +595,6 @@ int runShortcutTests(int argc, char *argv[])
               && result == 123 && controller.brightness(0) == 54,
           "unrelated message triggered a shortcut");
 
-    check(PostThreadMessageW(GetCurrentThreadId(), WM_HOTKEY, 1, 0), "could not post hotkey");
-    QElapsedTimer timer;
-    timer.start();
-    while (controller.brightness(0) == 54 && timer.elapsed() < 5000) {
-        app.processEvents();
-        QThread::msleep(1);
-    }
-    check(controller.brightness(0) == 56 && controller.brightness(1) == 56,
-          "posted hotkey did not trigger exactly once for all monitors");
     check(desktop.setShortcut(first, QStringLiteral("Ctrl+Alt+Shift+F10")), "shortcut replacement failed");
     check(desktop.setShortcut(first, QString()), "shortcut removal failed");
     message.message = WM_HOTKEY;

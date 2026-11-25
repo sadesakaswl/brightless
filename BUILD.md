@@ -40,6 +40,10 @@ cmake --install build --config Release --prefix stage
 
 Windows installation deploys Qt libraries and QML plugins; artifacts are unsigned. The SDR transport test intercepts native API calls while compiling the real transport; Windows builds use the real SDK structures for its packet-layout checks. Hardware validation is separate: enable HDR, compare 80/280/480-nit settings with Windows' SDR-content brightness slider, verify refresh and HDR toggling, and quit immediately after a change to check shutdown flushing. Linux installations require the distribution's Qt/KDE/libddcutil runtime packages.
 
+### Global shortcut parity
+
+`shortcut-validation` (Plasma) and `windows-shortcuts` check tap and repeat behavior with fake monitors. For a real keyboard check on either platform, assign a brightness shortcut, focus another application, then tap and hold the shortcut with brightness away from its limit. A tap should move one step, a hold should keep moving, and releasing should stop it.
+
 ## Release packaging
 
 GitHub Actions builds all seven download formats. Linux packages use Docker (`ci/`); Windows uses MSVC and Qt deployment. Push a `v<version>` tag matching `CMakeLists.txt`, or run **Build and package** manually with **publish_release** enabled. Add `releases/<version>.md` first. Publishing waits for all builds, package installation/smoke checks, and checksum generation; published releases are never overwritten.
